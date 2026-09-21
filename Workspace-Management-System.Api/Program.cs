@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Workspace_Management_System.Api.Middleware;
 using Workspace_Management_System.Application.Extensions;
 using Workspace_Management_System.Application.Settings;
+using Workspace_Management_System.Domain.Constants;
 using Workspace_Management_System.Infrastructure.Extensions;
+using Workspace_Management_System.Infrastructure.Persistence.SeedData;
 namespace Workspace_Management_System.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -83,7 +86,7 @@ namespace Workspace_Management_System.Api
 
 
 
-
+        
 
 
 
@@ -95,6 +98,15 @@ namespace Workspace_Management_System.Api
 
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider
+                    .GetRequiredService<RoleManager<IdentityRole>>();
+
+                await RoleSeeder.SeedAsync(roleManager);
+                await RolePermissionSeeder.SeedAsync(roleManager);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
