@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
+using Workspace_Management_System.Application.Features.Companies.Commands.ChangeCompanyStatus;
 using Workspace_Management_System.Application.Features.Companies.Commands.CreateCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.DeleteCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.UpdateCompany;
@@ -132,6 +133,30 @@ namespace Workspace_Management_System.Api.Controllers
 
             var result = await mediator.Send(
                 query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpPatch("{id}/status")]
+        [SwaggerOperation(
+    Summary = "Change company status",
+    Description = "Activates or deactivates an existing company."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> ChangeStatus(
+    int id,
+    [FromBody] ChangeCompanyStatusCommand command,
+    CancellationToken cancellationToken)
+        {
+            command.Id = id;
+
+            var result = await mediator.Send(
+                command,
                 cancellationToken);
 
             return result.ToActionResult();
