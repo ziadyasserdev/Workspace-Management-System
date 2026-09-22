@@ -8,9 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Contracts.ExternalServices;
+using Workspace_Management_System.Application.Contracts.Identity;
+using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Domain.Identity;
 using Workspace_Management_System.Infrastructure.ExternalServices;
+using Workspace_Management_System.Infrastructure.Identity;
 using Workspace_Management_System.Infrastructure.Persistence.Context;
+using Workspace_Management_System.Infrastructure.Repositories;
 
 namespace Workspace_Management_System.Infrastructure.Extensions
 {
@@ -20,7 +24,8 @@ namespace Workspace_Management_System.Infrastructure.Extensions
         {
             services.AddDbContext<ApplicationDbContext>(options =>
              options.UseSqlServer(configuration.GetConnectionString("DbConn")));
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddIdentityCore<ApplicationUser>(options =>
             {

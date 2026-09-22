@@ -21,8 +21,13 @@ namespace Workspace_Management_System.Application.Common.Results
             Message = message;
         }
 
+        //public static Result<T> Success(T value, string message = null)
+        //    => new(ResultStatus.Success, value, message);
         public static Result<T> Success(T value, string message = null)
-            => new(ResultStatus.Success, value, message);
+    => new(
+        status: ResultStatus.Success,
+        value: value,
+        message: message);
 
         public static Result<T> Failure(ResultStatus status, string error)
             => new(status, default, error);

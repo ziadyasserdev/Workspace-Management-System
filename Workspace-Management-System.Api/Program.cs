@@ -83,12 +83,15 @@ namespace Workspace_Management_System.Api
 
 
 
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.EnableAnnotations();
+            });
 
 
 
+            builder.Services.AddHttpContextAccessor();
 
-
-        
 
 
 
