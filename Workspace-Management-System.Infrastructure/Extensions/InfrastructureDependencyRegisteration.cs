@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Contracts.ExternalServices;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Contracts.Services;
 using Workspace_Management_System.Domain.Identity;
 using Workspace_Management_System.Infrastructure.ExternalServices;
 using Workspace_Management_System.Infrastructure.Identity;
 using Workspace_Management_System.Infrastructure.Persistence.Context;
 using Workspace_Management_System.Infrastructure.Repositories;
+using Workspace_Management_System.Infrastructure.Services;
 
 namespace Workspace_Management_System.Infrastructure.Extensions
 {
@@ -27,6 +29,7 @@ namespace Workspace_Management_System.Infrastructure.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IEmailService, EmailService>();
+      services.AddScoped<IAuthService, AuthService>();
             services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.Password.RequireDigit = true;
