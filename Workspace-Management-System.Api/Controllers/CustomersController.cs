@@ -6,6 +6,7 @@ using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer;
 using Workspace_Management_System.Application.Features.Customers.Commands.Delete_Customer;
 using Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer;
+using Workspace_Management_System.Application.Features.Customers.Queries.GetCustomers;
 using Workspace_Management_System.Application.Features.Customers.Queries.SearchCustomers;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -94,6 +95,25 @@ namespace Workspace_Management_System.Api.Controllers
         public async Task<IActionResult> Search(
             [FromQuery] SearchCustomersQuery query,
             CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet]
+        [SwaggerOperation(
+    Summary = "Get customers",
+    Description = "Retrieves a paginated list of active customers."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetCustomers(
+    [FromQuery] GetCustomersQuery query,
+    CancellationToken cancellationToken)
         {
             var result = await mediator.Send(
                 query,
