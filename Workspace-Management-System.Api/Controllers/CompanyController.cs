@@ -6,6 +6,7 @@ using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Companies.Commands.CreateCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.DeleteCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.UpdateCompany;
+using Workspace_Management_System.Application.Features.Companies.Queries.GetCompanies;
 
 namespace Workspace_Management_System.Api.Controllers
 {
@@ -86,6 +87,25 @@ namespace Workspace_Management_System.Api.Controllers
 
             var result = await mediator.Send(
                 command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet]
+        [SwaggerOperation(
+    Summary = "Get companies",
+    Description = "Retrieves a paginated list of companies."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetCompanies(
+    [FromQuery] GetCompaniesQuery query,
+    CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                query,
                 cancellationToken);
 
             return result.ToActionResult();
