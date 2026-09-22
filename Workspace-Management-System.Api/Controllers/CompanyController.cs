@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Companies.Commands.CreateCompany;
+using Workspace_Management_System.Application.Features.Companies.Commands.DeleteCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.UpdateCompany;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -56,6 +57,32 @@ namespace Workspace_Management_System.Api.Controllers
     CancellationToken cancellationToken)
         {
             command.Id = id;
+
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpDelete("{id}")]
+        [SwaggerOperation(
+    Summary = "Delete company",
+    Description = "Soft deletes an existing company."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Delete(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new DeleteCompanyCommand
+            {
+                Id = id
+            };
 
             var result = await mediator.Send(
                 command,
