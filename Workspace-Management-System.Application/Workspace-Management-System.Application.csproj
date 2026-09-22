@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Workspace-Management-System.Domain\Workspace-Management-System.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Authentications\Commands\" />
-  </ItemGroup>
-
 </Project>
