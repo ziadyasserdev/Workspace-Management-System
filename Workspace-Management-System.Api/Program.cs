@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using Workspace_Management_System.Api.Middleware;
 using Workspace_Management_System.Application.Extensions;
 using Workspace_Management_System.Application.Settings;
@@ -89,7 +90,13 @@ namespace Workspace_Management_System.Api
             });
 
 
-
+            builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter());
+    });
             builder.Services.AddHttpContextAccessor();
 
 
