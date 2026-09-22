@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Workspace-Management-System.Domain\Workspace-Management-System.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Companies\Queries\" />
+  </ItemGroup>
+
 </Project>
