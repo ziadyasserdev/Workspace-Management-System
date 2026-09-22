@@ -6,6 +6,7 @@ using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer;
 using Workspace_Management_System.Application.Features.Customers.Commands.Delete_Customer;
 using Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer;
+using Workspace_Management_System.Application.Features.Customers.Queries.GetCustomerById;
 using Workspace_Management_System.Application.Features.Customers.Queries.GetCustomers;
 using Workspace_Management_System.Application.Features.Customers.Queries.SearchCustomers;
 
@@ -121,5 +122,31 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+        [HttpGet("{id}")]
+        [SwaggerOperation(
+    Summary = "Get customer by ID",
+    Description = "Retrieves a customer by ID."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var query = new GetCustomerByIdQuery
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+
     }
 }
