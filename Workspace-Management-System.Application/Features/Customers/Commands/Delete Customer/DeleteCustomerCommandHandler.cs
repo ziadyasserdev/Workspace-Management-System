@@ -44,9 +44,12 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.De
                     ResultStatus.Conflict,
                     "Customer is already deleted.");
             }
+        
 
             customer.IsDeleted = true;
-
+            customer.IsDeletedBy = _currentUser.UserId;
+            customer.UpdatedAt = DateTime.UtcNow;
+            customer.UpdatedBy = _currentUser.UserId;
             await _unitOfWork.SaveAsync();
 
             return Result<bool>.Success(true);

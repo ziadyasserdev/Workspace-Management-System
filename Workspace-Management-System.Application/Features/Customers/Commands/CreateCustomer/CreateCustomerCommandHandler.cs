@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
@@ -10,10 +11,12 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
     public class CreateCustomerCommandHandler: IRequestHandler<CreateCustomerCommand, Result<int>>
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly ICurrentUserService currentUser;
 
-        public CreateCustomerCommandHandler(IUnitOfWork unitOfWork)
+        public CreateCustomerCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
         {
             this.unitOfWork = unitOfWork;
+            this.currentUser = currentUser;
         }
 
         public async Task<Result<int>> Handle(
@@ -40,7 +43,9 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
                 CustomerType = request.CustomerType,
                 Notes = request.Notes,
                 RegistrationDate = DateTime.UtcNow,
-                Status = CustomerStatus.Active
+                Status = CustomerStatus.Active,
+                 CreatedAt = DateTime.UtcNow,
+                CreatedBy = currentUser.UserId
             };
 
             await unitOfWork.Customers.AddAsync(customer);

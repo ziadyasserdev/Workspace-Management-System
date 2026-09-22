@@ -53,12 +53,14 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
                     "A customer with the same mobile number already exists.");
             }
 
-            customer.FullName = request.FullName;
+        customer.FullName = request.FullName;
             customer.MobileNumber = request.MobileNumber;
             customer.Email = request.Email;
             customer.CompanyId = request.CompanyId;
             customer.CustomerType = request.CustomerType;
             customer.Notes = request.Notes;
+            customer.UpdatedAt = DateTime.UtcNow;
+            customer.UpdatedBy = _currentUser.UserId;
             await _unitOfWork.SaveAsync();
             return Result<bool>.Success(true);
         }
