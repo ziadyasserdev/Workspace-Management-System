@@ -14,13 +14,13 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         private readonly ApplicationDbContext _context;
 
 
-     
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Workspaces = new WorkspaceRepository(_context);
             WorkspaceTypes = new WorkspaceTypeRepository(_context);
+            Customers = new CustomerRepository(_context);
         }
 
        
@@ -41,6 +41,7 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IWorkspaceRepository Workspaces { get; private set; } = null!;
 
         public IWorkspaceTypeRepository WorkspaceTypes { get; private set; } = null!;
+        public ICustomerRepository Customers { get; private set; } = null!;
 
         protected virtual void Dispose(bool disposing)
         {
