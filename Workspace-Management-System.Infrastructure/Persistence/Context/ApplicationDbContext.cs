@@ -30,7 +30,7 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
 
 
     //}
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options)

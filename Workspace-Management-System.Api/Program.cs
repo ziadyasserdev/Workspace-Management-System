@@ -6,6 +6,8 @@ using Workspace_Management_System.Api.Middleware;
 using Workspace_Management_System.Application.Extensions;
 using Workspace_Management_System.Application.Settings;
 using Workspace_Management_System.Domain.Constants;
+using Workspace_Management_System.Domain.Identity;
+using Workspace_Management_System.Domain.Models;
 using Workspace_Management_System.Infrastructure.Extensions;
 using Workspace_Management_System.Infrastructure.Persistence.SeedData;
 namespace Workspace_Management_System.Api
@@ -103,9 +105,12 @@ namespace Workspace_Management_System.Api
             {
                 var roleManager = scope.ServiceProvider
                     .GetRequiredService<RoleManager<IdentityRole>>();
-
+                var userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<ApplicationUser>>();
                 await RoleSeeder.SeedAsync(roleManager);
                 await RolePermissionSeeder.SeedAsync(roleManager);
+                await AdminSeeder.SeedAsync(userManager);
+
             }
 
             // Configure the HTTP request pipeline.
