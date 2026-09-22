@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer;
+using Workspace_Management_System.Application.Features.Customers.Commands.Delete_Customer;
 using Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -55,5 +56,31 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+        [HttpDelete("{id}")]
+        [SwaggerOperation(
+    Summary = "Delete customer",
+    Description = "Soft deletes an existing customer."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new DeleteCustomerCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+
     }
 }
