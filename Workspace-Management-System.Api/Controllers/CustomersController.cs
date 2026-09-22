@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer;
+using Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer;
 
 namespace Workspace_Management_System.Api.Controllers
 {
@@ -30,6 +31,27 @@ namespace Workspace_Management_System.Api.Controllers
         public async Task<IActionResult> Create( [FromBody] CreateCustomerCommand command,CancellationToken cancellationToken)
         {
             var result = await mediator.Send(command,cancellationToken);
+
+            return result.ToActionResult();
+        }
+
+        [HttpPut("{id}")]
+        [SwaggerOperation(
+           Summary = "Update customer",
+           Description = "Updates an existing customer."
+       )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Update(int id,[FromBody] UpdateCustomerCommand command,CancellationToken cancellationToken)
+        {
+            command.Id = id;
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
 
             return result.ToActionResult();
         }

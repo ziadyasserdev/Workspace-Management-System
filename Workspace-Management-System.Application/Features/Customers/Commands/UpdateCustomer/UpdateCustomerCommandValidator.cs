@@ -1,15 +1,11 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer
+namespace Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer
 {
-    public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
+    public class UpdateCustomerCommandValidator
+        : AbstractValidator<UpdateCustomerCommand>
     {
-        public CreateCustomerCommandValidator()
+        public UpdateCustomerCommandValidator()
         {
             RuleFor(x => x.FullName)
                 .NotEmpty()
@@ -18,10 +14,15 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
                 .WithMessage("Full name must not exceed 150 characters");
 
             RuleFor(x => x.MobileNumber)
-                .NotEmpty()
-                .WithMessage("Mobile number is required")
-                .Matches(@"^01[0125][0-9]{8}$")
-                .WithMessage("Mobile number must be a valid Egyptian mobile number");
+           .NotEmpty()
+           .WithMessage("Mobile number is required")
+           .Matches(@"^01[0125][0-9]{8}$")
+           .WithMessage("Mobile number must be a valid Egyptian mobile number");
+
+            RuleFor(x => x.Email)
+                .EmailAddress()
+                .When(x => !string.IsNullOrEmpty(x.Email))
+                .WithMessage("Email must be valid");
 
             RuleFor(x => x.CustomerType)
                 .NotEmpty()
