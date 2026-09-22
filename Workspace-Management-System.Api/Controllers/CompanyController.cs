@@ -9,6 +9,7 @@ using Workspace_Management_System.Application.Features.Companies.Commands.Delete
 using Workspace_Management_System.Application.Features.Companies.Commands.UpdateCompany;
 using Workspace_Management_System.Application.Features.Companies.Queries.GetCompanies;
 using Workspace_Management_System.Application.Features.Companies.Queries.GetCompanyById;
+using Workspace_Management_System.Application.Features.Companies.Queries.SearchCompanies;
 
 namespace Workspace_Management_System.Api.Controllers
 {
@@ -157,6 +158,26 @@ namespace Workspace_Management_System.Api.Controllers
 
             var result = await mediator.Send(
                 command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+
+        [HttpGet("search")]
+        [SwaggerOperation(
+        Summary = "Search companies",
+        Description = "Searches companies by name, contact person, phone, or email."
+    )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> Search(
+        [FromQuery] SearchCompaniesQuery query,
+        CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                query,
                 cancellationToken);
 
             return result.ToActionResult();
