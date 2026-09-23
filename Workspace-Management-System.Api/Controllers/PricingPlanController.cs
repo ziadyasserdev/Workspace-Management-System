@@ -6,6 +6,7 @@ using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.DeletePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.RestorePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.UpdatePricingPlan;
+using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlanById;
 using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlans;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -131,6 +132,31 @@ namespace Workspace_Management_System.Api.Controllers
     CancellationToken cancellationToken)
         {
             var query = new GetPricingPlansQuery();
+
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet("{id}")]
+        [SwaggerOperation(
+    Summary = "Get pricing plan by ID",
+    Description = "Retrieves a pricing plan by ID."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var query = new GetPricingPlanByIdQuery
+            {
+                Id = id
+            };
 
             var result = await mediator.Send(
                 query,
