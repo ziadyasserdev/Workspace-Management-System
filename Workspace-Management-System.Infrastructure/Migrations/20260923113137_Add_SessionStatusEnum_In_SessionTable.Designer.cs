@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Workspace_Management_System.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using Workspace_Management_System.Infrastructure.Persistence.Context;
 namespace Workspace_Management_System.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260923113137_Add_SessionStatusEnum_In_SessionTable")]
+    partial class Add_SessionStatusEnum_In_SessionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -573,6 +576,47 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.ToTable("CustomerPackages");
                 });
 
+            modelBuilder.Entity("Workspace_Management_System.Domain.Models.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IsDeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -640,15 +684,19 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("EmployeeNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("datetime2");
@@ -659,11 +707,11 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("IsDeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -676,19 +724,17 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("WorkspaceId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("DepartmentId");
 
-                    b.HasIndex("WorkspaceId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Employees");
                 });
@@ -2018,19 +2064,17 @@ namespace Workspace_Management_System.Infrastructure.Migrations
 
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Employee", b =>
                 {
-                    b.HasOne("Workspace_Management_System.Domain.Identity.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("Workspace_Management_System.Domain.Models.Employee", "UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Workspace_Management_System.Domain.Models.Workspace", "Workspace")
+                    b.HasOne("Workspace_Management_System.Domain.Models.Department", "Department")
                         .WithMany("Employees")
-                        .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("Workspace_Management_System.Domain.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("Department");
 
                     b.Navigation("User");
-
-                    b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Expense", b =>
@@ -2336,6 +2380,11 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Navigation("Transactions");
                 });
 
+            modelBuilder.Entity("Workspace_Management_System.Domain.Models.Department", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Discount", b =>
                 {
                     b.Navigation("TransactionItems");
@@ -2417,8 +2466,6 @@ namespace Workspace_Management_System.Infrastructure.Migrations
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Workspace", b =>
                 {
                     b.Navigation("Bookings");
-
-                    b.Navigation("Employees");
 
                     b.Navigation("Sessions");
                 });

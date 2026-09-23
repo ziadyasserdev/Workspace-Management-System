@@ -11,21 +11,28 @@ namespace Workspace_Management_System.Domain.Models
 {
     public class Employee : BaseEntity
     {
-        public string EmployeeNumber { get; set; } = null!;
-        public string FullName { get; set; } = null!;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+
+        public string FullName  => $"{FirstName} {LastName}";
+
         public string Phone { get; set; } = null!;
+
         public string? Email { get; set; }
 
-        public string Position { get; set; } = null!;
-
-        public int? DepartmentId { get; set; }
-
+        public Gender Gender { get; set; }
         public DateTime HireDate { get; set; }
-        public EmployeeStatus Status { get; set; } 
 
-        public int? UserId { get; set; }
+        public EmployeeStatus Status { get; set; }
 
-        public Department? Department { get; set; }
+        // Workspace
+        public int? WorkspaceId { get; set; }
+
+        // Identity User
+        public string? UserId { get; set; }
+
+        public Workspace Workspace { get; set; } = null!;
+
         public ApplicationUser? User { get; set; }
 
         public ICollection<Session> Sessions { get; set; }

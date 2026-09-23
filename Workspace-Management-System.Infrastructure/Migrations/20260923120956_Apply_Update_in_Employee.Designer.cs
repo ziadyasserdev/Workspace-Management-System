@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Workspace_Management_System.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using Workspace_Management_System.Infrastructure.Persistence.Context;
 namespace Workspace_Management_System.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260923120956_Apply_Update_in_Employee")]
+    partial class Apply_Update_in_Employee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -647,9 +650,6 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("datetime2");
 
@@ -679,7 +679,7 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("WorkspaceId")
+                    b.Property<int>("WorkspaceId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -2026,7 +2026,8 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.HasOne("Workspace_Management_System.Domain.Models.Workspace", "Workspace")
                         .WithMany("Employees")
                         .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("User");
 

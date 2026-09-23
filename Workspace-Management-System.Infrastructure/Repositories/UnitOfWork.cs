@@ -22,6 +22,7 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             WorkspaceTypes = new WorkspaceTypeRepository(_context);
             Customers = new CustomerRepository(_context);
             Companies = new CompanyRepository(_context);
+            Employees = new EmployeeRepository(_context);
         }
 
        
@@ -44,6 +45,9 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IWorkspaceTypeRepository WorkspaceTypes { get; private set; } = null!;
         public ICustomerRepository Customers { get; private set; } = null!;
         public ICompanyRepository Companies { get; private set; } = null!;
+
+        public IEmployeeRepository Employees { get;private set; } = null!;  
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

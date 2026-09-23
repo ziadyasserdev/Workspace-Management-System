@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Domain.Models
 {
@@ -18,8 +19,7 @@ namespace Workspace_Management_System.Domain.Models
         public DateTime? EndTime { get; set; }
 
         public int NumberOfPeople { get; set; }
-        public string Status { get; set; } = null!;
-
+        public SessionStatus Status { get; set; } 
         public Customer Customer { get; set; } = null!;
         public Booking? Booking { get; set; }
         public Workspace Workspace { get; set; } = null!;
