@@ -17,7 +17,7 @@ namespace Workspace_Management_System.Domain.Models
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string? DayOfWeek { get; set; }
+        public DayOfWeek? DayOfWeek { get; set; }
 
         public bool IsActive { get; set; }
 

@@ -16,6 +16,7 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         IWorkspaceTypeRepository WorkspaceTypes { get; }
         ICustomerRepository Customers { get; }
         IEmployeeRepository Employees { get; }
+        IPricingPlanRepository PricingPlans { get; }
         Task<int> SaveAsync();
     }
 
