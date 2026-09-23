@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.CreatePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.DeletePricingRule;
+using Workspace_Management_System.Application.Features.PricingRule.Commands.RestorePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.UpdatePricingRule;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -91,7 +92,30 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+        [HttpPatch("{id}/restore")]
+        [SwaggerOperation(
+    Summary = "Restore pricing rule",
+    Description = "Restores a soft-deleted pricing rule."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Restore(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new RestorePricingRuleCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
     }
-
-
 }
