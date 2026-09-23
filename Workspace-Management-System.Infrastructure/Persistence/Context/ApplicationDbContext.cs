@@ -84,7 +84,7 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
             => Set<ExpenseCategory>();
         public DbSet<Expense> Expenses => Set<Expense>();
 
-        public DbSet<Department> Departments => Set<Department>();
+     
         public DbSet<Employee> Employees => Set<Employee>();
 
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
@@ -139,6 +139,18 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
                 .WithMany()
                 .HasForeignKey(n => n.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Employee>()
+    .HasOne(e => e.Workspace)
+    .WithMany(w => w.Employees)
+    .HasForeignKey(e => e.WorkspaceId)
+    .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Employee>()
+    .HasOne(e => e.User)
+    .WithOne()
+    .HasForeignKey<Employee>(e => e.UserId)
+    .OnDelete(DeleteBehavior.SetNull);
         }
     }
 

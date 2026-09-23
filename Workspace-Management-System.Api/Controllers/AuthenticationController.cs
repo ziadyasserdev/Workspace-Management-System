@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Authentications.Commands.Login;
+using Workspace_Management_System.Application.Features.Authentications.Commands.RegisterUser;
 
 namespace Workspace_Management_System.Api.Controllers
 {
@@ -18,6 +19,19 @@ namespace Workspace_Management_System.Api.Controllers
             this.mediator = mediator;
         }
 
+        [HttpPost("register")]
+        [SwaggerOperation(
+        Summary = "Register a new user",
+        Description = "Create a new user account with full name, email, password, and other required details."
+    )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
+        {
+            var result = await mediator.Send(command);
+
+            return result.ToActionResult();
+        }
         [HttpPost("login")]
         [SwaggerOperation(
          Summary = "Login user",

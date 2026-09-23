@@ -25,6 +25,8 @@ namespace Workspace_Management_System.Domain.Models
 
         public ICollection<Booking> Bookings { get; set; }
             = new List<Booking>();
+        public ICollection<Employee> Employees { get; set; }
+    = new List<Employee>();
 
         public ICollection<Session> Sessions { get; set; }
             = new List<Session>();

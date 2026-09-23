@@ -109,7 +109,22 @@ namespace Workspace_Management_System.Api
 
 
 
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
+
             var app = builder.Build();
+
+           
 
             using (var scope = app.Services.CreateScope())
             {
@@ -124,13 +139,13 @@ namespace Workspace_Management_System.Api
             }
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+         
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowFrontend");
 
             app.UseAuthorization();
 
