@@ -8,6 +8,7 @@ using Workspace_Management_System.Application.Features.PricingRule.Commands.Crea
 using Workspace_Management_System.Application.Features.PricingRule.Commands.DeletePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.RestorePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.UpdatePricingRule;
+using Workspace_Management_System.Application.Features.PricingRule.Queries.GetPricingRules;
 
 namespace Workspace_Management_System.Api.Controllers
 {
@@ -113,6 +114,25 @@ namespace Workspace_Management_System.Api.Controllers
 
             var result = await mediator.Send(
                 command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet]
+        [SwaggerOperation(
+    Summary = "Get pricing rules",
+    Description = "Retrieves all pricing rules."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetPricingRules(
+    [FromQuery] GetPricingRulesQuery query,
+    CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(
+                query,
                 cancellationToken);
 
             return result.ToActionResult();
