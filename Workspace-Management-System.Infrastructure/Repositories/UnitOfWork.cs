@@ -23,6 +23,8 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             Customers = new CustomerRepository(_context);
             Companies = new CompanyRepository(_context);
             Employees = new EmployeeRepository(_context);
+            PricingPlans = new PricingPlanRepository(_context);
+            PricingRules = new PricingRuleRepository(_context);
         }
 
        
@@ -47,7 +49,8 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public ICompanyRepository Companies { get; private set; } = null!;
 
         public IEmployeeRepository Employees { get;private set; } = null!;  
-
+        public IPricingPlanRepository PricingPlans { get; private set; } = null!;
+        public IPricingRuleRepository PricingRules { get; private set; } = null!;
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
