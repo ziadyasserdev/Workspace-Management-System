@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.DeletePricingPlan;
+using Workspace_Management_System.Application.Features.PricingPlan.Commands.RestorePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.UpdatePricingPlan;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -89,5 +90,32 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+        [HttpPatch("{id}/restore")]
+        [SwaggerOperation(
+    Summary = "Restore pricing plan",
+    Description = "Restores a soft-deleted pricing plan."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Restore(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new RestorePricingPlanCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
     }
+
  }
