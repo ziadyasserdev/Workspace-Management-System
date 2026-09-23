@@ -6,6 +6,7 @@ using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.DeletePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.RestorePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.UpdatePricingPlan;
+using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlans;
 
 namespace Workspace_Management_System.Api.Controllers
 {
@@ -64,20 +65,20 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
-    
-    [HttpDelete("{id}")]
+
+        [HttpDelete("{id}")]
         [SwaggerOperation(
-    Summary = "Delete pricing plan",
-    Description = "Soft deletes an existing pricing plan."
-)]
+        Summary = "Delete pricing plan",
+        Description = "Soft deletes an existing pricing plan."
+    )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
-    int id,
-    CancellationToken cancellationToken)
+        int id,
+        CancellationToken cancellationToken)
         {
             var command = new DeletePricingPlanCommand
             {
@@ -116,6 +117,26 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
-    }
+    
+    [HttpGet]
+        [SwaggerOperation(
+    Summary = "Get pricing plans",
+    Description = "Retrieves all pricing plans."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetPricingPlans(
+    CancellationToken cancellationToken)
+        {
+            var query = new GetPricingPlansQuery();
 
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+    }
  }
