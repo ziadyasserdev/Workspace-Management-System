@@ -151,6 +151,10 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
     .WithOne()
     .HasForeignKey<Employee>(e => e.UserId)
     .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<PricingRule>()
+       .Property(x => x.DayOfWeek)
+       .HasConversion<int>();
         }
     }
 
