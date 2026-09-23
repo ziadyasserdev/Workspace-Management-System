@@ -8,6 +8,7 @@ using Workspace_Management_System.Application.Features.PricingRule.Commands.Crea
 using Workspace_Management_System.Application.Features.PricingRule.Commands.DeletePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.RestorePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.UpdatePricingRule;
+using Workspace_Management_System.Application.Features.PricingRule.Queries.GetPricingRuleById;
 using Workspace_Management_System.Application.Features.PricingRule.Queries.GetPricingRules;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -131,6 +132,31 @@ namespace Workspace_Management_System.Api.Controllers
     [FromQuery] GetPricingRulesQuery query,
     CancellationToken cancellationToken)
         {
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet("{id}")]
+        [SwaggerOperation(
+    Summary = "Get pricing rule by ID",
+    Description = "Retrieves a pricing rule by ID."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var query = new GetPricingRuleByIdQuery
+            {
+                Id = id
+            };
+
             var result = await mediator.Send(
                 query,
                 cancellationToken);
