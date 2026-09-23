@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
+using Workspace_Management_System.Application.Features.PricingPlan.Commands.DeletePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.UpdatePricingPlan;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -62,5 +63,31 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+    
+    [HttpDelete("{id}")]
+        [SwaggerOperation(
+    Summary = "Delete pricing plan",
+    Description = "Soft deletes an existing pricing plan."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new DeletePricingPlanCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
     }
-}
+ }
