@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.CreatePricingRule;
+using Workspace_Management_System.Application.Features.PricingRule.Commands.DeletePricingRule;
 using Workspace_Management_System.Application.Features.PricingRule.Commands.UpdatePricingRule;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -12,11 +14,11 @@ namespace Workspace_Management_System.Api.Controllers
     [ApiController]
     public class PricingRuleController : ControllerBase
     {
-        public IMediator Mediator { get; set; }
+        private readonly IMediator mediator;
 
         public PricingRuleController(IMediator mediator)
         {
-            Mediator = mediator;
+            this.mediator = mediator;
         }
 
         [HttpPost]
@@ -34,7 +36,7 @@ namespace Workspace_Management_System.Api.Controllers
             [FromBody] CreatePricingRuleCommand command,
             CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(
+            var result = await mediator.Send(
                 command,
                 cancellationToken);
 
@@ -58,12 +60,38 @@ namespace Workspace_Management_System.Api.Controllers
         {
             command.Id = id;
 
-            var result = await Mediator.Send(
+            var result = await mediator.Send(
+                command,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpDelete("{id}")]
+        [SwaggerOperation(
+    Summary = "Delete pricing rule",
+    Description = "Soft deletes an existing pricing rule."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new DeletePricingRuleCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
                 command,
                 cancellationToken);
 
             return result.ToActionResult();
         }
     }
+
 
 }
