@@ -18,6 +18,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.G
 
             RuleFor(x => x.Search)
                 .MaximumLength(100)
+                .When(x => !string.IsNullOrWhiteSpace(x.Search))
                 .WithMessage("Search must not exceed 100 characters.");
         }
     }

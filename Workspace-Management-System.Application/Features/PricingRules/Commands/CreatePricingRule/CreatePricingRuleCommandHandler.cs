@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Domain.Enums;
 using PricingRuleModel = Workspace_Management_System.Domain.Models.PricingRule;
+
 namespace Workspace_Management_System.Application.Features.PricingRule.Commands.CreatePricingRule
 {
     public class CreatePricingRuleCommandHandler
@@ -66,6 +68,33 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
                     "A pricing rule with the same type already exists for this pricing plan and workspace type.");
+            }
+
+            if (request.IsActive &&
+                (request.RuleType == PricingRuleType.RoundUp ||
+                 request.RuleType == PricingRuleType.RoundDown))
+            {
+                var conflictingRuleType =
+                    request.RuleType == PricingRuleType.RoundUp
+                        ? PricingRuleType.RoundDown
+                        : PricingRuleType.RoundUp;
+
+                var conflictingRuleExists = await unitOfWork.PricingRules
+                    .Query()
+                    .AnyAsync(
+                        x => x.PricingPlanId == request.PricingPlanId &&
+                             x.WorkspaceTypeId == request.WorkspaceTypeId &&
+                             x.RuleType == conflictingRuleType &&
+                             x.IsActive &&
+                             !x.IsDeleted,
+                        cancellationToken);
+
+                if (conflictingRuleExists)
+                {
+                    return Result<int>.Failure(
+                        ResultStatus.Conflict,
+                        $"An active {conflictingRuleType} rule already exists for this pricing plan and workspace type.");
+                }
             }
 
             var pricingRule = new PricingRuleModel

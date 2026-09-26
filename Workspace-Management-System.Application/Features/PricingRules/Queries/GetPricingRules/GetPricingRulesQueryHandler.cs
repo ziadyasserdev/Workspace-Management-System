@@ -1,24 +1,26 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
-using Workspace_Management_System.Application.Features.PricingRule.Queries;
 using Workspace_Management_System.Application.Features.PricingRules.Dtos;
-using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.PricingRule.Queries.GetPricingRules
 {
     public class GetPricingRulesQueryHandler
-        : IRequestHandler<GetPricingRulesQuery, Result<List<PricingRuleDto>>>
+        : IRequestHandler<
+            GetPricingRulesQuery,
+            Result<PaginatedResult<PricingRuleDto>>>
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public GetPricingRulesQueryHandler(IUnitOfWork unitOfWork)
+        public GetPricingRulesQueryHandler(
+            IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<List<PricingRuleDto>>> Handle(
+        public async Task<Result<PaginatedResult<PricingRuleDto>>> Handle(
             GetPricingRulesQuery request,
             CancellationToken cancellationToken)
         {
@@ -50,7 +52,13 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Queries.G
                     x.IsActive == request.IsActive.Value);
             }
 
+            var totalCount = await query
+                .CountAsync(cancellationToken);
+
             var pricingRules = await query
+                .OrderBy(x => x.PricingPlanId)
+                .ThenBy(x => x.WorkspaceTypeId)
+                .ThenBy(x => x.RuleType)
                 .Select(x => new PricingRuleDto
                 {
                     Id = x.Id,
@@ -67,8 +75,14 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Queries.G
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            return Result<List<PricingRuleDto>>.Success(
-                pricingRules);
+            var result = new PaginatedResult<PricingRuleDto>(
+                pricingRules,
+                request.PageNumber,
+                request.PageSize,
+                totalCount);
+
+            return Result<PaginatedResult<PricingRuleDto>>.Success(
+                result);
         }
     }
 }

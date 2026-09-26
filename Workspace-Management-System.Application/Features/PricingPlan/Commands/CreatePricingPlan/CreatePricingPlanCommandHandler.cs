@@ -25,12 +25,12 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             CreatePricingPlanCommand request,
             CancellationToken cancellationToken)
         {
+            var name = request.Name.Trim();
             var checkExist = await unitOfWork.PricingPlans
-                .Query()
-                .AnyAsync(
-                    x => x.Name == request.Name && !x.IsDeleted,
-                    cancellationToken);
-
+     .Query()
+     .AnyAsync(
+         x => x.Name == name && !x.IsDeleted,
+         cancellationToken);
             if (checkExist)
             {
                 return Result<int>.Failure(
@@ -40,7 +40,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
 
             var pricingPlan = new PricingPlanModel
             {
-                Name = request.Name,
+                Name = name,
                 Description = request.Description,
                 IsActive = request.IsActive,
                 CreatedAt = DateTime.UtcNow,
