@@ -24,10 +24,10 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
                 .WithMessage("Contact person must not exceed 150 characters");
 
             RuleFor(x => x.Phone)
-                .NotEmpty()
-                .WithMessage("Phone number is required")
-                .MaximumLength(20)
-                .WithMessage("Phone number must not exceed 20 characters");
+        .NotEmpty()
+        .WithMessage("Mobile number is required")
+        .Matches(@"^01[0125][0-9]{8}$")
+        .WithMessage("Mobile number must be a valid Egyptian mobile number");
 
             RuleFor(x => x.Email)
                 .MaximumLength(150)

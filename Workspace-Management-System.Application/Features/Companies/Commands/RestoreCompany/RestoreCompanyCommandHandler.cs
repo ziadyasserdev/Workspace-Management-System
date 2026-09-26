@@ -4,15 +4,15 @@ using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 
-namespace Workspace_Management_System.Application.Features.Companies.Commands.DeleteCompany
+namespace Workspace_Management_System.Application.Features.Companies.Commands.RestoreCompany
 {
-    public class DeleteCompanyCommandHandler
-        : IRequestHandler<DeleteCompanyCommand, Result<bool>>
+    public class RestoreCompanyCommandHandler
+        : IRequestHandler<RestoreCompanyCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
 
-        public DeleteCompanyCommandHandler(
+        public RestoreCompanyCommandHandler(
             IUnitOfWork unitOfWork,
             ICurrentUserService currentUser)
         {
@@ -21,11 +21,12 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.De
         }
 
         public async Task<Result<bool>> Handle(
-            DeleteCompanyCommand request,
+            RestoreCompanyCommand request,
             CancellationToken cancellationToken)
         {
             var company = await _unitOfWork.Companies
                 .Query()
+                .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(
                     x => x.Id == request.Id,
                     cancellationToken);
@@ -37,15 +38,30 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.De
                     "Company not found.");
             }
 
-            if (company.IsDeleted)
+            if (!company.IsDeleted)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Company is already deleted.");
+                    "Company is already active.");
             }
 
-            company.IsDeleted = true;
-            company.IsDeletedBy = _currentUser.UserId;
+            var activeCompanyWithSameName = await _unitOfWork.Companies
+                .Query()
+                .AnyAsync(
+                    x => x.Id != request.Id &&
+                         x.Name == company.Name &&
+                         !x.IsDeleted,
+                    cancellationToken);
+
+            if (activeCompanyWithSameName)
+            {
+                return Result<bool>.Failure(
+                    ResultStatus.Conflict,
+                    "Another active company with the same name already exists.");
+            }
+
+            company.IsDeleted = false;
+            company.IsDeletedBy = null;
             company.UpdatedAt = DateTime.UtcNow;
             company.UpdatedBy = _currentUser.UserId;
 
@@ -53,7 +69,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.De
 
             return Result<bool>.Success(
                 true,
-                "Company deleted successfully.");
+                "Company restored successfully.");
         }
     }
 }
