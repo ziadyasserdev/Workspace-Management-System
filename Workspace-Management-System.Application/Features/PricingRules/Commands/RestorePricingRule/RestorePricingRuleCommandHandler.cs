@@ -38,6 +38,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             }
 
             pricingRule.IsDeleted = false;
+            pricingRule.IsDeletedBy = null;
             pricingRule.IsActive = true;
             pricingRule.UpdatedAt = DateTime.UtcNow;
             pricingRule.UpdatedBy = currentUser.UserId;

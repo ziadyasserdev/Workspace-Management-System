@@ -37,7 +37,38 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
                     "Pricing plan not found.");
             }
 
+            var hasPricingRules = await unitOfWork.PricingRules
+                .Query()
+                .AnyAsync(
+                    x => x.PricingPlanId == request.Id &&
+                         !x.IsDeleted,
+                    cancellationToken);
+
+            if (hasPricingRules)
+            {
+                return Result<bool>.Failure(
+                    ResultStatus.Conflict,
+                    "Pricing plan cannot be deleted because it has pricing rules.");
+            }
+
+            var isUsedByCompany = await unitOfWork.Companies
+                .Query()
+                .AnyAsync(
+                    x => x.PricingPlanId == request.Id &&
+                         !x.IsDeleted,
+                    cancellationToken);
+
+            if (isUsedByCompany)
+            {
+                return Result<bool>.Failure(
+                    ResultStatus.Conflict,
+                    "Pricing plan cannot be deleted because it is assigned to a company.");
+            }
+
+      
+
             pricingPlan.IsDeleted = true;
+            pricingPlan.IsDeletedBy = currentUser.UserId;
             pricingPlan.IsActive = false;
             pricingPlan.UpdatedAt = DateTime.UtcNow;
             pricingPlan.UpdatedBy = currentUser.UserId;

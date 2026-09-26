@@ -16,5 +16,5 @@ public class PricingCalculationInput
 
     public int RoundingMinutes { get; init; }
 
-    public bool RoundUp { get; init; }
+    public RoundingMode RoundingMode { get; init; }
 }

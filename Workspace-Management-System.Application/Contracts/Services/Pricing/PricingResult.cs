@@ -6,6 +6,10 @@ public class PricingResult
 
     public TimeSpan BillableDuration { get; init; }
 
+    public decimal HourlyRateUsed { get; init; }
+
+    public decimal? HalfHourRateUsed { get; init; }
+
     public decimal BaseAmount { get; init; }
 
     public decimal MinimumChargeApplied { get; init; }

@@ -7,6 +7,7 @@ using Workspace_Management_System.Application.Features.PricingPlan.Commands.Dele
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.RestorePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.UpdatePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlanById;
+using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlanRules;
 using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlans;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -118,21 +119,20 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
-    
-    [HttpGet]
+
+        [HttpGet]
         [SwaggerOperation(
-    Summary = "Get pricing plans",
-    Description = "Retrieves all pricing plans."
-)]
+            Summary = "Get pricing plans",
+            Description = "Retrieves a paginated list of pricing plans with optional search and active-status filtering."
+        )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetPricingPlans(
-    CancellationToken cancellationToken)
+            [FromQuery] GetPricingPlansQuery query,
+            CancellationToken cancellationToken)
         {
-            var query = new GetPricingPlansQuery();
-
             var result = await mediator.Send(
                 query,
                 cancellationToken);
@@ -154,6 +154,31 @@ namespace Workspace_Management_System.Api.Controllers
     CancellationToken cancellationToken)
         {
             var query = new GetPricingPlanByIdQuery
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet("{id}/rules")]
+        [SwaggerOperation(
+    Summary = "Get pricing plan rules",
+    Description = "Retrieves all non-deleted pricing rules belonging to a specific pricing plan."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetPricingPlanRules(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var query = new GetPricingPlanRulesQuery
             {
                 Id = id
             };

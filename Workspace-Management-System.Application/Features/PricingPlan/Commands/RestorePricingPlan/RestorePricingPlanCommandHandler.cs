@@ -53,6 +53,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             }
 
             pricingPlan.IsDeleted = false;
+            pricingPlan.IsDeletedBy = null;
             pricingPlan.IsActive = true;
             pricingPlan.UpdatedAt = DateTime.UtcNow;
             pricingPlan.UpdatedBy = currentUser.UserId;

@@ -1,10 +1,11 @@
 ﻿using MediatR;
+using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
 
 namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlans
 {
     public class GetPricingPlansQuery
-        : IRequest<Result<List<PricingPlanDto>>>
+        : IRequest<Result<PaginatedResult<PricingPlanDto>>>
     {
         public int PageNumber { get; set; } = 1;
 

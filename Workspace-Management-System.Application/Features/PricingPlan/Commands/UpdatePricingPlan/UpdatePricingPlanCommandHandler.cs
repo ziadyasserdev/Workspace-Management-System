@@ -37,14 +37,15 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
                     "Pricing plan not found.");
             }
 
+            var name = request.Name.Trim();
+
             var duplicateName = await unitOfWork.PricingPlans
                 .Query()
                 .AnyAsync(
                     x => x.Id != request.Id &&
-                         x.Name == request.Name &&
+                         x.Name == name &&
                          !x.IsDeleted,
                     cancellationToken);
-
             if (duplicateName)
             {
                 return Result<bool>.Failure(
@@ -52,7 +53,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
                     "A pricing plan with the same name already exists.");
             }
 
-            pricingPlan.Name = request.Name;
+            pricingPlan.Name = name;
             pricingPlan.Description = request.Description;
             pricingPlan.IsActive = request.IsActive;
             pricingPlan.UpdatedAt = DateTime.UtcNow;
