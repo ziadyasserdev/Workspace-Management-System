@@ -38,7 +38,22 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
                     ResultStatus.Conflict,
                     "A company with the same name already exists.");
             }
+            if (request.PricingPlanId.HasValue)
+            {
+                var pricingPlanExists = await _unitOfWork.PricingPlans
+                    .Query()
+                    .AnyAsync(
+                        x => x.Id == request.PricingPlanId.Value &&
+                             !x.IsDeleted,
+                        cancellationToken);
 
+                if (!pricingPlanExists)
+                {
+                    return Result<int>.Failure(
+                        ResultStatus.NotFound,
+                        "Pricing plan not found.");
+                }
+            }
             var company = new Company
             {
                 Name = request.Name,

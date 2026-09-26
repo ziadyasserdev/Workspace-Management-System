@@ -6,9 +6,11 @@ using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Companies.Commands.ChangeCompanyStatus;
 using Workspace_Management_System.Application.Features.Companies.Commands.CreateCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.DeleteCompany;
+using Workspace_Management_System.Application.Features.Companies.Commands.RestoreCompany;
 using Workspace_Management_System.Application.Features.Companies.Commands.UpdateCompany;
 using Workspace_Management_System.Application.Features.Companies.Queries.GetCompanies;
 using Workspace_Management_System.Application.Features.Companies.Queries.GetCompanyById;
+using Workspace_Management_System.Application.Features.Companies.Queries.GetCompanyCustomers;
 using Workspace_Management_System.Application.Features.Companies.Queries.SearchCompanies;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -179,6 +181,40 @@ namespace Workspace_Management_System.Api.Controllers
             var result = await mediator.Send(
                 query,
                 cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet("{id}/customers")]
+        public async Task<IActionResult> GetCustomers(
+    int id,
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    CancellationToken cancellationToken = default)
+        {
+            var query = new GetCompanyCustomersQuery
+            {
+                CompanyId = id,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            var result = await mediator.Send(
+                query,
+                cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpPatch("{id}/restore")]
+        public async Task<IActionResult> Restore(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new RestoreCompanyCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(command, cancellationToken);
 
             return result.ToActionResult();
         }
