@@ -8,9 +8,9 @@ namespace Workspace_Management_System.Domain.Enums
 {
     public enum CustomerType
     {
-        Individual,
-        Corporate,
-        Member,
-        WalkIn
+        Individual = 1,
+        Corporate = 2,
+        Member = 3,
+        WalkIn = 4
     }
 }

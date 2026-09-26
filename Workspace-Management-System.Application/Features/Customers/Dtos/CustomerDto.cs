@@ -19,7 +19,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Dtos
 
         public int? CompanyId { get; set; }
 
-        public string CustomerType { get; set; }
+        public CustomerType CustomerType { get; set; }
 
         public string? Notes { get; set; }
 

@@ -152,6 +152,11 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
     .HasForeignKey<Employee>(e => e.UserId)
     .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Customer>()
+                .Property(x => x.CustomerType)
+                .HasConversion<string>()
+                .HasMaxLength(50);
+
             modelBuilder.Entity<PricingRule>()
        .Property(x => x.DayOfWeek)
        .HasConversion<int>();
