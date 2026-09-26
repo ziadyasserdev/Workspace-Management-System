@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer
 {
@@ -22,13 +23,28 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
                 .WithMessage("Mobile number is required")
                 .Matches(@"^01[0125][0-9]{8}$")
                 .WithMessage("Mobile number must be a valid Egyptian mobile number");
-
+           
             RuleFor(x => x.CustomerType)
-                .NotEmpty()
-                .WithMessage("Customer type is required")
-                .MaximumLength(50)
-                .WithMessage("Customer type must not exceed 50 characters");
+                .IsInEnum()
+                .WithMessage("Invalid customer type.");
 
+            RuleFor(x => x.Email)
+           .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+           .When(x => !string.IsNullOrEmpty(x.Email))
+           .WithMessage("Email must be valid");
+
+            RuleFor(x => x.CompanyId)
+            .NotNull()
+            .When(x => x.CustomerType == CustomerType.Corporate)
+            .WithMessage("Corporate customers must be associated with a company.");
+
+            RuleFor(x => x.CompanyId)
+                .Null()
+                .When(x =>
+                    x.CustomerType == CustomerType.Individual ||
+                    x.CustomerType == CustomerType.Member ||
+                    x.CustomerType == CustomerType.WalkIn)
+                .WithMessage("This customer type cannot be associated with a company.");
             RuleFor(x => x.Notes)
                 .MaximumLength(500)
                 .WithMessage("Notes must not exceed 500 characters");

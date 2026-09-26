@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer
 {
@@ -20,7 +21,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
 
             public int? CompanyId { get; set; }
 
-            public string CustomerType { get; set; } = null!;
+            public CustomerType CustomerType { get; set; }
 
             public string? Notes { get; set; }
        

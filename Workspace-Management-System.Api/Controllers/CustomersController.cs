@@ -5,9 +5,11 @@ using Swashbuckle.AspNetCore.Annotations;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer;
 using Workspace_Management_System.Application.Features.Customers.Commands.Delete_Customer;
+using Workspace_Management_System.Application.Features.Customers.Commands.RestoreCustomer;
 using Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer;
 using Workspace_Management_System.Application.Features.Customers.Queries.GetCustomerById;
 using Workspace_Management_System.Application.Features.Customers.Queries.GetCustomers;
+using Workspace_Management_System.Application.Features.Customers.Queries.GetCustomerTypes;
 using Workspace_Management_System.Application.Features.Customers.Queries.SearchCustomers;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -147,6 +149,29 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+        [HttpPatch("{id}/restore")]
+        public async Task<IActionResult> Restore(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new RestoreCustomerCommand
+            {
+                Id = id
+            };
 
+            var result = await mediator.Send(command, cancellationToken);
+
+            return result.ToActionResult();
+        }
+        [HttpGet("types")]
+        public async Task<IActionResult> GetCustomerTypes(
+    CancellationToken cancellationToken)
+        {
+            var query = new GetCustomerTypesQuery();
+
+            var result = await mediator.Send(query, cancellationToken);
+
+            return result.ToActionResult();
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Workspace_Management_System.Domain.Models
 
         public int? CompanyId { get; set; }
 
-        public string CustomerType { get; set; } = null!;
+        public CustomerType CustomerType { get; set; }
         public string? Notes { get; set; }
         public DateTime RegistrationDate { get; set; }
         public CustomerStatus Status { get; set; } 

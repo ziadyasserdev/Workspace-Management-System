@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer
 {
@@ -20,15 +21,24 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
            .WithMessage("Mobile number must be a valid Egyptian mobile number");
 
             RuleFor(x => x.Email)
-                .EmailAddress()
-                .When(x => !string.IsNullOrEmpty(x.Email))
-                .WithMessage("Email must be valid");
+             .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+             .When(x => !string.IsNullOrEmpty(x.Email))
+             .WithMessage("Email must be valid");
 
             RuleFor(x => x.CustomerType)
-                .NotEmpty()
-                .WithMessage("Customer type is required")
-                .MaximumLength(50)
-                .WithMessage("Customer type must not exceed 50 characters");
+                .IsInEnum()
+                .WithMessage("Invalid customer type."); RuleFor(x => x.CompanyId)
+                .NotNull()
+                .When(x => x.CustomerType == CustomerType.Corporate)
+                .WithMessage("Corporate customers must be associated with a company.");
+
+            RuleFor(x => x.CompanyId)
+                .Null()
+                .When(x =>
+                    x.CustomerType == CustomerType.Individual ||
+                    x.CustomerType == CustomerType.Member ||
+                    x.CustomerType == CustomerType.WalkIn)
+                .WithMessage("This customer type cannot be associated with a company.");
 
             RuleFor(x => x.Notes)
                 .MaximumLength(500)
