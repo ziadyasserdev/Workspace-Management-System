@@ -19,6 +19,7 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         IPricingPlanRepository PricingPlans { get; }
         IPricingRuleRepository PricingRules { get; }
         IProductCategoryRepository ProductCategories { get; }
+        IProductRepository Products { get; }
         Task<int> SaveAsync();
     }
 

@@ -26,6 +26,7 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             PricingPlans = new PricingPlanRepository(_context);
             PricingRules = new PricingRuleRepository(_context);
             ProductCategories = new ProductCategoryRepository(_context);
+            Products = new ProductRepository(_context);
         }
 
        
@@ -53,6 +54,7 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IPricingPlanRepository PricingPlans { get; private set; } = null!;
         public IPricingRuleRepository PricingRules { get; private set; } = null!;
         public IProductCategoryRepository ProductCategories { get; private set; } = null!;
+        public IProductRepository Products { get; private set; } = null!;
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

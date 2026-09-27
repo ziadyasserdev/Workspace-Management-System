@@ -39,7 +39,7 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
 
             category.IsDeleted = true;
             category.IsActive = false;
-
+            category.IsDeletedBy = currentUser.UserId;
             category.UpdatedAt = DateTime.UtcNow;
             category.UpdatedBy = currentUser.UserId;
 
