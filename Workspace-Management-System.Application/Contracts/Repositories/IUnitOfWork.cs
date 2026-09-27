@@ -18,6 +18,8 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         IEmployeeRepository Employees { get; }
         IPricingPlanRepository PricingPlans { get; }
         IPricingRuleRepository PricingRules { get; }
+        IProductCategoryRepository ProductCategories { get; }
+        IProductRepository Products { get; }
         Task<int> SaveAsync();
     }
 
