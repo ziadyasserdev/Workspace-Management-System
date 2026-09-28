@@ -25,7 +25,7 @@ namespace Workspace_Management_System.Domain.Models
         public Workspace Workspace { get; set; } = null!;
         public PricingPlan PricingPlan { get; set; } = null!;
         public Employee Employee { get; set; } = null!;
-
+        public ICollection<SessionProduct> SessionProducts { get; set; } = new List<SessionProduct>();
         public ICollection<SessionWorkspaceHistory> WorkspaceHistory { get; set; }
             = new List<SessionWorkspaceHistory>();
 
