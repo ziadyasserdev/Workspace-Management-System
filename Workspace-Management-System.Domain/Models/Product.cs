@@ -26,6 +26,7 @@ namespace Workspace_Management_System.Domain.Models
 
         public ICollection<StockMovement> StockMovements { get; set; }
             = new List<StockMovement>();
+        public ICollection<SessionProduct> SessionProducts { get; set; }= new List<SessionProduct>();
 
         public ICollection<TransactionItem> TransactionItems { get; set; }
             = new List<TransactionItem>();

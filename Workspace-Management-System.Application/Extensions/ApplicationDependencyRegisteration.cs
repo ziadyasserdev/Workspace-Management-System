@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Behaviors;
+using Workspace_Management_System.Application.Contracts.Pricing;
+using Workspace_Management_System.Application.Services.Pricing;
 
 namespace Workspace_Management_System.Application.Extensions
 {
@@ -21,6 +23,7 @@ namespace Workspace_Management_System.Application.Extensions
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped<IPricingCalculator, PricingCalculator>();
             return services;
         }
     }

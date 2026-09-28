@@ -84,7 +84,7 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
             => Set<ExpenseCategory>();
         public DbSet<Expense> Expenses => Set<Expense>();
 
-     
+        public DbSet<SessionProduct> SessionProducts => Set<SessionProduct>();
         public DbSet<Employee> Employees => Set<Employee>();
 
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
@@ -160,6 +160,36 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
             modelBuilder.Entity<PricingRule>()
        .Property(x => x.DayOfWeek)
        .HasConversion<int>();
+            modelBuilder.Entity<SessionProduct>()
+    .HasKey(x => x.Id);
+
+            modelBuilder.Entity<SessionProduct>()
+                .HasOne(x => x.Session)
+                .WithMany(x => x.SessionProducts)
+                .HasForeignKey(x => x.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SessionProduct>()
+                .HasOne(x => x.Product)
+                .WithMany(x => x.SessionProducts)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SessionProduct>()
+                .Property(x => x.Quantity)
+                .HasPrecision(18, 3);
+
+            modelBuilder.Entity<SessionProduct>()
+                .Property(x => x.UnitPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<SessionProduct>()
+                .HasIndex(x => new
+                {
+                    x.SessionId,
+                    x.ProductId
+                })
+                .IsUnique();
         }
     }
 
