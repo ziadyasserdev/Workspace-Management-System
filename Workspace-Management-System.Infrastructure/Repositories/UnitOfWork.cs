@@ -30,6 +30,7 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             Products = new ProductRepository(_context);
             Sessions = new SessionRepository(_context);
             SessionProducts = new SessionProductRepository(_context);
+            Discounts = new DiscountRepository(_context);
         }
 
        
@@ -60,7 +61,9 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IProductCategoryRepository ProductCategories { get; private set; } = null!;
         public IProductRepository Products { get; private set; } = null!;
         public ISessionRepository Sessions {  get; private set; } = null!;
-        public ISessionProductRepository SessionProducts { get; private set; }
+        public ISessionProductRepository SessionProducts { get; private set; } = null!;
+        public IDiscountRepository Discounts { get; private set; } = null!;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
