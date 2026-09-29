@@ -24,12 +24,18 @@ public class GetSessionServiceByIdHandler
         if (sessionService == null)
             throw new KeyNotFoundException("Session service not found.");
 
+        var service = await _unitOfWork.Services
+            .GetByIdAsync(sessionService.ServiceId);
+
+        if (service == null)
+            throw new KeyNotFoundException("Service not found.");
+
         return new SessionServiceResponseDto
         {
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
-            ServiceName= sessionService.Service.Name,
             ServiceId = sessionService.ServiceId,
+            ServiceName = service.Name,
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
             TotalPrice = sessionService.Quantity * sessionService.UnitPrice

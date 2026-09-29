@@ -39,21 +39,30 @@ public class GetSessionServicesHandler
 
         var totalCount = query.Count();
 
-        var items = query
+        var sessionServices = query
             .OrderBy(x => x.Id)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(x => new SessionServiceResponseDto
-            {
-                Id = x.Id,
-                SessionId = x.SessionId,
-                ServiceName = x.Service.Name,
-                ServiceId = x.ServiceId,
-                Quantity = x.Quantity,
-                UnitPrice = x.UnitPrice,
-                TotalPrice = x.Quantity * x.UnitPrice
-            })
             .ToList();
+
+        var items = new List<SessionServiceResponseDto>();
+
+        foreach (var sessionService in sessionServices)
+        {
+            var service = await _unitOfWork.Services
+                .GetByIdAsync(sessionService.ServiceId);
+
+            items.Add(new SessionServiceResponseDto
+            {
+                Id = sessionService.Id,
+                SessionId = sessionService.SessionId,
+                ServiceId = sessionService.ServiceId,
+                ServiceName = service?.Name ?? string.Empty,
+                Quantity = sessionService.Quantity,
+                UnitPrice = sessionService.UnitPrice,
+                TotalPrice = sessionService.Quantity * sessionService.UnitPrice,
+            });
+        }
 
         return new PaginatedResult<SessionServiceResponseDto>(
             items,

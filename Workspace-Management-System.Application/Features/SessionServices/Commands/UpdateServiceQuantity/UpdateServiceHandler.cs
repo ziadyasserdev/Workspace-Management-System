@@ -7,7 +7,8 @@ using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Services.Commands.UpdateService;
 
-public class UpdateServiceHandler : IRequestHandler<UpdateServiceCommand, SessionServiceResponseDto>
+public class UpdateServiceHandler
+    : IRequestHandler<UpdateServiceCommand, SessionServiceResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUserService;
@@ -47,6 +48,12 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceCommand, Sessio
             throw new KeyNotFoundException(
                 "Service is not added to this session.");
 
+        var service = await _unitOfWork.Services
+            .GetByIdAsync(sessionService.ServiceId);
+
+        if (service == null)
+            throw new KeyNotFoundException("Service not found.");
+
         sessionService.Quantity = request.Quantity;
         sessionService.UpdatedAt = DateTime.UtcNow;
         sessionService.UpdatedBy = _currentUserService.UserId;
@@ -60,14 +67,10 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceCommand, Sessio
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
             ServiceId = sessionService.ServiceId,
-            ServiceName = sessionService.Service.Name,
+            ServiceName = service.Name,
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
-            TotalPrice = sessionService.Quantity * sessionService.UnitPrice,
-            CreatedAt = sessionService.CreatedAt,
-            CreatedBy = sessionService.CreatedBy,
-            UpdatedAt = sessionService.UpdatedAt,
-            UpdatedBy = sessionService.UpdatedBy
+            TotalPrice = sessionService.Quantity * sessionService.UnitPrice
         };
     }
 }

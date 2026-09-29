@@ -8,145 +8,183 @@ using Workspace_Management_System.Application.Services.Pricing;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
 
-namespace Workspace_Management_System.Application.Features.Checkout.Commands.CheckoutSession
+namespace Workspace_Management_System.Application.Features.Checkout.Commands.CheckoutSession;
+
+public class CheckoutSessionHandler
+    : IRequestHandler<CheckoutSessionCommand, CheckoutResponseDto>
 {
-    public class CheckoutSessionHandler
-        : IRequestHandler<CheckoutSessionCommand, CheckoutResponseDto>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPricingCalculator _pricingCalculator;
+    private readonly ICurrentUserService _currentUser;
+
+    public CheckoutSessionHandler(
+        IUnitOfWork unitOfWork,
+        IPricingCalculator pricingCalculator,
+        ICurrentUserService currentUser)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IPricingCalculator _pricingCalculator;
-        private readonly ICurrentUserService _currentUser;
+        _unitOfWork = unitOfWork;
+        _pricingCalculator = pricingCalculator;
+        _currentUser = currentUser;
+    }
 
-        public CheckoutSessionHandler(
-            IUnitOfWork unitOfWork,
-            IPricingCalculator pricingCalculator,
-            ICurrentUserService currentUser)
+    public async Task<CheckoutResponseDto> Handle(
+        CheckoutSessionCommand request,
+        CancellationToken cancellationToken)
+    {
+        var dbTransaction = await _unitOfWork.BeginTransactionAsync();
+
+        try
         {
-            _unitOfWork = unitOfWork;
-            _pricingCalculator = pricingCalculator;
-            _currentUser = currentUser;
-        }
+            var now = DateTime.UtcNow;
 
-        public async Task<CheckoutResponseDto> Handle(
-            CheckoutSessionCommand request,
-            CancellationToken cancellationToken)
-        {
-            var dbTransaction = await _unitOfWork.BeginTransactionAsync();
+            var session = await _unitOfWork.Sessions
+                .Query()
+                .Include(x => x.Workspace)
+                .Include(x => x.SessionProducts)
+                    .ThenInclude(x => x.Product)
+                .Include(x => x.SessionServices)
+                    .ThenInclude(x => x.Service)
+                .FirstOrDefaultAsync(
+                    x => x.Id == request.SessionId,
+                    cancellationToken);
 
-            try
+            if (session is null)
             {
-                var now = DateTime.UtcNow;
+                throw new KeyNotFoundException(
+                    $"Session with ID {request.SessionId} was not found.");
+            }
 
-                var session = await _unitOfWork.Sessions
-                    .Query()
-                    .Include(x => x.Workspace)
-                    .Include(x => x.SessionProducts)
-                        .ThenInclude(x => x.Product)
-                    .FirstOrDefaultAsync(
-                        x => x.Id == request.SessionId,
-                        cancellationToken);
+            if (session.Status != SessionStatus.Active)
+            {
+                throw new InvalidOperationException(
+                    "Only active sessions can be checked out.");
+            }
 
-                if (session is null)
-                {
-                    throw new KeyNotFoundException(
-                        $"Session with ID {request.SessionId} was not found.");
-                }
+            var endTime = now;
 
-                if (session.Status != SessionStatus.Active)
+            if (endTime < session.StartTime)
+            {
+                throw new InvalidOperationException(
+                    "Checkout time cannot be before session start time.");
+            }
+
+            session.EndTime = endTime;
+
+            var duration = endTime - session.StartTime;
+
+            var pricingRules = await _unitOfWork.PricingRules
+                .Query()
+                .Where(x =>
+                    x.PricingPlanId == session.PricingPlanId &&
+                    x.WorkspaceTypeId == session.Workspace.WorkspaceTypeId &&
+                    x.IsActive &&
+                    (!x.StartDate.HasValue || x.StartDate <= endTime) &&
+                    (!x.EndDate.HasValue || x.EndDate >= endTime))
+                .ToListAsync(cancellationToken);
+
+            if (pricingRules.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "No applicable pricing rules were found for this session.");
+            }
+
+            var pricingInput = new PricingCalculationInput
+            {
+                StartTime = session.StartTime,
+                EndTime = endTime,
+
+                HourlyRate = pricingRules
+                    .FirstOrDefault(x =>
+                        x.RuleType == PricingRuleType.HourlyRate)
+                    ?.Value ?? 0,
+
+                HalfHourRate = pricingRules
+                    .FirstOrDefault(x =>
+                        x.RuleType == PricingRuleType.HalfHourRate)
+                    ?.Value,
+
+                MinimumCharge = pricingRules
+                    .FirstOrDefault(x =>
+                        x.RuleType == PricingRuleType.MinimumCharge)
+                    ?.Value ?? 0,
+
+                FullDayMaximum = pricingRules
+                    .FirstOrDefault(x =>
+                        x.RuleType == PricingRuleType.FullDayMaximum)
+                    ?.Value,
+
+                RoundingMinutes = 0,
+                RoundingMode = RoundingMode.None
+            };
+
+            var pricingResult =
+                _pricingCalculator.Calculate(pricingInput);
+
+            var workspaceAmount = pricingResult.FinalAmount;
+
+            var productsAmount = 0m;
+            var servicesAmount = 0m;
+
+            var responseItems = new List<CheckoutResponseItemDto>();
+
+            var transaction = new Transaction
+            {
+                SessionId = session.Id,
+                CustomerId = session.CustomerId,
+                EmployeeId = session.EmployeeId,
+
+                TransactionNumber =
+                    $"TRX-{now:yyyyMMddHHmmssfff}",
+
+                Status = "Completed",
+
+                CreatedAt = now,
+                CreatedBy = _currentUser.UserId
+            };
+
+            transaction.Items.Add(new TransactionItem
+            {
+                ItemType = "Workspace",
+                Description = "Workspace Usage",
+                Quantity = 1,
+                UnitPrice = workspaceAmount,
+                Total = workspaceAmount,
+
+                CreatedAt = now,
+                CreatedBy = _currentUser.UserId
+            });
+
+            responseItems.Add(new CheckoutResponseItemDto
+            {
+                Description = "Workspace Usage",
+                ItemType = "Workspace",
+                Quantity = 1,
+                UnitPrice = workspaceAmount,
+                Total = workspaceAmount
+            });
+
+            foreach (var sessionProduct in session.SessionProducts)
+            {
+                if (sessionProduct.Product is null)
                 {
                     throw new InvalidOperationException(
-                        "Only active sessions can be checked out.");
+                        $"Product with ID {sessionProduct.ProductId} could not be loaded.");
                 }
 
-                var endTime = now;
+                var itemTotal =
+                    sessionProduct.Quantity *
+                    sessionProduct.UnitPrice;
 
-                if (endTime < session.StartTime)
-                {
-                    throw new InvalidOperationException(
-                        "Checkout time cannot be before session start time.");
-                }
-
-                session.EndTime = endTime;
-
-                var duration = endTime - session.StartTime;
-
-                var pricingRules = await _unitOfWork.PricingRules
-                    .Query()
-                    .Where(x =>
-                        x.PricingPlanId == session.PricingPlanId &&
-                        x.WorkspaceTypeId == session.Workspace.WorkspaceTypeId &&
-                        x.IsActive &&
-                        (!x.StartDate.HasValue || x.StartDate <= endTime) &&
-                        (!x.EndDate.HasValue || x.EndDate >= endTime))
-                    .ToListAsync(cancellationToken);
-
-                if (pricingRules.Count == 0)
-                {
-                    throw new InvalidOperationException(
-                        "No applicable pricing rules were found for this session.");
-                }
-
-                var pricingInput = new PricingCalculationInput
-                {
-                    StartTime = session.StartTime,
-                    EndTime = endTime,
-
-                    HourlyRate = pricingRules
-                        .FirstOrDefault(x =>
-                            x.RuleType == PricingRuleType.HourlyRate)
-                        ?.Value ?? 0,
-
-                    HalfHourRate = pricingRules
-                        .FirstOrDefault(x =>
-                            x.RuleType == PricingRuleType.HalfHourRate)
-                        ?.Value,
-
-                    MinimumCharge = pricingRules
-                        .FirstOrDefault(x =>
-                            x.RuleType == PricingRuleType.MinimumCharge)
-                        ?.Value ?? 0,
-
-                    FullDayMaximum = pricingRules
-                        .FirstOrDefault(x =>
-                            x.RuleType == PricingRuleType.FullDayMaximum)
-                        ?.Value,
-
-                    RoundingMinutes = 0,
-                    RoundingMode = RoundingMode.None
-                };
-
-                var pricingResult =
-                    _pricingCalculator.Calculate(pricingInput);
-
-                var workspaceAmount = pricingResult.FinalAmount;
-
-                var productsAmount = 0m;
-
-                var responseItems = new List<CheckoutResponseItemDto>();
-
-                var transaction = new Transaction
-                {
-                    SessionId = session.Id,
-                    CustomerId = session.CustomerId,
-                    EmployeeId = session.EmployeeId,
-
-                    TransactionNumber =
-                        $"TRX-{now:yyyyMMddHHmmssfff}",
-
-                    Status = "Completed",
-
-                    CreatedAt = now,
-                    CreatedBy = _currentUser.UserId
-                };
-
+                productsAmount += itemTotal;
 
                 transaction.Items.Add(new TransactionItem
                 {
-                    ItemType = "Workspace",
-                    Description = "Workspace Usage",
-                    Quantity = 1,
-                    UnitPrice = workspaceAmount,
-                    Total = workspaceAmount,
+                    ItemType = "Product",
+                    ProductId = sessionProduct.ProductId,
+                    Description = sessionProduct.Product.EnglishName,
+                    Quantity = sessionProduct.Quantity,
+                    UnitPrice = sessionProduct.UnitPrice,
+                    Total = itemTotal,
 
                     CreatedAt = now,
                     CreatedBy = _currentUser.UserId
@@ -154,123 +192,170 @@ namespace Workspace_Management_System.Application.Features.Checkout.Commands.Che
 
                 responseItems.Add(new CheckoutResponseItemDto
                 {
-                    Description = "Workspace Usage",
-                    ItemType = "Workspace",
-                    Quantity = 1,
-                    UnitPrice = workspaceAmount,
-                    Total = workspaceAmount
+                    Description = sessionProduct.Product.EnglishName,
+                    ItemType = "Product",
+                    Quantity = sessionProduct.Quantity,
+                    UnitPrice = sessionProduct.UnitPrice,
+                    Total = itemTotal
                 });
+            }
 
-                foreach (var sessionProduct in session.SessionProducts)
-                {
-                    if (sessionProduct.Product is null)
-                    {
-                        throw new InvalidOperationException(
-                            $"Product with ID {sessionProduct.ProductId} could not be loaded.");
-                    }
-
-                    var itemTotal =
-                        sessionProduct.Quantity *
-                        sessionProduct.UnitPrice;
-
-                    productsAmount += itemTotal;
-
-                    transaction.Items.Add(new TransactionItem
-                    {
-                        ItemType = "Product",
-                        ProductId = sessionProduct.ProductId,
-                        Description = sessionProduct.Product.EnglishName,
-                        Quantity = sessionProduct.Quantity,
-                        UnitPrice = sessionProduct.UnitPrice,
-                        Total = itemTotal,
-
-                        CreatedAt = now,
-                        CreatedBy = _currentUser.UserId
-                    });
-
-                    responseItems.Add(new CheckoutResponseItemDto
-                    {
-                        Description = sessionProduct.Product.EnglishName,
-                        ItemType = "Product",
-                        Quantity = sessionProduct.Quantity,
-                        UnitPrice = sessionProduct.UnitPrice,
-                        Total = itemTotal
-                    });
-                }
-
-                var subtotal =
-                    workspaceAmount +
-                    productsAmount;
-
-                var discountAmount =
-                    request.Request.DiscountAmount;
-
-                if (discountAmount < 0)
+            foreach (var sessionService in session.SessionServices)
+            {
+                if (sessionService.Service is null)
                 {
                     throw new InvalidOperationException(
-                        "Discount cannot be negative.");
+                        $"Service with ID {sessionService.ServiceId} could not be loaded.");
+                }
+
+                var itemTotal =
+                    sessionService.Quantity *
+                    sessionService.UnitPrice;
+
+                servicesAmount += itemTotal;
+
+                transaction.Items.Add(new TransactionItem
+                {
+                    ItemType = "Service",
+                    Description = sessionService.Service.Name,
+                    Quantity = sessionService.Quantity,
+                    UnitPrice = sessionService.UnitPrice,
+                    Total = itemTotal,
+
+                    CreatedAt = now,
+                    CreatedBy = _currentUser.UserId
+                });
+
+                responseItems.Add(new CheckoutResponseItemDto
+                {
+                    Description = sessionService.Service.Name,
+                    ItemType = "Service",
+                    Quantity = sessionService.Quantity,
+                    UnitPrice = sessionService.UnitPrice,
+                    Total = itemTotal
+                });
+            }
+
+            var subtotal =
+                workspaceAmount +
+                productsAmount +
+                servicesAmount;
+
+            decimal discountAmount = 0m;
+
+            if (request.Request.DiscountId.HasValue)
+            {
+                var discount = await _unitOfWork.Discounts
+                    .GetByIdAsync(request.Request.DiscountId.Value);
+
+                if (discount == null)
+                {
+                    throw new KeyNotFoundException(
+                        "Discount not found.");
+                }
+
+                if (!discount.IsActive)
+                {
+                    throw new InvalidOperationException(
+                        "Discount is not active.");
+                }
+
+                if (discount.Value < 0)
+                {
+                    throw new InvalidOperationException(
+                        "Discount value cannot be negative.");
+                }
+
+                if (discount.DiscountType == DiscountType.FixedAmount)
+                {
+                    discountAmount = discount.Value;
+                }
+                else if (discount.DiscountType == DiscountType.Percentage)
+                {
+                    if (discount.Value > 100)
+                    {
+                        throw new InvalidOperationException(
+                            "Discount percentage cannot be greater than 100.");
+                    }
+
+                    discountAmount =
+                        subtotal * (discount.Value / 100m);
                 }
 
                 if (discountAmount > subtotal)
                 {
-                    throw new InvalidOperationException(
-                        "Discount cannot be greater than subtotal.");
+                    discountAmount = subtotal;
                 }
-
-                if (request.Request.TaxRate < 0)
-                {
-                    throw new InvalidOperationException(
-                        "Tax rate cannot be negative.");
-                }
-
-                var taxableAmount =
-                    subtotal - discountAmount;
-
-                var taxAmount =
-                    taxableAmount *
-                    (request.Request.TaxRate / 100m);
-
-                var total =
-                    taxableAmount + taxAmount;
-
-                transaction.Subtotal = subtotal;
-                transaction.TaxAmount = taxAmount;
-                transaction.Total = total;
-                session.Status = SessionStatus.Completed;
-                session.UpdatedAt = now;
-                session.UpdatedBy = _currentUser.UserId;
-
-                _unitOfWork.Sessions.Update(session);
-
-                await _unitOfWork.Transactions.AddAsync(transaction);
-
-                await _unitOfWork.SaveAsync();
-
-                await dbTransaction.CommitAsync(cancellationToken);
-
-                return new CheckoutResponseDto
-                {
-                    TransactionId = transaction.Id,
-                    TransactionNumber = transaction.TransactionNumber,
-                    SessionId = session.Id,
-                    StartTime = session.StartTime,
-                    EndTime = endTime,
-                    Duration = duration,
-                    WorkspaceAmount = workspaceAmount,
-                    ProductsAmount = productsAmount,
-                    Subtotal = subtotal,
-                    DiscountAmount = discountAmount,
-                    TaxAmount = taxAmount,
-                    Total = total,
-                    Status = transaction.Status,
-                    Items = responseItems
-                };
             }
-            catch
+
+            var taxRate = request.Request.TaxRate ?? 0m;
+
+            if (taxRate < 0)
             {
-                await dbTransaction.RollbackAsync(cancellationToken);
-                throw;
+                throw new InvalidOperationException(
+                    "Tax rate cannot be negative.");
             }
+
+            if (taxRate > 100)
+            {
+                throw new InvalidOperationException(
+                    "Tax rate cannot be greater than 100.");
+            }
+
+            var taxableAmount =
+                subtotal - discountAmount;
+
+            var taxAmount =
+                taxableAmount * (taxRate / 100m);
+
+            var total =
+                taxableAmount + taxAmount;
+
+            transaction.Subtotal = subtotal;
+            transaction.TaxAmount = taxAmount;
+            transaction.Total = total;
+
+            session.Status = SessionStatus.Completed;
+            session.UpdatedAt = now;
+            session.UpdatedBy = _currentUser.UserId;
+
+            _unitOfWork.Sessions.Update(session);
+
+            await _unitOfWork.Transactions.AddAsync(transaction);
+
+            await _unitOfWork.SaveAsync();
+
+            await dbTransaction.CommitAsync(cancellationToken);
+
+            return new CheckoutResponseDto
+            {
+                TransactionId = transaction.Id,
+                TransactionNumber = transaction.TransactionNumber,
+
+                SessionId = session.Id,
+
+                StartTime = session.StartTime,
+                EndTime = endTime,
+                Duration = duration,
+
+                WorkspaceAmount = workspaceAmount,
+                ProductsAmount = productsAmount,
+                ServicesAmount = servicesAmount,
+
+                Subtotal = subtotal,
+                DiscountAmount = discountAmount,
+                TaxAmount = taxAmount,
+                Total = total,
+
+                Status = transaction.Status,
+
+                Items = responseItems
+            };
+        }
+        catch
+        {
+            await dbTransaction.RollbackAsync(cancellationToken);
+            throw;
         }
     }
 }
