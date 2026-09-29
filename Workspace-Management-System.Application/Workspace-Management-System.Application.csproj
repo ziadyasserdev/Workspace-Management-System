@@ -19,9 +19,4 @@
     <ProjectReference Include="..\Workspace-Management-System.Domain\Workspace-Management-System.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Discounts\Dtos\" />
-    <Folder Include="Features\Discounts\Queries\" />
-  </ItemGroup>
-
 </Project>
