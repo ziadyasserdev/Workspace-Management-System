@@ -86,6 +86,23 @@ int serviceId)
 
         return Ok(result);
     }
-   
 
+    [HttpDelete("sessions/{sessionId}/services")]
+    [SwaggerOperation(
+   Summary = "Clear all services from an active session",
+   Description = "Removes all services from an active session.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ClearServices(int sessionId)
+    {
+        var command = new ClearServicesCommand
+        {
+            SessionId = sessionId
+        };
+
+        var result = await _mediator.Send(command);
+
+        return Ok(result);
+    }
 }
