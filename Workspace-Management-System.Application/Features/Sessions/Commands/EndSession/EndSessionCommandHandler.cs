@@ -1,19 +1,15 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Domain.Enums;
+using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Commands.EndSession
 {
     public class EndSessionCommandHandler
-     : IRequestHandler<EndSessionCommand, Result<bool>>
+        : IRequestHandler<EndSessionCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
@@ -35,6 +31,8 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
 
             try
             {
+               
+
                 var currentUserId = _currentUserService.UserId;
 
                 if (string.IsNullOrWhiteSpace(currentUserId))
@@ -44,6 +42,7 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                         "User is not authenticated.");
                 }
 
+         
                 var session = await _unitOfWork.Sessions
                     .Query()
                     .FirstOrDefaultAsync(
@@ -58,12 +57,16 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                         "Session not found.");
                 }
 
+             
+
                 if (session.Status != SessionStatus.Active)
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Conflict,
                         "Session is not active.");
                 }
+
+                
 
                 var employee = await _unitOfWork.Employees
                     .Query()
@@ -79,12 +82,25 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                         "Current user is not registered as an employee.");
                 }
 
+              
+
                 if (employee.Status != EmployeeStatus.Active)
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Forbidden,
                         "Employee is not active.");
                 }
+
+              
+
+                if (session.EmployeeId != employee.Id)
+                {
+                    return Result<bool>.Failure(
+                        ResultStatus.Forbidden,
+                        "You are not authorized to end this session.");
+                }
+
+             
 
                 var workspace = await _unitOfWork.Workspaces
                     .Query()
@@ -100,9 +116,49 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                         "Workspace not found.");
                 }
 
-                var now = DateTime.UtcNow;
+               
+
+                if (workspace.Status != WorkspaceStatus.Occupied)
+                {
+                    return Result<bool>.Failure(
+                        ResultStatus.Conflict,
+                        "Workspace is not occupied by an active session.");
+                }
 
                
+
+                Booking? booking = null;
+
+                if (session.BookingId.HasValue)
+                {
+                    booking = await _unitOfWork.Bookings
+                        .Query()
+                        .FirstOrDefaultAsync(
+                            x => x.Id == session.BookingId.Value &&
+                                 !x.IsDeleted,
+                            cancellationToken);
+
+                    if (booking is null)
+                    {
+                        return Result<bool>.Failure(
+                            ResultStatus.NotFound,
+                            "Booking associated with this session was not found.");
+                    }
+
+                  
+                    if (booking.Status != BookingStatus.CheckedIn)
+                    {
+                        return Result<bool>.Failure(
+                            ResultStatus.Conflict,
+                            "Booking is not in CheckedIn status.");
+                    }
+                }
+
+   
+
+                var now = DateTime.UtcNow;
+
+
                 session.EndTime = now;
                 session.Status = SessionStatus.Completed;
                 session.UpdatedAt = now;
@@ -111,6 +167,7 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                 _unitOfWork.Sessions.Update(session);
 
                
+
                 var currentHistory = await _unitOfWork
                     .SessionWorkspaceHistories
                     .Query()
@@ -121,24 +178,42 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                     .OrderByDescending(x => x.StartTime)
                     .FirstOrDefaultAsync(cancellationToken);
 
-                if (currentHistory is not null)
+                if (currentHistory is null)
                 {
-                    currentHistory.EndTime = now;
-                    currentHistory.UpdatedAt = now;
-                    currentHistory.UpdatedBy = currentUserId;
-
-                    _unitOfWork.SessionWorkspaceHistories
-                        .Update(currentHistory);
+                    return Result<bool>.Failure(
+                        ResultStatus.Failure,
+                        "Active workspace history was not found.");
                 }
 
-             
+                currentHistory.EndTime = now;
+                currentHistory.UpdatedAt = now;
+                currentHistory.UpdatedBy = currentUserId;
+
+                _unitOfWork.SessionWorkspaceHistories
+                    .Update(currentHistory);
+
+              
+
                 workspace.Status = WorkspaceStatus.Available;
                 workspace.UpdatedAt = now;
                 workspace.UpdatedBy = currentUserId;
 
                 _unitOfWork.Workspaces.Update(workspace);
 
+
+                if (booking is not null)
+                {
+                    booking.Status = BookingStatus.Completed;
+                    booking.UpdatedAt = now;
+                    booking.UpdatedBy = currentUserId;
+
+                    _unitOfWork.Bookings.Update(booking);
+                }
+
+             
+
                 await _unitOfWork.SaveAsync();
+
 
                 await transaction.CommitAsync(cancellationToken);
 
@@ -148,7 +223,10 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
             }
             catch
             {
+              
+
                 await transaction.RollbackAsync(cancellationToken);
+
                 throw;
             }
         }
