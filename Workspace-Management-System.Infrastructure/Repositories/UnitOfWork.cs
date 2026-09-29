@@ -33,6 +33,7 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             Products = new ProductRepository(_context);
             Sessions = new SessionRepository(_context);
             SessionProducts = new SessionProductRepository(_context);
+            Discounts = new DiscountRepository(_context);
         }
 
        
@@ -59,21 +60,20 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IEmployeeRepository Employees { get;private set; } = null!;  
         public IPricingPlanRepository PricingPlans { get; private set; } = null!;
         public IPricingRuleRepository PricingRules { get; private set; } = null!;
-<<<<<<< Updated upstream
         public ITransactionRepository Transactions { get; private set; } = null!;
         public IProductCategoryRepository ProductCategories { get; private set; } = null!;
         public IProductRepository Products { get; private set; } = null!;
         public ISessionRepository Sessions {  get; private set; } = null!;
-        public ISessionProductRepository SessionProducts { get; private set; }
-=======
+        public ISessionProductRepository SessionProducts { get; private set; } = null!;
+        public IDiscountRepository Discounts { get; private set; } = null!;
 
-        public ISessionRepository Sessions { get; private set; } = null!;
+        public ISessionProductRepository SessionProducts { get; private set; }
+
 
         public ISessionWorkspaceHistoryRepository SessionWorkspaceHistories { get; private set; } = null!;
 
         public IBookingRepository Bookings { get; private set; } = null!;
 
->>>>>>> Stashed changes
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
