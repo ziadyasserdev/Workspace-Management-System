@@ -67,7 +67,6 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public ISessionProductRepository SessionProducts { get; private set; } = null!;
         public IDiscountRepository Discounts { get; private set; } = null!;
 
-        public ISessionProductRepository SessionProducts { get; private set; }
 
 
         public ISessionWorkspaceHistoryRepository SessionWorkspaceHistories { get; private set; } = null!;

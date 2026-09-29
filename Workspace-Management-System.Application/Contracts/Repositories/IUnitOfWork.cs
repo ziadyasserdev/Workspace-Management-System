@@ -24,7 +24,6 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         ITransactionRepository Transactions { get; }
         IProductCategoryRepository ProductCategories { get; }
         IProductRepository Products { get; }
-        ISessionRepository Sessions { get; }
         ISessionProductRepository SessionProducts { get; }
         IDiscountRepository Discounts { get; }  
         Task<int> SaveAsync();
