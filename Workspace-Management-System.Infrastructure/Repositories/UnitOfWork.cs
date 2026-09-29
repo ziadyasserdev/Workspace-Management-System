@@ -51,29 +51,19 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         private bool _disposed = false;
 
         public IWorkspaceRepository Workspaces { get; private set; } = null!;
-
         public IWorkspaceTypeRepository WorkspaceTypes { get; private set; } = null!;
         public ICustomerRepository Customers { get; private set; } = null!;
         public ICompanyRepository Companies { get; private set; } = null!;
-
-        public IEmployeeRepository Employees { get;private set; } = null!;  
+        public IEmployeeRepository Employees { get; private set; } = null!;
         public IPricingPlanRepository PricingPlans { get; private set; } = null!;
         public IPricingRuleRepository PricingRules { get; private set; } = null!;
-<<<<<<< Updated upstream
         public ITransactionRepository Transactions { get; private set; } = null!;
         public IProductCategoryRepository ProductCategories { get; private set; } = null!;
         public IProductRepository Products { get; private set; } = null!;
-        public ISessionRepository Sessions {  get; private set; } = null!;
-        public ISessionProductRepository SessionProducts { get; private set; }
-=======
-
         public ISessionRepository Sessions { get; private set; } = null!;
-
         public ISessionWorkspaceHistoryRepository SessionWorkspaceHistories { get; private set; } = null!;
-
         public IBookingRepository Bookings { get; private set; } = null!;
-
->>>>>>> Stashed changes
+        public ISessionProductRepository SessionProducts { get; private set; } = null!;
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

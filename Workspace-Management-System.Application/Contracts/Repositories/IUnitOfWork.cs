@@ -1,16 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Workspace_Management_System.Application.Contracts.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-       
         Task<IDbContextTransaction> BeginTransactionAsync();
+
         ICompanyRepository Companies { get; }
         IWorkspaceRepository Workspaces { get; }
         IWorkspaceTypeRepository WorkspaceTypes { get; }
@@ -24,9 +19,8 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         ITransactionRepository Transactions { get; }
         IProductCategoryRepository ProductCategories { get; }
         IProductRepository Products { get; }
-        ISessionRepository Sessions { get; }
         ISessionProductRepository SessionProducts { get; }
+
         Task<int> SaveAsync();
     }
-
 }
