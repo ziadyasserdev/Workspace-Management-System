@@ -16,6 +16,9 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         IWorkspaceTypeRepository WorkspaceTypes { get; }
         ICustomerRepository Customers { get; }
         IEmployeeRepository Employees { get; }
+        IBookingRepository Bookings { get; }
+        ISessionWorkspaceHistoryRepository SessionWorkspaceHistories { get; }
+        ISessionRepository Sessions { get; }
         IPricingPlanRepository PricingPlans { get; }
         IPricingRuleRepository PricingRules { get; }
         ITransactionRepository Transactions { get; }
