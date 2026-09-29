@@ -34,6 +34,8 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             Sessions = new SessionRepository(_context);
             SessionProducts = new SessionProductRepository(_context);
             Discounts = new DiscountRepository(_context);
+            Services = new ServiceRepository(_context);
+            SessionServices = new SessionServiceRepository(_context);   
         }
 
        
@@ -66,10 +68,11 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public ISessionRepository Sessions {  get; private set; } = null!;
         public ISessionProductRepository SessionProducts { get; private set; } = null!;
         public IDiscountRepository Discounts { get; private set; } = null!;
-
+        public IServiceRepository Services { get; private set; } = null!;
 
 
         public ISessionWorkspaceHistoryRepository SessionWorkspaceHistories { get; private set; } = null!;
+        public ISessionServiceRepository SessionServices { get; private set; } = null!;
 
         public IBookingRepository Bookings { get; private set; } = null!;
 

@@ -124,22 +124,31 @@ namespace Workspace_Management_System.Api.Controllers
         [HttpGet]
         [SwaggerOperation(
             Summary = "Get discounts",
-            Description = "Retrieves all non-deleted discounts with optional active-status filtering."
+            Description = "Returns all non-deleted discounts with optional search, active status filter, and pagination."
         )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAll(
-            [FromQuery] GetDiscountsQuery query,
-            CancellationToken cancellationToken)
-        {
-            var result = await mediator.Send(
-                query,
-                cancellationToken);
+            [FromQuery] string? search,
+            [FromQuery] bool? isActive,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            CancellationToken cancellationToken = default)
+                {
+                    var query = new GetDiscountsQuery
+                    {
+                        Search = search,
+                        IsActive = isActive,
+                        PageNumber = pageNumber,
+                        PageSize = pageSize
+                    };
 
-            return result.ToActionResult();
-        }
+                    var result = await mediator.Send(query, cancellationToken);
+
+                    return result.ToActionResult();
+                }
 
         [HttpGet("{id:int}")]
         [SwaggerOperation(

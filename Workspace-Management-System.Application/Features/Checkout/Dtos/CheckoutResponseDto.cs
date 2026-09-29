@@ -18,6 +18,8 @@ public class CheckoutResponseDto
 
     public decimal ProductsAmount { get; set; }
 
+    public decimal ServicesAmount { get; set; }
+
     public decimal Subtotal { get; set; }
 
     public decimal DiscountAmount { get; set; }
@@ -30,7 +32,6 @@ public class CheckoutResponseDto
 
     public List<CheckoutResponseItemDto> Items { get; set; } = new();
 }
-
 public class CheckoutResponseItemDto
 {
     public string Description { get; set; } = string.Empty;

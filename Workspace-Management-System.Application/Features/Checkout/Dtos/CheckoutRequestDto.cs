@@ -2,6 +2,7 @@
 
 public class CheckoutRequestDto
 {
-    public decimal DiscountAmount { get; set; }
-    public decimal TaxRate { get; set; }
+    public int? DiscountId { get; set; }
+
+    public decimal? TaxRate { get; set; }
 }

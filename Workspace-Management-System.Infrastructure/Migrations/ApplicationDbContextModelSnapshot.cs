@@ -1528,6 +1528,56 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.ToTable("Sessions");
                 });
 
+            modelBuilder.Entity("Workspace_Management_System.Domain.Models.SessionService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IsDeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("SessionId", "ServiceId")
+                        .IsUnique();
+
+                    b.ToTable("SessionServices");
+                });
+
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.SessionWorkspaceHistory", b =>
                 {
                     b.Property<int>("Id")
@@ -2270,6 +2320,25 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("Workspace_Management_System.Domain.Models.SessionService", b =>
+                {
+                    b.HasOne("Workspace_Management_System.Domain.Models.Service", "Service")
+                        .WithMany("SessionServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Workspace_Management_System.Domain.Models.Session", "Session")
+                        .WithMany("SessionServices")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Session");
+                });
+
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.SessionWorkspaceHistory", b =>
                 {
                     b.HasOne("Workspace_Management_System.Domain.Models.Employee", "Employee")
@@ -2467,12 +2536,16 @@ namespace Workspace_Management_System.Infrastructure.Migrations
 
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Service", b =>
                 {
+                    b.Navigation("SessionServices");
+
                     b.Navigation("TransactionItems");
                 });
 
             modelBuilder.Entity("Workspace_Management_System.Domain.Models.Session", b =>
                 {
                     b.Navigation("SessionProducts");
+
+                    b.Navigation("SessionServices");
 
                     b.Navigation("Transactions");
 

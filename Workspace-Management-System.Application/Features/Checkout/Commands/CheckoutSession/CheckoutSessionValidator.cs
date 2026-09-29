@@ -15,12 +15,17 @@ public class CheckoutSessionValidator
             .NotNull()
             .WithMessage("Checkout request is required.");
 
-        RuleFor(x => x.Request.DiscountAmount)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Discount cannot be negative.");
+        When(x => x.Request != null, () =>
+        {
+            RuleFor(x => x.Request.DiscountId)
+                .GreaterThan(0)
+                .When(x => x.Request.DiscountId.HasValue)
+                .WithMessage("Discount ID must be greater than zero.");
 
-        RuleFor(x => x.Request.TaxRate)
-            .InclusiveBetween(0, 100)
-            .WithMessage("Tax rate must be between 0 and 100.");
+            RuleFor(x => x.Request.TaxRate)
+                .InclusiveBetween(0, 100)
+                .When(x => x.Request.TaxRate.HasValue)
+                .WithMessage("Tax rate must be between 0 and 100.");
+        });
     }
 }

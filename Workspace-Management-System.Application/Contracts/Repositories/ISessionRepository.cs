@@ -4,5 +4,6 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
 {
     public interface ISessionRepository : IGenericRepository<Session>
     {
+
     }
 }

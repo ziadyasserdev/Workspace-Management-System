@@ -90,7 +90,7 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
         public DbSet<Notification> Notifications => Set<Notification>();
         public DbSet<Setting> Settings => Set<Setting>();
-
+        public DbSet<SessionService> SessionServices => Set<SessionService>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -190,7 +190,33 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
                     x.ProductId
                 })
                 .IsUnique();
+            modelBuilder.Entity<SessionService>(entity =>
+            {
+                entity.ToTable("SessionService");
+
+                entity.HasKey(x => x.Id);
+
+                entity.HasOne(x => x.Session)
+                    .WithMany(x => x.SessionServices)
+                    .HasForeignKey(x => x.SessionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.Service)
+                    .WithMany(x => x.SessionServices)
+                    .HasForeignKey(x => x.ServiceId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(x => x.UnitPrice)
+                    .HasPrecision(18, 2);
+
+                entity.Property(x => x.Quantity)
+                    .HasPrecision(18, 3);
+
+                entity.HasIndex(x => new { x.SessionId, x.ServiceId })
+                    .IsUnique();
+            });
         }
+
     }
 
 }
