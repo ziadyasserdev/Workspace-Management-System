@@ -7,8 +7,8 @@ using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Contracts.Repositories
 {
-    public interface ISessionRepository : IGenericRepository<Session>
+    public interface ISessionServiceRepository:IGenericRepository<SessionService>
     {
-
+        Task<SessionService?> GetBySessionAndServiceAsync(int sessionId, int serviceId);
     }
 }

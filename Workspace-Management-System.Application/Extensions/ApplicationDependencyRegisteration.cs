@@ -24,6 +24,7 @@ namespace Workspace_Management_System.Application.Extensions
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped<IPricingCalculator, PricingCalculator>();
+
             return services;
         }
     }

@@ -1,0 +1,42 @@
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using Workspace_Management_System.Application.Features.Sessions.Services.Commands.AddService;
+using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
+
+namespace Workspace_Management_System.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class SessionServiceController : ControllerBase
+{
+    private readonly IMediator _mediator;
+
+    public SessionServiceController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpPost("sessions/{sessionId}/services")]
+    [SwaggerOperation(
+        Summary = "Add a service to an active session",
+        Description = "Adds a service with a specified quantity to an active session.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AddService(
+        int sessionId,
+        [FromBody] AddServiceRequestDto request)
+    {
+        var command = new AddServiceCommand
+        {
+            SessionId = sessionId,
+            ServiceId = request.ServiceId,
+            Quantity = request.Quantity
+        };
+
+        var result = await _mediator.Send(command);
+
+        return Ok(result);
+    }
+}

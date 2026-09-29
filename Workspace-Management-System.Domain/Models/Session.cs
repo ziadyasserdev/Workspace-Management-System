@@ -28,7 +28,8 @@ namespace Workspace_Management_System.Domain.Models
         public ICollection<SessionProduct> SessionProducts { get; set; } = new List<SessionProduct>();
         public ICollection<SessionWorkspaceHistory> WorkspaceHistory { get; set; }
             = new List<SessionWorkspaceHistory>();
-
+        public ICollection<SessionService> SessionServices { get; set; }
+        = new List<SessionService>();
         public ICollection<Transaction> Transactions { get; set; }
             = new List<Transaction>();
     }

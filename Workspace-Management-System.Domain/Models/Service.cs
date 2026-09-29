@@ -12,7 +12,8 @@ namespace Workspace_Management_System.Domain.Models
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
-
+        public ICollection<SessionService> SessionServices { get; set; }
+    = new List<SessionService>();
         public ICollection<TransactionItem> TransactionItems { get; set; }
             = new List<TransactionItem>();
     }
