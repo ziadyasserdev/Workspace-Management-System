@@ -11,9 +11,9 @@ namespace Workspace_Management_System.Infrastructure.Repositories
 {
     public class SessionRepository : GenericRepository<Session>, ISessionRepository
     {
-        public SessionRepository(ApplicationDbContext dbContext)
-            : base(dbContext)
+        public SessionRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
     }
 }
+
