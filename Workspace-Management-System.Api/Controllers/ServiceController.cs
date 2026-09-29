@@ -8,6 +8,7 @@ using Workspace_Management_System.Application.Features.Services.Commands.CreateS
 using Workspace_Management_System.Application.Features.Services.Commands.DeleteService;
 using Workspace_Management_System.Application.Features.Services.Commands.RestoreService;
 using Workspace_Management_System.Application.Features.Services.Commands.UpdateService;
+using Workspace_Management_System.Application.Features.Services.Queries.GetServices;
 using static System.Net.WebRequestMethods;
 
 namespace Workspace_Management_System.Api.Controllers
@@ -114,5 +115,33 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
 
+        [HttpGet]
+        [SwaggerOperation(
+            Summary = "Get services",
+            Description = "Returns all non-deleted services with optional search, active status filter, and pagination."
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string? search,
+            [FromQuery] bool? isActive,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            CancellationToken cancellationToken = default)
+                {
+                    var query = new GetServicesQuery
+                    {
+                        Search = search,
+                        IsActive = isActive,
+                        PageNumber = pageNumber,
+                        PageSize = pageSize
+                    };
+
+                    var result = await mediator.Send(query, cancellationToken);
+
+                    return result.ToActionResult();
+                }
     }
 }
