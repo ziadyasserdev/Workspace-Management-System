@@ -5,6 +5,8 @@ using System;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Api.Controllers;
 using Workspace_Management_System.Application.Features.Services.Commands.CreateService;
+using Workspace_Management_System.Application.Features.Services.Commands.DeleteService;
+using Workspace_Management_System.Application.Features.Services.Commands.RestoreService;
 using Workspace_Management_System.Application.Features.Services.Commands.UpdateService;
 using static System.Net.WebRequestMethods;
 
@@ -61,5 +63,56 @@ namespace Workspace_Management_System.Api.Controllers
 
             return result.ToActionResult();
         }
+
+        [HttpDelete("{id:int}")]
+        [SwaggerOperation(
+            Summary = "Delete service",
+            Description = "Soft deletes an existing service."
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(
+            int id,
+            CancellationToken cancellationToken)
+                {
+                    var command = new DeleteServiceCommand
+                    {
+                        Id = id
+                    };
+
+                    var result = await mediator.Send(command, cancellationToken);
+
+                    return result.ToActionResult();
+        }
+
+        [HttpPatch("{id:int}/restore")]
+        [SwaggerOperation(
+    Summary = "Restore service",
+    Description = "Restores a previously deleted service."
+)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Restore(
+    int id,
+    CancellationToken cancellationToken)
+        {
+            var command = new RestoreServiceCommand
+            {
+                Id = id
+            };
+
+            var result = await mediator.Send(command, cancellationToken);
+
+            return result.ToActionResult();
+        }
+
+
     }
 }
