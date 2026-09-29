@@ -21,9 +21,12 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             Workspaces = new WorkspaceRepository(_context);
             WorkspaceTypes = new WorkspaceTypeRepository(_context);
             Customers = new CustomerRepository(_context);
+            Bookings = new BookingRepository(_context);
             Companies = new CompanyRepository(_context);
+            Sessions = new SessionRepository(_context);
             Employees = new EmployeeRepository(_context);
             PricingPlans = new PricingPlanRepository(_context);
+            SessionWorkspaceHistories = new SessionWorkspaceHistoryRepository(_context);
             PricingRules = new PricingRuleRepository(_context);
             Transactions = new TransactionRepository(_context);
             ProductCategories = new ProductCategoryRepository(_context);
@@ -56,11 +59,21 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IEmployeeRepository Employees { get;private set; } = null!;  
         public IPricingPlanRepository PricingPlans { get; private set; } = null!;
         public IPricingRuleRepository PricingRules { get; private set; } = null!;
+<<<<<<< Updated upstream
         public ITransactionRepository Transactions { get; private set; } = null!;
         public IProductCategoryRepository ProductCategories { get; private set; } = null!;
         public IProductRepository Products { get; private set; } = null!;
         public ISessionRepository Sessions {  get; private set; } = null!;
         public ISessionProductRepository SessionProducts { get; private set; }
+=======
+
+        public ISessionRepository Sessions { get; private set; } = null!;
+
+        public ISessionWorkspaceHistoryRepository SessionWorkspaceHistories { get; private set; } = null!;
+
+        public IBookingRepository Bookings { get; private set; } = null!;
+
+>>>>>>> Stashed changes
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
