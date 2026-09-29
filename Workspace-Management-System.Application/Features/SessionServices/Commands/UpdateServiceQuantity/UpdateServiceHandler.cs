@@ -1,18 +1,23 @@
 ﻿using MediatR;
+using Workspace_Management_System.Application.Contracts;
+using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
 using Workspace_Management_System.Domain.Enums;
-using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Services.Commands.UpdateService;
 
 public class UpdateServiceHandler : IRequestHandler<UpdateServiceCommand, SessionServiceResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUserService;
 
-    public UpdateServiceHandler(IUnitOfWork unitOfWork)
+    public UpdateServiceHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService)
     {
         _unitOfWork = unitOfWork;
+        _currentUserService = currentUserService;
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -43,8 +48,11 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceCommand, Sessio
                 "Service is not added to this session.");
 
         sessionService.Quantity = request.Quantity;
+        sessionService.UpdatedAt = DateTime.UtcNow;
+        sessionService.UpdatedBy = _currentUserService.UserId;
 
         _unitOfWork.SessionServices.Update(sessionService);
+
         await _unitOfWork.SaveAsync();
 
         return new SessionServiceResponseDto
@@ -55,7 +63,11 @@ public class UpdateServiceHandler : IRequestHandler<UpdateServiceCommand, Sessio
             ServiceName = sessionService.Service.Name,
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
-            TotalPrice = sessionService.Quantity * sessionService.UnitPrice
+            TotalPrice = sessionService.Quantity * sessionService.UnitPrice,
+            CreatedAt = sessionService.CreatedAt,
+            CreatedBy = sessionService.CreatedBy,
+            UpdatedAt = sessionService.UpdatedAt,
+            UpdatedBy = sessionService.UpdatedBy
         };
     }
-
+}

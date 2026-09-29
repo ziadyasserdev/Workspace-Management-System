@@ -6,6 +6,8 @@ using Workspace_Management_System.Application.Features.Sessions.Services.Command
 using Workspace_Management_System.Application.Features.Sessions.Services.Commands.DeleteService;
 using Workspace_Management_System.Application.Features.Sessions.Services.Commands.UpdateService;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
+using Workspace_Management_System.Application.Features.Sessions.Services.Queries.GetSessionServiceById;
+using Workspace_Management_System.Application.Features.Sessions.Services.Queries.GetSessionServices;
 
 namespace Workspace_Management_System.Api.Controllers;
 
@@ -102,6 +104,38 @@ int serviceId)
         };
 
         var result = await _mediator.Send(command);
+
+        return Ok(result);
+    }
+    [HttpGet("sessions/{sessionId}/services")]
+    [SwaggerOperation(
+    Summary = "Get session services",
+    Description = "Gets all services added to a session.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSessionServices(int sessionId)
+    {
+        var result = await _mediator.Send(
+            new GetSessionServicesQuery
+            {
+                SessionId = sessionId
+            });
+
+        return Ok(result);
+    }
+    [HttpGet("services/{id}")]
+    [SwaggerOperation(
+    Summary = "Get session service by ID",
+    Description = "Gets a specific service added to a session.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSessionServiceById(int id)
+    {
+        var result = await _mediator.Send(
+            new GetSessionServiceByIdQuery
+            {
+                Id = id
+            });
 
         return Ok(result);
     }

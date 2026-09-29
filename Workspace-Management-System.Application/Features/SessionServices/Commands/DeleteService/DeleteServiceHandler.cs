@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Workspace_Management_System.Application.Contracts;
+using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Domain.Enums;
 
@@ -7,10 +9,14 @@ namespace Workspace_Management_System.Application.Features.Sessions.Services.Com
 public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUserService;
 
-    public DeleteServiceHandler(IUnitOfWork unitOfWork)
+    public DeleteServiceHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService)
     {
         _unitOfWork = unitOfWork;
+        _currentUserService = currentUserService;
     }
 
     public async Task<bool> Handle(
@@ -36,7 +42,12 @@ public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, bool>
             throw new KeyNotFoundException(
                 "Service is not added to this session.");
 
-        _unitOfWork.SessionServices.Delete(sessionService);
+        sessionService.IsDeleted = true;
+        sessionService.IsDeletedBy = _currentUserService.UserId;
+        sessionService.UpdatedAt = DateTime.UtcNow;
+        sessionService.UpdatedBy = _currentUserService.UserId;
+
+        _unitOfWork.SessionServices.Update(sessionService);
 
         await _unitOfWork.SaveAsync();
 

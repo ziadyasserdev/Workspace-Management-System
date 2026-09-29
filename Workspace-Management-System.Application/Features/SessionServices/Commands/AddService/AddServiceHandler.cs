@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Workspace_Management_System.Application.Contracts;
+using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
 using Workspace_Management_System.Domain.Enums;
@@ -10,10 +11,14 @@ namespace Workspace_Management_System.Application.Features.Sessions.Services.Com
 public class AddServiceHandler : IRequestHandler<AddServiceCommand, SessionServiceResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUserService;
 
-    public AddServiceHandler(IUnitOfWork unitOfWork)
+    public AddServiceHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService)
     {
         _unitOfWork = unitOfWork;
+        _currentUserService = currentUserService;
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -27,7 +32,8 @@ public class AddServiceHandler : IRequestHandler<AddServiceCommand, SessionServi
             throw new KeyNotFoundException("Session not found.");
 
         if (session.Status != SessionStatus.Active)
-            throw new InvalidOperationException("Service can only be added to an active session.");
+            throw new InvalidOperationException(
+                "Service can only be added to an active session.");
 
         var service = await _unitOfWork.Services
             .GetByIdAsync(request.ServiceId);
@@ -39,20 +45,26 @@ public class AddServiceHandler : IRequestHandler<AddServiceCommand, SessionServi
             throw new InvalidOperationException("Service is not active.");
 
         if (request.Quantity <= 0)
-            throw new ArgumentException("Quantity must be greater than zero.");
+            throw new ArgumentException(
+                "Quantity must be greater than zero.");
 
         var existingService = await _unitOfWork.SessionServices
-            .GetBySessionAndServiceAsync(request.SessionId, request.ServiceId);
+            .GetBySessionAndServiceAsync(
+                request.SessionId,
+                request.ServiceId);
 
         if (existingService != null)
-            throw new InvalidOperationException("Service is already added to this session.");
+            throw new InvalidOperationException(
+                "Service is already added to this session.");
 
         var sessionService = new SessionService
         {
             SessionId = request.SessionId,
             ServiceId = request.ServiceId,
             Quantity = request.Quantity,
-            UnitPrice = service.Price
+            UnitPrice = service.Price,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = _currentUserService.UserId
         };
 
         await _unitOfWork.SessionServices.AddAsync(sessionService);
@@ -62,11 +74,11 @@ public class AddServiceHandler : IRequestHandler<AddServiceCommand, SessionServi
         {
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
-            ServiceName = sessionService.Service.Name,
+            ServiceName = service.Name,
             ServiceId = sessionService.ServiceId,
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
             TotalPrice = sessionService.Quantity * sessionService.UnitPrice
-        }; 
+        };
     }
 }

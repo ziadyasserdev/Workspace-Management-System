@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Workspace_Management_System.Application.Contracts;
+using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Domain.Enums;
 
@@ -7,10 +9,14 @@ namespace Workspace_Management_System.Application.Features.Sessions.Services.Com
 public class ClearServicesHandler : IRequestHandler<ClearServicesCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUserService;
 
-    public ClearServicesHandler(IUnitOfWork unitOfWork)
+    public ClearServicesHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService)
     {
         _unitOfWork = unitOfWork;
+        _currentUserService = currentUserService;
     }
 
     public async Task<bool> Handle(
@@ -36,7 +42,12 @@ public class ClearServicesHandler : IRequestHandler<ClearServicesCommand, bool>
 
         foreach (var service in sessionServices)
         {
-            _unitOfWork.SessionServices.Delete(service);
+            service.IsDeleted = true;
+            service.IsDeletedBy = _currentUserService.UserId;
+            service.UpdatedAt = DateTime.UtcNow;
+            service.UpdatedBy = _currentUserService.UserId;
+
+            _unitOfWork.SessionServices.Update(service);
         }
 
         await _unitOfWork.SaveAsync();
