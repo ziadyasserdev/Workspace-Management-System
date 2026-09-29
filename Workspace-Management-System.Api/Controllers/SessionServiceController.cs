@@ -65,5 +65,27 @@ public class SessionServiceController : ControllerBase
 
         return Ok(result);
     }
+    [HttpDelete("sessions/{sessionId}/services/{serviceId}")]
+    [SwaggerOperation(
+Summary = "Delete a service from an active session",
+Description = "Removes a specific service from an active session.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteService(
+int sessionId,
+int serviceId)
+    {
+        var command = new DeleteServiceCommand
+        {
+            SessionId = sessionId,
+            ServiceId = serviceId
+        };
+
+        var result = await _mediator.Send(command);
+
+        return Ok(result);
+    }
+   
 
 }
