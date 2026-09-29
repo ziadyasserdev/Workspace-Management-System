@@ -8,6 +8,7 @@ using Workspace_Management_System.Application.Features.Services.Commands.CreateS
 using Workspace_Management_System.Application.Features.Services.Commands.DeleteService;
 using Workspace_Management_System.Application.Features.Services.Commands.RestoreService;
 using Workspace_Management_System.Application.Features.Services.Commands.UpdateService;
+using Workspace_Management_System.Application.Features.Services.Queries.GetServiceById;
 using Workspace_Management_System.Application.Features.Services.Queries.GetServices;
 using static System.Net.WebRequestMethods;
 
@@ -142,6 +143,32 @@ namespace Workspace_Management_System.Api.Controllers
                     var result = await mediator.Send(query, cancellationToken);
 
                     return result.ToActionResult();
+        }
+
+        [HttpGet("{id:int}")]
+        [SwaggerOperation(
+            Summary = "Get service by ID",
+            Description = "Returns a service by its ID."
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(
+            int id,
+            CancellationToken cancellationToken)
+                {
+                    var query = new GetServiceByIdQuery
+                    {
+                        Id = id
+                    };
+
+                    var result = await mediator.Send(query, cancellationToken);
+
+                    return result.ToActionResult();
                 }
+
+
     }
 }
