@@ -11,6 +11,7 @@ namespace Workspace_Management_System.Domain.Enums
         Active,
         Completed,
         Expired,
-        Cancelled
+        Cancelled,
+        Upgraded,
     }
 }

@@ -28,6 +28,8 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
         IDiscountRepository Discounts { get; }  
         IServiceRepository Services { get; }
         ISessionServiceRepository SessionServices { get; }
+        IPackageRepository Packages { get; }
+        ICustomerPackageRepository CustomerPackages { get; }
         Task<int> SaveAsync();
     }
 

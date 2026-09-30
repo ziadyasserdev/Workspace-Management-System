@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Diagnostics.Metrics;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Pricing;
 using Workspace_Management_System.Application.Contracts.Repositories;
@@ -7,6 +9,7 @@ using Workspace_Management_System.Application.Features.Checkout.Dtos;
 using Workspace_Management_System.Application.Services.Pricing;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Workspace_Management_System.Application.Features.Checkout.Commands.CheckoutSession;
 
@@ -72,60 +75,109 @@ public class CheckoutSessionHandler
 
             var duration = endTime - session.StartTime;
 
-            var pricingRules = await _unitOfWork.PricingRules
+            var sessionHours = (decimal)duration.TotalHours;
+
+            var customerPackage = await _unitOfWork.CustomerPackages
                 .Query()
-                .Where(x =>
-                    x.PricingPlanId == session.PricingPlanId &&
-                    x.WorkspaceTypeId == session.Workspace.WorkspaceTypeId &&
-                    x.IsActive &&
-                    (!x.StartDate.HasValue || x.StartDate <= endTime) &&
-                    (!x.EndDate.HasValue || x.EndDate >= endTime))
-                .ToListAsync(cancellationToken);
+                .FirstOrDefaultAsync(
+                    x =>
+                        x.CustomerId == session.CustomerId &&
+                        x.Status == CustomerPackageStatus.Active &&
+                        !x.IsDeleted &&
+                        x.RemainingHours.HasValue &&
+                        x.RemainingHours.Value > 0 &&
+                        x.StartDate <= endTime &&
+                        (!x.EndDate.HasValue || x.EndDate.Value >= endTime),
+                    cancellationToken);
 
-            if (pricingRules.Count == 0)
+            var workspaceAmount = 0m;
+            var packageHoursUsed = 0m;
+
+            if (customerPackage is not null)
             {
-                throw new InvalidOperationException(
-                    "No applicable pricing rules were found for this session.");
+                var remainingHours =
+                    customerPackage.RemainingHours!.Value;
+
+                if (remainingHours < sessionHours)
+                {
+                    throw new InvalidOperationException(
+                        $"Customer has only {remainingHours} package hours remaining, " +
+                        $"but this session requires {sessionHours:F2} hours.");
+                }
+
+                packageHoursUsed = sessionHours;
+
+                customerPackage.RemainingHours =
+                    remainingHours - packageHoursUsed;
+
+                customerPackage.UpdatedAt = now;
+                customerPackage.UpdatedBy = _currentUser.UserId;
+
+                if (customerPackage.RemainingHours <= 0)
+                {
+                    customerPackage.RemainingHours = 0;
+                    customerPackage.Status = CustomerPackageStatus.Expired;
+                    customerPackage.EndDate ??= now;
+                }
             }
-
-            var pricingInput = new PricingCalculationInput
+            else
             {
-                StartTime = session.StartTime,
-                EndTime = endTime,
+                var pricingRules = await _unitOfWork.PricingRules
+                    .Query()
+                    .Where(x =>
+                        x.PricingPlanId == session.PricingPlanId &&
+                        x.WorkspaceTypeId == session.Workspace.WorkspaceTypeId &&
+                        x.IsActive &&
+                        (!x.StartDate.HasValue || x.StartDate <= endTime) &&
+                        (!x.EndDate.HasValue || x.EndDate >= endTime))
+                    .ToListAsync(cancellationToken);
 
-                HourlyRate = pricingRules
-                    .FirstOrDefault(x =>
-                        x.RuleType == PricingRuleType.HourlyRate)
-                    ?.Value ?? 0,
+                if (pricingRules.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "No applicable pricing rules were found for this session.");
+                }
 
-                HalfHourRate = pricingRules
-                    .FirstOrDefault(x =>
-                        x.RuleType == PricingRuleType.HalfHourRate)
-                    ?.Value,
+                var pricingInput = new PricingCalculationInput
+                {
+                    StartTime = session.StartTime,
+                    EndTime = endTime,
 
-                MinimumCharge = pricingRules
-                    .FirstOrDefault(x =>
-                        x.RuleType == PricingRuleType.MinimumCharge)
-                    ?.Value ?? 0,
+                    HourlyRate = pricingRules
+                        .FirstOrDefault(x =>
+                            x.RuleType == PricingRuleType.HourlyRate)
+                        ?.Value ?? 0,
 
-                FullDayMaximum = pricingRules
-                    .FirstOrDefault(x =>
-                        x.RuleType == PricingRuleType.FullDayMaximum)
-                    ?.Value,
+                    HalfHourRate = pricingRules
+                        .FirstOrDefault(x =>
+                            x.RuleType == PricingRuleType.HalfHourRate)
+                        ?.Value,
 
-                RoundingMinutes = 0,
-                RoundingMode = RoundingMode.None
-            };
+                    MinimumCharge = pricingRules
+                        .FirstOrDefault(x =>
+                            x.RuleType == PricingRuleType.MinimumCharge)
+                        ?.Value ?? 0,
 
-            var pricingResult =
-                _pricingCalculator.Calculate(pricingInput);
+                    FullDayMaximum = pricingRules
+                        .FirstOrDefault(x =>
+                            x.RuleType == PricingRuleType.FullDayMaximum)
+                        ?.Value,
 
-            var workspaceAmount = pricingResult.FinalAmount;
+                    RoundingMinutes = 0,
+                    RoundingMode = RoundingMode.None
+                };
+
+                var pricingResult =
+                    _pricingCalculator.Calculate(pricingInput);
+
+                workspaceAmount = pricingResult.FinalAmount;
+            }
 
             var productsAmount = 0m;
             var servicesAmount = 0m;
 
-            var responseItems = new List<CheckoutResponseItemDto>();
+            var responseItems =
+                new List<CheckoutResponseItemDto>();
 
             var transaction = new Transaction
             {
@@ -142,26 +194,29 @@ public class CheckoutSessionHandler
                 CreatedBy = _currentUser.UserId
             };
 
-            transaction.Items.Add(new TransactionItem
+            if (workspaceAmount > 0)
             {
-                ItemType = "Workspace",
-                Description = "Workspace Usage",
-                Quantity = 1,
-                UnitPrice = workspaceAmount,
-                Total = workspaceAmount,
+                transaction.Items.Add(new TransactionItem
+                {
+                    ItemType = "Workspace",
+                    Description = "Workspace Usage",
+                    Quantity = 1,
+                    UnitPrice = workspaceAmount,
+                    Total = workspaceAmount,
 
-                CreatedAt = now,
-                CreatedBy = _currentUser.UserId
-            });
+                    CreatedAt = now,
+                    CreatedBy = _currentUser.UserId
+                });
 
-            responseItems.Add(new CheckoutResponseItemDto
-            {
-                Description = "Workspace Usage",
-                ItemType = "Workspace",
-                Quantity = 1,
-                UnitPrice = workspaceAmount,
-                Total = workspaceAmount
-            });
+                responseItems.Add(new CheckoutResponseItemDto
+                {
+                    Description = "Workspace Usage",
+                    ItemType = "Workspace",
+                    Quantity = 1,
+                    UnitPrice = workspaceAmount,
+                    Total = workspaceAmount
+                });
+            }
 
             foreach (var sessionProduct in session.SessionProducts)
             {
@@ -248,7 +303,7 @@ public class CheckoutSessionHandler
                 var discount = await _unitOfWork.Discounts
                     .GetByIdAsync(request.Request.DiscountId.Value);
 
-                if (discount == null)
+                if (discount is null)
                 {
                     throw new KeyNotFoundException(
                         "Discount not found.");
@@ -288,7 +343,8 @@ public class CheckoutSessionHandler
                 }
             }
 
-            var taxRate = request.Request.TaxRate ?? 0m;
+            var taxRate =
+                request.Request.TaxRate ?? 0m;
 
             if (taxRate < 0)
             {
