@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Domain.Models;
 using Workspace_Management_System.Infrastructure.Persistence.Context;
 
 namespace Workspace_Management_System.Infrastructure.Repositories
@@ -35,7 +36,9 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             SessionProducts = new SessionProductRepository(_context);
             Discounts = new DiscountRepository(_context);
             Services = new ServiceRepository(_context);
-            SessionServices = new SessionServiceRepository(_context);   
+            SessionServices = new SessionServiceRepository(_context);  
+            Packages = new PackageRepository(_context);
+            CustomerPackages = new CustomerPackageRepository(_context);
         }
 
        
@@ -75,7 +78,8 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public ISessionServiceRepository SessionServices { get; private set; } = null!;
 
         public IBookingRepository Bookings { get; private set; } = null!;
-
+        public IPackageRepository Packages { get; private set; } = null!;
+        public ICustomerPackageRepository CustomerPackages { get; }
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
