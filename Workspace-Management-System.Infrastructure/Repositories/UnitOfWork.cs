@@ -39,6 +39,9 @@ namespace Workspace_Management_System.Infrastructure.Repositories
             SessionServices = new SessionServiceRepository(_context);  
             Packages = new PackageRepository(_context);
             CustomerPackages = new CustomerPackageRepository(_context);
+            Memberships = new MembershipRepository(_context);
+            CustomerMemberships = new CustomerMembershipRepository(_context);
+            MembershipBenefits = new MembershipBenefitRepository(_context);
         }
 
        
@@ -80,6 +83,13 @@ namespace Workspace_Management_System.Infrastructure.Repositories
         public IBookingRepository Bookings { get; private set; } = null!;
         public IPackageRepository Packages { get; private set; } = null!;
         public ICustomerPackageRepository CustomerPackages { get; }
+
+        public IMembershipRepository Memberships { get; private set; } = null!;
+
+        public ICustomerMembershipRepository CustomerMemberships { get; private set; } = null!;
+
+        public IMembershipBenefitRepository MembershipBenefits { get; private set; } = null!;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
