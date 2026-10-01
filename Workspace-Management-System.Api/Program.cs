@@ -1,14 +1,18 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using Workspace_Management_System.Api.Middleware;
+using Workspace_Management_System.Application.Contracts.Services.Memberships;
 using Workspace_Management_System.Application.Extensions;
 using Workspace_Management_System.Application.Settings;
 using Workspace_Management_System.Domain.Constants;
 using Workspace_Management_System.Domain.Identity;
 using Workspace_Management_System.Domain.Models;
+using Workspace_Management_System.Infrastructure.BackgroundJobs;
 using Workspace_Management_System.Infrastructure.Extensions;
 using Workspace_Management_System.Infrastructure.Persistence.SeedData;
 namespace Workspace_Management_System.Api
@@ -72,6 +76,7 @@ namespace Workspace_Management_System.Api
 
 
 
+            builder.Services.AddHangfireServer();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -81,7 +86,9 @@ namespace Workspace_Management_System.Api
                           .AllowAnyMethod();
                 });
             });
-
+            builder.Services.AddScoped<
+    IMembershipExpirationService,
+    MembershipExpirationService>();
 
 
             builder.Services.AddSwaggerGen(options =>
@@ -124,8 +131,12 @@ namespace Workspace_Management_System.Api
 
             var app = builder.Build();
 
-           
 
+            app.UseHangfireDashboard("/hangfire");
+            RecurringJob.AddOrUpdate<MembershipExpirationJob>(
+    "membership-expiration",
+    job => job.ExecuteAsync(),
+    Cron.Hourly);
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider
