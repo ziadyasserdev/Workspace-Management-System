@@ -12,6 +12,9 @@ namespace Workspace_Management_System.Application.Contracts.Repositories
        
         Task<IDbContextTransaction> BeginTransactionAsync();
         ICompanyRepository Companies { get; }
+        IMembershipRepository Memberships { get; }
+        ICustomerMembershipRepository CustomerMemberships { get; }
+        IMembershipBenefitRepository MembershipBenefits { get; }
         IWorkspaceRepository Workspaces { get; }
         IWorkspaceTypeRepository WorkspaceTypes { get; }
         ICustomerRepository Customers { get; }
