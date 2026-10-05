@@ -1,9 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Domain.Enums;
 
@@ -11,9 +6,11 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
 {
     public class CreateCustomerCommand : IRequest<Result<int>>
     {
-        public string FullName { get; set; }
+        public string FullNameEn { get; set; } = null!;
 
-        public string MobileNumber { get; set; }
+        public string FullNameAr { get; set; } = null!;
+
+        public string MobileNumber { get; set; } = null!;
 
         public string? Email { get; set; }
 
@@ -21,6 +18,8 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
 
         public CustomerType CustomerType { get; set; }
 
-        public string? Notes { get; set; }
+        public string? NotesEn { get; set; }
+
+        public string? NotesAr { get; set; }
     }
 }

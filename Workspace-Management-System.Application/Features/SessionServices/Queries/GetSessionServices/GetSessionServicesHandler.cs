@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Workspace_Management_System.Application.Common.PaginatedResults;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
 
@@ -9,10 +10,14 @@ public class GetSessionServicesHandler
     : IRequestHandler<GetSessionServicesQuery, PaginatedResult<SessionServiceResponseDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILocalizationService _localizationService;
 
-    public GetSessionServicesHandler(IUnitOfWork unitOfWork)
+    public GetSessionServicesHandler(
+        IUnitOfWork unitOfWork,
+        ILocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
+        _localizationService = localizationService;
     }
 
     public async Task<PaginatedResult<SessionServiceResponseDto>> Handle(
@@ -57,10 +62,14 @@ public class GetSessionServicesHandler
                 Id = sessionService.Id,
                 SessionId = sessionService.SessionId,
                 ServiceId = sessionService.ServiceId,
-                ServiceName = service?.Name ?? string.Empty,
+                ServiceName = service == null
+                    ? string.Empty
+                    : _localizationService.GetLocalizedValue(
+                        service.NameEn,
+                        service.NameAr),
                 Quantity = sessionService.Quantity,
                 UnitPrice = sessionService.UnitPrice,
-                TotalPrice = sessionService.Quantity * sessionService.UnitPrice,
+                TotalPrice = sessionService.Quantity * sessionService.UnitPrice
             });
         }
 

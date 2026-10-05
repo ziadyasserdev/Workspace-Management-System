@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Workspace_Management_System.Domain.Models
 {
@@ -10,13 +6,16 @@ namespace Workspace_Management_System.Domain.Models
     {
         public int ProductCategoryId { get; set; }
 
-        public string EnglishName { get; set; } = null!;
-        public string? Description { get; set; }
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
+
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
+
         public string Sku { get; set; } = null!;
 
         public decimal SellingPrice { get; set; }
         public decimal CostPrice { get; set; }
-
 
         public bool IsActive { get; set; }
 
@@ -26,7 +25,9 @@ namespace Workspace_Management_System.Domain.Models
 
         public ICollection<StockMovement> StockMovements { get; set; }
             = new List<StockMovement>();
-        public ICollection<SessionProduct> SessionProducts { get; set; }= new List<SessionProduct>();
+
+        public ICollection<SessionProduct> SessionProducts { get; set; }
+            = new List<SessionProduct>();
 
         public ICollection<TransactionItem> TransactionItems { get; set; }
             = new List<TransactionItem>();

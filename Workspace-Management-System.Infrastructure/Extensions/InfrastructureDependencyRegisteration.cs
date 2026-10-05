@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.ExternalServices;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
@@ -30,6 +31,7 @@ namespace Workspace_Management_System.Infrastructure.Extensions
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IEmailService, EmailService>();
       services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ILocalizationService, LocalizationService>();
             services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.Password.RequireDigit = true;

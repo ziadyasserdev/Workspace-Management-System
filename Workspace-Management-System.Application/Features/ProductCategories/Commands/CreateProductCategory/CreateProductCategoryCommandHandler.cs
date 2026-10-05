@@ -10,31 +10,36 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
     public class CreateProductCategoryCommandHandler
         : IRequestHandler<CreateProductCategoryCommand, Result<int>>
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly ICurrentUserService currentUser;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUser;
 
         public CreateProductCategoryCommandHandler(
             IUnitOfWork unitOfWork,
             ICurrentUserService currentUser)
         {
-            this.unitOfWork = unitOfWork;
-            this.currentUser = currentUser;
+            _unitOfWork = unitOfWork;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<int>> Handle(
             CreateProductCategoryCommand request,
             CancellationToken cancellationToken)
         {
-            var name = request.Name.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
-            var checkExist = await unitOfWork.ProductCategories
+            var nameExists = await _unitOfWork.ProductCategories
                 .Query()
                 .AnyAsync(
-                    x => x.Name.ToLower() == name.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == nameEn.ToLower() ||
+                            x.NameAr.ToLower() == nameAr.ToLower()
+                        ),
                     cancellationToken);
 
-            if (checkExist)
+            if (nameExists)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
@@ -43,17 +48,18 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
 
             var category = new ProductCategory
             {
-                Name = name,
-                Description = request.Description?.Trim(),
+                NameEn = nameEn,
+                NameAr = nameAr,
+                DescriptionEn = request.DescriptionEn?.Trim(),
+                DescriptionAr = request.DescriptionAr?.Trim(),
                 IsActive = request.IsActive,
-
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = currentUser.UserId
+                CreatedBy = _currentUser.UserId
             };
 
-            await unitOfWork.ProductCategories.AddAsync(category);
+            await _unitOfWork.ProductCategories.AddAsync(category);
 
-            await unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync();
 
             return Result<int>.Success(
                 category.Id,

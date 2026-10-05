@@ -28,8 +28,10 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
             var exists = await _unitOfWork.Companies
                 .Query()
                 .AnyAsync(
-                    x => x.Name == request.Name &&
-                         !x.IsDeleted,
+                    x =>
+                        (x.NameEn == request.NameEn ||
+                         x.NameAr == request.NameAr) &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (exists)
@@ -38,13 +40,15 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
                     ResultStatus.Conflict,
                     "A company with the same name already exists.");
             }
+
             if (request.PricingPlanId.HasValue)
             {
                 var pricingPlanExists = await _unitOfWork.PricingPlans
                     .Query()
                     .AnyAsync(
-                        x => x.Id == request.PricingPlanId.Value &&
-                             !x.IsDeleted,
+                        x =>
+                            x.Id == request.PricingPlanId.Value &&
+                            !x.IsDeleted,
                         cancellationToken);
 
                 if (!pricingPlanExists)
@@ -54,19 +58,22 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
                         "Pricing plan not found.");
                 }
             }
+
             var company = new Company
             {
-                Name = request.Name,
+                NameEn = request.NameEn.Trim(),
+                NameAr = request.NameAr.Trim(),
                 ContactPerson = request.ContactPerson,
                 Phone = request.Phone,
                 Email = request.Email,
                 TaxNumber = request.TaxNumber,
-                TaxInformation = request.TaxInformation,
-                ContractDetails = request.ContractDetails,
+                TaxInformationEn = request.TaxInformationEn?.Trim(),
+                TaxInformationAr = request.TaxInformationAr?.Trim(),
+                ContractDetailsEn = request.ContractDetailsEn?.Trim(),
+                ContractDetailsAr = request.ContractDetailsAr?.Trim(),
                 PricingPlanId = request.PricingPlanId,
                 CreditLimit = request.CreditLimit,
                 IsActive = true,
-
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _currentUser.UserId
             };

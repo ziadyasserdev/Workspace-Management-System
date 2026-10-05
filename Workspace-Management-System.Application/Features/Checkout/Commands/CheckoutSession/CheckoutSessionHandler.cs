@@ -1,15 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Diagnostics.Metrics;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Pricing;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Features.Checkout.Dtos;
 using Workspace_Management_System.Application.Services.Pricing;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Workspace_Management_System.Application.Features.Checkout.Commands.CheckoutSession;
 
@@ -19,15 +17,18 @@ public class CheckoutSessionHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPricingCalculator _pricingCalculator;
     private readonly ICurrentUserService _currentUser;
+    private readonly ILocalizationService _localizationService;
 
     public CheckoutSessionHandler(
         IUnitOfWork unitOfWork,
         IPricingCalculator pricingCalculator,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        ILocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _pricingCalculator = pricingCalculator;
         _currentUser = currentUser;
+        _localizationService = localizationService;
     }
 
     public async Task<CheckoutResponseDto> Handle(
@@ -184,12 +185,9 @@ public class CheckoutSessionHandler
                 SessionId = session.Id,
                 CustomerId = session.CustomerId,
                 EmployeeId = session.EmployeeId,
-
                 TransactionNumber =
                     $"TRX-{now:yyyyMMddHHmmssfff}",
-
                 Status = "Completed",
-
                 CreatedAt = now,
                 CreatedBy = _currentUser.UserId
             };
@@ -203,7 +201,6 @@ public class CheckoutSessionHandler
                     Quantity = 1,
                     UnitPrice = workspaceAmount,
                     Total = workspaceAmount,
-
                     CreatedAt = now,
                     CreatedBy = _currentUser.UserId
                 });
@@ -232,22 +229,26 @@ public class CheckoutSessionHandler
 
                 productsAmount += itemTotal;
 
+                var productName =
+                    _localizationService.GetLocalizedValue(
+                        sessionProduct.Product.NameEn,
+                        sessionProduct.Product.NameAr);
+
                 transaction.Items.Add(new TransactionItem
                 {
                     ItemType = "Product",
                     ProductId = sessionProduct.ProductId,
-                    Description = sessionProduct.Product.EnglishName,
+                    Description = productName,
                     Quantity = sessionProduct.Quantity,
                     UnitPrice = sessionProduct.UnitPrice,
                     Total = itemTotal,
-
                     CreatedAt = now,
                     CreatedBy = _currentUser.UserId
                 });
 
                 responseItems.Add(new CheckoutResponseItemDto
                 {
-                    Description = sessionProduct.Product.EnglishName,
+                    Description = productName,
                     ItemType = "Product",
                     Quantity = sessionProduct.Quantity,
                     UnitPrice = sessionProduct.UnitPrice,
@@ -269,21 +270,25 @@ public class CheckoutSessionHandler
 
                 servicesAmount += itemTotal;
 
+                var serviceName =
+                    _localizationService.GetLocalizedValue(
+                        sessionService.Service.NameEn,
+                        sessionService.Service.NameAr);
+
                 transaction.Items.Add(new TransactionItem
                 {
                     ItemType = "Service",
-                    Description = sessionService.Service.Name,
+                    Description = serviceName,
                     Quantity = sessionService.Quantity,
                     UnitPrice = sessionService.UnitPrice,
                     Total = itemTotal,
-
                     CreatedAt = now,
                     CreatedBy = _currentUser.UserId
                 });
 
                 responseItems.Add(new CheckoutResponseItemDto
                 {
-                    Description = sessionService.Service.Name,
+                    Description = serviceName,
                     ItemType = "Service",
                     Quantity = sessionService.Quantity,
                     UnitPrice = sessionService.UnitPrice,
@@ -387,24 +392,18 @@ public class CheckoutSessionHandler
             {
                 TransactionId = transaction.Id,
                 TransactionNumber = transaction.TransactionNumber,
-
                 SessionId = session.Id,
-
                 StartTime = session.StartTime,
                 EndTime = endTime,
                 Duration = duration,
-
                 WorkspaceAmount = workspaceAmount,
                 ProductsAmount = productsAmount,
                 ServicesAmount = servicesAmount,
-
                 Subtotal = subtotal,
                 DiscountAmount = discountAmount,
                 TaxAmount = taxAmount,
                 Total = total,
-
                 Status = transaction.Status,
-
                 Items = responseItems
             };
         }

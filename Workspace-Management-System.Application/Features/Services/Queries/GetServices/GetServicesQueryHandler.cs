@@ -34,9 +34,12 @@ namespace Workspace_Management_System.Application.Features.Services.Queries.GetS
                 var search = request.Search.Trim();
 
                 query = query.Where(x =>
-                    x.Name.Contains(search) ||
-                    (x.Description != null &&
-                     x.Description.Contains(search)));
+                    x.NameEn.Contains(search) ||
+                    x.NameAr.Contains(search) ||
+                    (x.DescriptionEn != null &&
+                     x.DescriptionEn.Contains(search)) ||
+                    (x.DescriptionAr != null &&
+                     x.DescriptionAr.Contains(search)));
             }
 
             if (request.IsActive.HasValue)
@@ -49,14 +52,16 @@ namespace Workspace_Management_System.Application.Features.Services.Queries.GetS
                 cancellationToken);
 
             var items = await query
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.NameEn)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new ServiceResponseDto
                 {
                     Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
                     Price = x.Price,
                     IsActive = x.IsActive
                 })
@@ -74,4 +79,3 @@ namespace Workspace_Management_System.Application.Features.Services.Queries.GetS
         }
     }
 }
-

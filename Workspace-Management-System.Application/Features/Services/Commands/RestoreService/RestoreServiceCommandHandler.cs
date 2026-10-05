@@ -6,7 +6,8 @@ using Workspace_Management_System.Application.Contracts.Repositories;
 
 namespace Workspace_Management_System.Application.Features.Services.Commands.RestoreService
 {
-    public class RestoreServiceCommandHandler : IRequestHandler<RestoreServiceCommand, Result<bool>>
+    public class RestoreServiceCommandHandler
+        : IRequestHandler<RestoreServiceCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
@@ -39,9 +40,13 @@ namespace Workspace_Management_System.Application.Features.Services.Commands.Res
             var duplicateName = await _unitOfWork.Services
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id &&
-                         x.Name == service.Name &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn == service.NameEn ||
+                            x.NameAr == service.NameAr
+                        ),
                     cancellationToken);
 
             if (duplicateName)

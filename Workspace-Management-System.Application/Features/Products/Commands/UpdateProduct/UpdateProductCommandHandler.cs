@@ -40,8 +40,9 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Upd
             var categoryExists = await _unitOfWork.ProductCategories
                 .Query()
                 .AnyAsync(
-                    x => x.Id == request.ProductCategoryId
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id == request.ProductCategoryId &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (!categoryExists)
@@ -56,9 +57,10 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Upd
             var skuExists = await _unitOfWork.Products
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id
-                         && x.Sku.ToLower() == sku.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        x.Sku.ToLower() == sku.ToLower() &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (skuExists)
@@ -68,26 +70,33 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Upd
                     "A product with the same SKU already exists.");
             }
 
-            var name = request.EnglishName.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
             var nameExists = await _unitOfWork.Products
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id
-                         && x.EnglishName.ToLower() == name.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == nameEn.ToLower() ||
+                            x.NameAr.ToLower() == nameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (nameExists)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A product with the same English name already exists.");
+                    "A product with the same name already exists.");
             }
 
             product.ProductCategoryId = request.ProductCategoryId;
-            product.EnglishName = name;
-            product.Description = request.Description?.Trim();
+            product.NameEn = nameEn;
+            product.NameAr = nameAr;
+            product.DescriptionEn = request.DescriptionEn?.Trim();
+            product.DescriptionAr = request.DescriptionAr?.Trim();
             product.Sku = sku;
             product.SellingPrice = request.SellingPrice;
             product.CostPrice = request.CostPrice;
@@ -98,7 +107,8 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Upd
 
             await _unitOfWork.SaveAsync();
 
-            return Result<bool>.Success(true,
+            return Result<bool>.Success(
+                true,
                 "Product updated successfully.");
         }
     }

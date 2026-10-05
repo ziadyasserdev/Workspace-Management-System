@@ -25,12 +25,15 @@ namespace Workspace_Management_System.Application.Features.Services.Commands.Cre
             CreateServiceCommand request,
             CancellationToken cancellationToken)
         {
-            var name = request.Name.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
             var exists = await _unitOfWork.Services
                 .Query()
                 .AnyAsync(
-                    x => x.Name == name && !x.IsDeleted,
+                    x =>
+                        (x.NameEn == nameEn || x.NameAr == nameAr)
+                        && !x.IsDeleted,
                     cancellationToken);
 
             if (exists)
@@ -44,8 +47,10 @@ namespace Workspace_Management_System.Application.Features.Services.Commands.Cre
 
             var service = new Service
             {
-                Name = name,
-                Description = request.Description?.Trim(),
+                NameEn = nameEn,
+                NameAr = nameAr,
+                DescriptionEn = request.DescriptionEn?.Trim(),
+                DescriptionAr = request.DescriptionAr?.Trim(),
                 Price = request.Price,
                 IsActive = request.IsActive,
                 CreatedAt = now,

@@ -7,15 +7,25 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
     {
         public CreateProductCategoryCommandValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Category name is required.")
+                .WithMessage("Category English name is required.")
                 .MaximumLength(100)
-                .WithMessage("Category name must not exceed 100 characters.");
+                .WithMessage("Category English name must not exceed 100 characters.");
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.NameAr)
+                .NotEmpty()
+                .WithMessage("Category Arabic name is required.")
+                .MaximumLength(100)
+                .WithMessage("Category Arabic name must not exceed 100 characters.");
+
+            RuleFor(x => x.DescriptionEn)
                 .MaximumLength(500)
-                .WithMessage("Description must not exceed 500 characters.");
+                .WithMessage("English description must not exceed 500 characters.");
+
+            RuleFor(x => x.DescriptionAr)
+                .MaximumLength(500)
+                .WithMessage("Arabic description must not exceed 500 characters.");
         }
     }
 }

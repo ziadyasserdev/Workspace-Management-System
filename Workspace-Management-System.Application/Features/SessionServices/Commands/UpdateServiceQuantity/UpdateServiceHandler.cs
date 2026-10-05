@@ -12,13 +12,16 @@ public class UpdateServiceHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ILocalizationService _localizationService;
 
     public UpdateServiceHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        ILocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _currentUserService = currentUserService;
+        _localizationService = localizationService;
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -67,7 +70,9 @@ public class UpdateServiceHandler
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
             ServiceId = sessionService.ServiceId,
-            ServiceName = service.Name,
+            ServiceName = _localizationService.GetLocalizedValue(
+                service.NameEn,
+                service.NameAr),
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
             TotalPrice = sessionService.Quantity * sessionService.UnitPrice

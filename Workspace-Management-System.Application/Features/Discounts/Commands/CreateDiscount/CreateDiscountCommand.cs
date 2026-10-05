@@ -5,7 +5,13 @@ namespace Workspace_Management_System.Application.Features.Discounts.Commands.Cr
 {
     public class CreateDiscountCommand : IRequest<Result<int>>
     {
-        public string Name { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
+
+        public string NameAr { get; set; } = null!;
+
+        public string? DescriptionEn { get; set; }
+
+        public string? DescriptionAr { get; set; }
 
         public Domain.Enums.DiscountType Type { get; set; }
 

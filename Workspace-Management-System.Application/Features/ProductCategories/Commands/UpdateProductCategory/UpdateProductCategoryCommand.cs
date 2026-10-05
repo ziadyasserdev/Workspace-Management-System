@@ -7,9 +7,13 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
 
-        public string? Description { get; set; }
+        public string NameAr { get; set; } = null!;
+
+        public string? DescriptionEn { get; set; }
+
+        public string? DescriptionAr { get; set; }
 
         public bool IsActive { get; set; }
     }

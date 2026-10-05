@@ -1,44 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Workspace_Management_System.Domain.Enums;
-using static System.Collections.Specialized.BitVector32;
+﻿using Workspace_Management_System.Domain.Enums;
+using Workspace_Management_System.Domain.Models;
 
-namespace Workspace_Management_System.Domain.Models
+public class Customer : BaseEntity
 {
-    public class Customer : BaseEntity
-    {
-        public string FullName { get; set; } = null!;
-        public string MobileNumber { get; set; } = null!;
-        public string? Email { get; set; }
+    public string FullNameEn { get; set; } = null!;
+    public string FullNameAr { get; set; } = null!;
 
-        public int? CompanyId { get; set; }
+    public string MobileNumber { get; set; } = null!;
+    public string? Email { get; set; }
 
-        public CustomerType CustomerType { get; set; }
-        public string? Notes { get; set; }
-        public DateTime RegistrationDate { get; set; }
-        public CustomerStatus Status { get; set; } 
+    public int? CompanyId { get; set; }
 
-        public Company? Company { get; set; }
+    public CustomerType CustomerType { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
-            = new List<Booking>();
+    public string? NotesEn { get; set; }
+    public string? NotesAr { get; set; }
 
-        public ICollection<Session> Sessions { get; set; }
-            = new List<Session>();
+    public DateTime RegistrationDate { get; set; }
+    public CustomerStatus Status { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
-            = new List<Transaction>();
+    public Company? Company { get; set; }
 
-        public ICollection<Invoice> Invoices { get; set; }
-            = new List<Invoice>();
+    public ICollection<Booking> Bookings { get; set; }
+        = new List<Booking>();
 
-        public ICollection<CustomerPackage> CustomerPackages { get; set; }
-            = new List<CustomerPackage>();
+    public ICollection<Session> Sessions { get; set; }
+        = new List<Session>();
 
-        public ICollection<CustomerMembership> CustomerMemberships { get; set; }
-            = new List<CustomerMembership>();
-    }
+    public ICollection<Transaction> Transactions { get; set; }
+        = new List<Transaction>();
+
+    public ICollection<Invoice> Invoices { get; set; }
+        = new List<Invoice>();
+
+    public ICollection<CustomerPackage> CustomerPackages { get; set; }
+        = new List<CustomerPackage>();
+
+    public ICollection<CustomerMembership> CustomerMemberships { get; set; }
+        = new List<CustomerMembership>();
 }

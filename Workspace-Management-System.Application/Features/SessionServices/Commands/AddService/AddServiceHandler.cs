@@ -12,13 +12,13 @@ public class AddServiceHandler : IRequestHandler<AddServiceCommand, SessionServi
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ILocalizationService _localizationService;
 
-    public AddServiceHandler(
-        IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService)
+    public AddServiceHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUserService, ILocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
         _currentUserService = currentUserService;
+        _localizationService = localizationService;
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -74,7 +74,9 @@ public class AddServiceHandler : IRequestHandler<AddServiceCommand, SessionServi
         {
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
-            ServiceName = service.Name,
+            ServiceName = _localizationService.GetLocalizedValue(
+                service.NameEn,
+                service.NameAr),
             ServiceId = sessionService.ServiceId,
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,

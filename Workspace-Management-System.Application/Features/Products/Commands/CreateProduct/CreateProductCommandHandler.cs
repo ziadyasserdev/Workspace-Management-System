@@ -55,32 +55,38 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Cre
                     "A product with the same SKU already exists.");
             }
 
-            var name = request.EnglishName.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
             var nameExists = await _unitOfWork.Products
                 .Query()
                 .AnyAsync(
-                    x => x.EnglishName.ToLower() == name.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == nameEn.ToLower() ||
+                            x.NameAr.ToLower() == nameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (nameExists)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "A product with the same English name already exists.");
+                    "A product with the same name already exists.");
             }
 
             var product = new Product
             {
                 ProductCategoryId = request.ProductCategoryId,
-                EnglishName = name,
-                Description = request.Description?.Trim(),
+                NameEn = nameEn,
+                NameAr = nameAr,
+                DescriptionEn = request.DescriptionEn?.Trim(),
+                DescriptionAr = request.DescriptionAr?.Trim(),
                 Sku = sku,
                 SellingPrice = request.SellingPrice,
                 CostPrice = request.CostPrice,
                 IsActive = request.IsActive,
-
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _currentUser.UserId
             };

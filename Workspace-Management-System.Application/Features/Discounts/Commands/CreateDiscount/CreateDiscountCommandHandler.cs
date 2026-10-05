@@ -25,12 +25,18 @@ namespace Workspace_Management_System.Application.Features.Discounts.Commands.Cr
             CreateDiscountCommand request,
             CancellationToken cancellationToken)
         {
-            var name = request.Name.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
             var exists = await _unitOfWork.Discounts
                 .Query()
                 .AnyAsync(
-                    x => x.Name == name && !x.IsDeleted,
+                    x =>
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == nameEn.ToLower() ||
+                            x.NameAr.ToLower() == nameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (exists)
@@ -44,7 +50,10 @@ namespace Workspace_Management_System.Application.Features.Discounts.Commands.Cr
 
             var discount = new Discount
             {
-                Name = name,
+                NameEn = nameEn,
+                NameAr = nameAr,
+                DescriptionEn = request.DescriptionEn?.Trim(),
+                DescriptionAr = request.DescriptionAr?.Trim(),
                 DiscountType = request.Type,
                 Value = request.Value,
                 IsActive = request.IsActive,

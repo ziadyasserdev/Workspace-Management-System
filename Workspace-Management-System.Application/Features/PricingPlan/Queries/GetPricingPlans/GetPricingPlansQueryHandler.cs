@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Features.PricingPlan.Queries;
 
 namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlans
 {
@@ -24,6 +25,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.G
         {
             var query = unitOfWork.PricingPlans
                 .Query()
+                .AsNoTracking()
                 .Where(x => !x.IsDeleted);
 
             if (!string.IsNullOrWhiteSpace(request.Search))
@@ -31,9 +33,12 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.G
                 var search = request.Search.Trim();
 
                 query = query.Where(x =>
-                    x.Name.Contains(search) ||
-                    (x.Description != null &&
-                     x.Description.Contains(search)));
+                    x.NameEn.Contains(search) ||
+                    x.NameAr.Contains(search) ||
+                    (x.DescriptionEn != null &&
+                     x.DescriptionEn.Contains(search)) ||
+                    (x.DescriptionAr != null &&
+                     x.DescriptionAr.Contains(search)));
             }
 
             if (request.IsActive.HasValue)
@@ -46,12 +51,14 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.G
                 cancellationToken);
 
             var pricingPlans = await query
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.NameEn)
                 .Select(x => new PricingPlanDto
                 {
                     Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
                     IsActive = x.IsActive
                 })
                 .Skip((request.PageNumber - 1) * request.PageSize)

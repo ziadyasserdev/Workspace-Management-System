@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.SessionProducts.Dtos;
@@ -13,17 +14,22 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
-        public AddProductHandler(IUnitOfWork unitOfWork,ICurrentUserService currentUser)
+        private readonly ILocalizationService _localizationService;
+
+        public AddProductHandler(
+            IUnitOfWork unitOfWork,
+            ICurrentUserService currentUser,
+            ILocalizationService localizationService)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizationService = localizationService;
         }
 
         public async Task<SessionProductResponseDto> Handle(
             AddProductCommand request,
             CancellationToken cancellationToken)
         {
-        
             var session = await _unitOfWork.Sessions
                 .Query()
                 .FirstOrDefaultAsync(
@@ -42,7 +48,6 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
                     "Products can only be added to active sessions.");
             }
 
- 
             var product = await _unitOfWork.Products
                 .Query()
                 .FirstOrDefaultAsync(
@@ -58,7 +63,9 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
             if (!product.IsActive)
             {
                 throw new InvalidOperationException(
-                    $"Product '{product.EnglishName}' is not active.");
+                    $"Product '{_localizationService.GetLocalizedValue(
+                        product.NameEn,
+                        product.NameAr)}' is not active.");
             }
 
             var sessionProduct = await _unitOfWork.SessionProducts
@@ -76,33 +83,34 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
                     SessionId = request.SessionId,
                     ProductId = request.ProductId,
                     Quantity = request.Quantity,
-
-                    UnitPrice = product.SellingPrice
+                    UnitPrice = product.SellingPrice,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = _currentUser.UserId
                 };
-                sessionProduct.CreatedAt = DateTime.UtcNow;
-                sessionProduct.CreatedBy = _currentUser.UserId;
+
                 await _unitOfWork.SessionProducts
                     .AddAsync(sessionProduct);
             }
             else
-            {             
+            {
                 sessionProduct.Quantity += request.Quantity;
                 sessionProduct.UpdatedAt = DateTime.UtcNow;
                 sessionProduct.UpdatedBy = _currentUser.UserId;
+
                 _unitOfWork.SessionProducts
                     .Update(sessionProduct);
             }
 
-
             await _unitOfWork.SaveAsync();
-
 
             return new SessionProductResponseDto
             {
                 Id = sessionProduct.Id,
                 SessionId = sessionProduct.SessionId,
                 ProductId = sessionProduct.ProductId,
-                ProductName = product.EnglishName,
+                ProductName = _localizationService.GetLocalizedValue(
+                    product.NameEn,
+                    product.NameAr),
                 Quantity = sessionProduct.Quantity,
                 UnitPrice = sessionProduct.UnitPrice,
                 Total = sessionProduct.Quantity * sessionProduct.UnitPrice

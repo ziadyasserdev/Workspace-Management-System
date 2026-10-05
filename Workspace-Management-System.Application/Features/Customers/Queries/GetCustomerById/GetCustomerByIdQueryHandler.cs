@@ -41,12 +41,14 @@ namespace Workspace_Management_System.Application.Features.Customers.Queries.Get
             var result = new CustomerDto
             {
                 Id = customer.Id,
-                FullName = customer.FullName,
+                FullNameEn = customer.FullNameEn,
+                FullNameAr = customer.FullNameAr,
                 MobileNumber = customer.MobileNumber,
                 Email = customer.Email,
                 CompanyId = customer.CompanyId,
                 CustomerType = customer.CustomerType,
-                Notes = customer.Notes,
+                NotesEn = customer.NotesEn,
+                NotesAr = customer.NotesAr,
                 RegistrationDate = customer.RegistrationDate,
                 Status = customer.Status
             };

@@ -7,19 +7,25 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
     {
         public CreatePricingPlanValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Pricing plan name is required.")
+                .WithMessage("Pricing plan English name is required.")
                 .MaximumLength(100)
-                .WithMessage("Pricing plan name must not exceed 100 characters.");
+                .WithMessage("Pricing plan English name must not exceed 100 characters.");
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.NameAr)
+                .NotEmpty()
+                .WithMessage("Pricing plan Arabic name is required.")
+                .MaximumLength(100)
+                .WithMessage("Pricing plan Arabic name must not exceed 100 characters.");
+
+            RuleFor(x => x.DescriptionEn)
                 .MaximumLength(500)
-                .WithMessage("Pricing plan description must not exceed 500 characters.");
+                .WithMessage("English description must not exceed 500 characters.");
 
-            RuleFor(x => x.IsActive)
-                .NotNull()
-                .WithMessage("Pricing plan active status is required.");
+            RuleFor(x => x.DescriptionAr)
+                .MaximumLength(500)
+                .WithMessage("Arabic description must not exceed 500 characters.");
         }
     }
 }

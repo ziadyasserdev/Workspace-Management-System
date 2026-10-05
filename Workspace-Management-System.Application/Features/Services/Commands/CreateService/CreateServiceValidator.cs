@@ -7,11 +7,17 @@ namespace Workspace_Management_System.Application.Features.Services.Commands.Cre
     {
         public CreateServiceValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NameEn)
                 .NotEmpty()
                 .MaximumLength(100)
                 .WithMessage(
-                    "Service name is required and cannot exceed 100 characters.");
+                    "English service name is required and cannot exceed 100 characters.");
+
+            RuleFor(x => x.NameAr)
+                .NotEmpty()
+                .MaximumLength(100)
+                .WithMessage(
+                    "Arabic service name is required and cannot exceed 100 characters.");
 
             RuleFor(x => x.Price)
                 .GreaterThan(0)

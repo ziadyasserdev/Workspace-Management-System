@@ -11,19 +11,19 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Que
             GetProductCategoryByIdQuery,
             Result<ProductCategoryDto>>
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public GetProductCategoryByIdQueryHandler(
             IUnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<ProductCategoryDto>> Handle(
             GetProductCategoryByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var category = await unitOfWork.ProductCategories
+            var category = await _unitOfWork.ProductCategories
                 .Query()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(
@@ -40,8 +40,10 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Que
             var dto = new ProductCategoryDto
             {
                 Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
+                NameEn = category.NameEn,
+                NameAr = category.NameAr,
+                DescriptionEn = category.DescriptionEn,
+                DescriptionAr = category.DescriptionAr,
                 IsActive = category.IsActive,
                 IsDeleted = category.IsDeleted
             };

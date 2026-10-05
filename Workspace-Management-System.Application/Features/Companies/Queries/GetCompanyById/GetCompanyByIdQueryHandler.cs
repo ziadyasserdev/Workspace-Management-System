@@ -41,13 +41,16 @@ namespace Workspace_Management_System.Application.Features.Companies.Queries.Get
             var result = new CompanyDto
             {
                 Id = company.Id,
-                Name = company.Name,
+                NameEn = company.NameEn,
+                NameAr = company.NameAr,
                 ContactPerson = company.ContactPerson,
                 Phone = company.Phone,
                 Email = company.Email,
                 TaxNumber = company.TaxNumber,
-                TaxInformation = company.TaxInformation,
-                ContractDetails = company.ContractDetails,
+                TaxInformationEn = company.TaxInformationEn,
+                TaxInformationAr = company.TaxInformationAr,
+                ContractDetailsEn = company.ContractDetailsEn,
+                ContractDetailsAr = company.ContractDetailsAr,
                 PricingPlanId = company.PricingPlanId,
                 CreditLimit = company.CreditLimit,
                 IsActive = company.IsActive

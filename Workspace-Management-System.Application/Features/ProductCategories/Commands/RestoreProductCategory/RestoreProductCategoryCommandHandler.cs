@@ -9,22 +9,22 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
     public class RestoreProductCategoryCommandHandler
         : IRequestHandler<RestoreProductCategoryCommand, Result<bool>>
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly ICurrentUserService currentUser;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUser;
 
         public RestoreProductCategoryCommandHandler(
             IUnitOfWork unitOfWork,
             ICurrentUserService currentUser)
         {
-            this.unitOfWork = unitOfWork;
-            this.currentUser = currentUser;
+            _unitOfWork = unitOfWork;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<bool>> Handle(
             RestoreProductCategoryCommand request,
             CancellationToken cancellationToken)
         {
-            var category = await unitOfWork.ProductCategories
+            var category = await _unitOfWork.ProductCategories
                 .Query()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(
@@ -45,13 +45,17 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
                     "Product category is not deleted.");
             }
 
-            var duplicate = await unitOfWork.ProductCategories
+            var duplicate = await _unitOfWork.ProductCategories
                 .Query()
                 .IgnoreQueryFilters()
                 .AnyAsync(
-                    x => x.Id != request.Id
-                         && x.Name.ToLower() == category.Name.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == category.NameEn.ToLower() ||
+                            x.NameAr.ToLower() == category.NameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (duplicate)
@@ -65,11 +69,12 @@ namespace Workspace_Management_System.Application.Features.ProductCategories.Com
             category.IsActive = false;
             category.IsDeletedBy = null;
             category.UpdatedAt = DateTime.UtcNow;
-            category.UpdatedBy = currentUser.UserId;
+            category.UpdatedBy = _currentUser.UserId;
 
-            await unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync();
 
-            return Result<bool>.Success(true,
+            return Result<bool>.Success(
+                true,
                 "Product category restored successfully.");
         }
     }

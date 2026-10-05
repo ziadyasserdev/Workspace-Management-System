@@ -9,23 +9,24 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
     public class RestorePricingPlanCommandHandler
         : IRequestHandler<RestorePricingPlanCommand, Result<bool>>
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly ICurrentUserService currentUser;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUser;
 
         public RestorePricingPlanCommandHandler(
             IUnitOfWork unitOfWork,
             ICurrentUserService currentUser)
         {
-            this.unitOfWork = unitOfWork;
-            this.currentUser = currentUser;
+            _unitOfWork = unitOfWork;
+            _currentUser = currentUser;
         }
 
         public async Task<Result<bool>> Handle(
             RestorePricingPlanCommand request,
             CancellationToken cancellationToken)
         {
-            var pricingPlan = await unitOfWork.PricingPlans
+            var pricingPlan = await _unitOfWork.PricingPlans
                 .Query()
+                .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(
                     x => x.Id == request.Id && x.IsDeleted,
                     cancellationToken);
@@ -37,12 +38,17 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
                     "Deleted pricing plan not found.");
             }
 
-            var duplicateName = await unitOfWork.PricingPlans
+            var duplicateName = await _unitOfWork.PricingPlans
                 .Query()
+                .IgnoreQueryFilters()
                 .AnyAsync(
-                    x => x.Id != request.Id &&
-                         x.Name == pricingPlan.Name &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == pricingPlan.NameEn.ToLower() ||
+                            x.NameAr.ToLower() == pricingPlan.NameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (duplicateName)
@@ -56,9 +62,9 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             pricingPlan.IsDeletedBy = null;
             pricingPlan.IsActive = true;
             pricingPlan.UpdatedAt = DateTime.UtcNow;
-            pricingPlan.UpdatedBy = currentUser.UserId;
+            pricingPlan.UpdatedBy = _currentUser.UserId;
 
-            await unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync();
 
             return Result<bool>.Success(
                 true,

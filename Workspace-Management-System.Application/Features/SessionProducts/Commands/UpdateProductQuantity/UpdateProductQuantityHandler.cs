@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.SessionProducts.Dtos;
@@ -14,11 +15,16 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly ILocalizationService _localizationService;
 
-        public UpdateProductQuantityHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+        public UpdateProductQuantityHandler(
+            IUnitOfWork unitOfWork,
+            ICurrentUserService currentUser,
+            ILocalizationService localizationService)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizationService = localizationService;
         }
 
         public async Task<SessionProductResponseDto> Handle(
@@ -61,6 +67,7 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
             sessionProduct.Quantity = request.Quantity;
             sessionProduct.UpdatedAt = DateTime.UtcNow;
             sessionProduct.UpdatedBy = _currentUser.UserId;
+
             _unitOfWork.SessionProducts.Update(sessionProduct);
 
             await _unitOfWork.SaveAsync();
@@ -70,7 +77,9 @@ namespace Workspace_Management_System.Application.Features.SessionProducts.Comma
                 Id = sessionProduct.Id,
                 SessionId = sessionProduct.SessionId,
                 ProductId = sessionProduct.ProductId,
-                ProductName = sessionProduct.Product.EnglishName,
+                ProductName = _localizationService.GetLocalizedValue(
+                    sessionProduct.Product.NameEn,
+                    sessionProduct.Product.NameAr),
                 Quantity = sessionProduct.Quantity,
                 UnitPrice = sessionProduct.UnitPrice,
                 Total = sessionProduct.Quantity * sessionProduct.UnitPrice

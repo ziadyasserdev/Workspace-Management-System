@@ -6,7 +6,13 @@ namespace Workspace_Management_System.Application.Features.Discounts.Dtos
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
+
+        public string NameAr { get; set; } = string.Empty;
+
+        public string? DescriptionEn { get; set; }
+
+        public string? DescriptionAr { get; set; }
 
         public DiscountType Type { get; set; }
 

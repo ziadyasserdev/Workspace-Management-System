@@ -4,6 +4,7 @@ using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Customers.Dtos;
+
 namespace Workspace_Management_System.Application.Features.Customers.Queries.SearchCustomers
 {
     public class SearchCustomersQueryHandler
@@ -31,27 +32,34 @@ namespace Workspace_Management_System.Application.Features.Customers.Queries.Sea
             var search = request.SearchTerm.Trim();
 
             query = query.Where(x =>
-                x.FullName.Contains(search) ||
+                x.FullNameEn.Contains(search) ||
+                x.FullNameAr.Contains(search) ||
                 x.MobileNumber.Contains(search) ||
                 (x.Email != null &&
-                 x.Email.Contains(search)));
+                 x.Email.Contains(search)) ||
+                (x.NotesEn != null &&
+                 x.NotesEn.Contains(search)) ||
+                (x.NotesAr != null &&
+                 x.NotesAr.Contains(search)));
 
             var totalCount = await query.CountAsync(
                 cancellationToken);
 
             var items = await query
-                .OrderBy(x => x.FullName)
+                .OrderBy(x => x.FullNameEn)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new CustomerDto
                 {
                     Id = x.Id,
-                    FullName = x.FullName,
+                    FullNameEn = x.FullNameEn,
+                    FullNameAr = x.FullNameAr,
                     MobileNumber = x.MobileNumber,
                     Email = x.Email,
                     CompanyId = x.CompanyId,
                     CustomerType = x.CustomerType,
-                    Notes = x.Notes,
+                    NotesEn = x.NotesEn,
+                    NotesAr = x.NotesAr,
                     RegistrationDate = x.RegistrationDate,
                     Status = x.Status
                 })

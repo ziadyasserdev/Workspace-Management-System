@@ -14,8 +14,8 @@ namespace Workspace_Management_System.Application.Features.Bookings.Dtos
         public string BookingNumber { get; set; } = null!;
 
         public int CustomerId { get; set; }
-        public string CustomerName { get; set; } = null!;
-
+        public string CustomerNameEn { get; set; } = null!;
+        public string CustomerNameAr { get; set; } = null!;
         public int WorkspaceId { get; set; }
         public string WorkspaceName { get; set; } = null!;
         public string WorkspaceCode { get; set; } = null!;

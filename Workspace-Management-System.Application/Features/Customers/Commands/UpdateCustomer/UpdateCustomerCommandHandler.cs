@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
-using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer
 {
-    public class UpdateCustomerCommandHandler: IRequestHandler<UpdateCustomerCommand, Result<bool>>
+    public class UpdateCustomerCommandHandler
+        : IRequestHandler<UpdateCustomerCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
@@ -27,8 +27,9 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
             var customer = await _unitOfWork.Customers
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id == request.Id &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (customer is null)
@@ -41,9 +42,10 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
             var exists = await _unitOfWork.Customers
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id &&
-                         x.MobileNumber == request.MobileNumber &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        x.MobileNumber == request.MobileNumber &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (exists)
@@ -53,16 +55,22 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
                     "A customer with the same mobile number already exists.");
             }
 
-        customer.FullName = request.FullName;
+            customer.FullNameEn = request.FullNameEn.Trim();
+            customer.FullNameAr = request.FullNameAr.Trim();
             customer.MobileNumber = request.MobileNumber;
             customer.Email = request.Email;
             customer.CompanyId = request.CompanyId;
             customer.CustomerType = request.CustomerType;
-            customer.Notes = request.Notes;
+            customer.NotesEn = request.NotesEn?.Trim();
+            customer.NotesAr = request.NotesAr?.Trim();
             customer.UpdatedAt = DateTime.UtcNow;
             customer.UpdatedBy = _currentUser.UserId;
+
             await _unitOfWork.SaveAsync();
-            return Result<bool>.Success(true);
+
+            return Result<bool>.Success(
+                true,
+                "Customer updated successfully.");
         }
     }
 }

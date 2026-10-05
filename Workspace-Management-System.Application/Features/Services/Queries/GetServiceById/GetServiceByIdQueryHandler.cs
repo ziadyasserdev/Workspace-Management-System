@@ -28,8 +28,10 @@ namespace Workspace_Management_System.Application.Features.Services.Queries.GetS
                 .Select(x => new ServiceResponseDto
                 {
                     Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
                     Price = x.Price,
                     IsActive = x.IsActive
                 })
