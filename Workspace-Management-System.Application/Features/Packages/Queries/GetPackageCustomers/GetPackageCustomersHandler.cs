@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Packages.Dtos;
 using Workspace_Management_System.Domain.Enums;
@@ -14,10 +15,14 @@ public class GetPackageCustomersHandler
         Result<PaginatedResult<PackageCustomerDto>>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILocalizationService _localizationService;
 
-    public GetPackageCustomersHandler(IUnitOfWork unitOfWork)
+    public GetPackageCustomersHandler(
+        IUnitOfWork unitOfWork,
+        ILocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
+        _localizationService = localizationService;
     }
 
     public async Task<Result<PaginatedResult<PackageCustomerDto>>> Handle(
@@ -41,6 +46,7 @@ public class GetPackageCustomersHandler
 
         var query = _unitOfWork.CustomerPackages
             .Query()
+            .AsNoTracking()
             .Where(x =>
                 x.PackageId == request.PackageId &&
                 !x.IsDeleted &&
@@ -52,7 +58,8 @@ public class GetPackageCustomersHandler
             var search = request.Search.Trim();
 
             query = query.Where(x =>
-                x.Customer.FullName.Contains(search) ||
+                x.Customer.FullNameEn.Contains(search) ||
+                x.Customer.FullNameAr.Contains(search) ||
                 x.Customer.MobileNumber.Contains(search) ||
                 (x.Customer.Email != null &&
                  x.Customer.Email.Contains(search)));
@@ -62,24 +69,41 @@ public class GetPackageCustomersHandler
             .CountAsync(cancellationToken);
 
         var customers = await query
-            .OrderBy(x => x.Customer.FullName)
+            .OrderBy(x => x.Customer.FullNameEn)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
+            .Select(x => new
+            {
+                x.CustomerId,
+                CustomerNameEn = x.Customer.FullNameEn,
+                CustomerNameAr = x.Customer.FullNameAr,
+                x.Customer.MobileNumber,
+                x.Status,
+                x.PurchaseDate,
+                x.StartDate,
+                x.EndDate,
+                x.RemainingHours
+            })
+            .ToListAsync(cancellationToken);
+
+        var customerDtos = customers
             .Select(x => new PackageCustomerDto
             {
                 CustomerId = x.CustomerId,
-                FullName = x.Customer.FullName,
-                MobileNumber = x.Customer.MobileNumber,
+                FullName = _localizationService.GetLocalizedValue(
+                    x.CustomerNameEn,
+                    x.CustomerNameAr),
+                MobileNumber = x.MobileNumber,
                 Status = x.Status,
                 PurchaseDate = x.PurchaseDate,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 RemainingHours = x.RemainingHours
             })
-            .ToListAsync(cancellationToken);
+            .ToList();
 
         var result = new PaginatedResult<PackageCustomerDto>(
-            customers,
+            customerDtos,
             request.PageNumber,
             request.PageSize,
             totalCount);

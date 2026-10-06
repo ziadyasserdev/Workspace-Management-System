@@ -12,7 +12,9 @@ public class CreatePackageCommandHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
 
-    public CreatePackageCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public CreatePackageCommandHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
@@ -29,24 +31,26 @@ public class CreatePackageCommandHandler
         {
             var package = new Package
             {
-                Name = request.Name.Trim(),
+                NameEn = request.NameEn.Trim(),
+                NameAr = request.NameAr.Trim(),
 
-                Description = string.IsNullOrWhiteSpace(request.Description)
-                    ? null
-                    : request.Description.Trim(),
+                DescriptionEn =
+                    string.IsNullOrWhiteSpace(request.DescriptionEn)
+                        ? null
+                        : request.DescriptionEn.Trim(),
+
+                DescriptionAr =
+                    string.IsNullOrWhiteSpace(request.DescriptionAr)
+                        ? null
+                        : request.DescriptionAr.Trim(),
 
                 PackageType = request.PackageType,
-
                 TotalHours = request.TotalHours,
-
                 DurationDays = request.DurationDays,
-
                 Price = request.Price,
-
                 IsActive = true,
-
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = _currentUser.UserId,
+                CreatedBy = _currentUser.UserId
             };
 
             await _unitOfWork.Packages.AddAsync(package);

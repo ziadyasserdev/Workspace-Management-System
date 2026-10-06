@@ -2,7 +2,9 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using Workspace_Management_System.Api.Middleware;
@@ -74,7 +76,11 @@ namespace Workspace_Management_System.Api
                 };
             });
 
+            builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(
+        builder.Configuration.GetConnectionString("DbConn")));
 
+            builder.Services.AddHangfireServer();
 
             builder.Services.AddHangfireServer();
             builder.Services.AddCors(options =>
@@ -127,10 +133,30 @@ namespace Workspace_Management_System.Api
                         .AllowAnyHeader();
                 });
             });
+            builder.Services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
 
+            var supportedCultures = new[]
+{
+    new CultureInfo("en"),
+    new CultureInfo("ar")
+};
+
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
 
             var app = builder.Build();
+            var localizationOptions =
+    app.Services.GetRequiredService<
+        Microsoft.Extensions.Options.IOptions<RequestLocalizationOptions>>();
 
+            app.UseRequestLocalization(localizationOptions.Value);
 
             app.UseHangfireDashboard("/hangfire");
             RecurringJob.AddOrUpdate<MembershipExpirationJob>(

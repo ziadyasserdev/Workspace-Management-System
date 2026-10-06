@@ -7,11 +7,25 @@ public class CreatePackageValidator
 {
     public CreatePackageValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.NameEn)
             .NotEmpty()
-            .WithMessage("Package name is required.")
+            .WithMessage("English package name is required.")
             .MaximumLength(100)
-            .WithMessage("Package name cannot exceed 100 characters.");
+            .WithMessage("English package name cannot exceed 100 characters.");
+
+        RuleFor(x => x.NameAr)
+            .NotEmpty()
+            .WithMessage("Arabic package name is required.")
+            .MaximumLength(100)
+            .WithMessage("Arabic package name cannot exceed 100 characters.");
+
+        RuleFor(x => x.DescriptionEn)
+            .MaximumLength(500)
+            .WithMessage("English package description cannot exceed 500 characters.");
+
+        RuleFor(x => x.DescriptionAr)
+            .MaximumLength(500)
+            .WithMessage("Arabic package description cannot exceed 500 characters.");
 
         RuleFor(x => x.TotalHours)
             .GreaterThan(0)

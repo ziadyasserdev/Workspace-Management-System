@@ -6,9 +6,13 @@ namespace Workspace_Management_System.Application.Features.Packages.Commands.Cre
 
 public class CreatePackageCommand : IRequest<Result<int>>
 {
-    public string Name { get; set; } = null!;
+    public string NameEn { get; set; } = null!;
 
-    public string? Description { get; set; }
+    public string NameAr { get; set; } = null!;
+
+    public string? DescriptionEn { get; set; }
+
+    public string? DescriptionAr { get; set; }
 
     public PackageType PackageType { get; set; }
 

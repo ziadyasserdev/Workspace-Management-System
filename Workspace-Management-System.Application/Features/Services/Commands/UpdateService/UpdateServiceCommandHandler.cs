@@ -1,77 +1,84 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.Services.Commands.UpdateService
+namespace Workspace_Management_System.Application.Features.Services.Commands.UpdateService;
+
+public class UpdateServiceCommandHandler
+    : IRequestHandler<UpdateServiceCommand, Result<bool>>
 {
-    public class UpdateServiceCommandHandler
-        : IRequestHandler<UpdateServiceCommand, Result<bool>>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer<SharedResources> _localizer;
+
+    public UpdateServiceCommandHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IStringLocalizer<SharedResources> localizer)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICurrentUserService _currentUser;
+        _unitOfWork = unitOfWork;
+        _currentUser = currentUser;
+        _localizer = localizer;
+    }
 
-        public UpdateServiceCommandHandler(
-            IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+    public async Task<Result<bool>> Handle(
+        UpdateServiceCommand request,
+        CancellationToken cancellationToken)
+    {
+        var service = await _unitOfWork.Services
+            .Query()
+            .FirstOrDefaultAsync(
+                x => x.Id == request.Id && !x.IsDeleted,
+                cancellationToken);
+
+        if (service == null)
         {
-            _unitOfWork = unitOfWork;
-            _currentUser = currentUser;
+            return Result<bool>.Failure(
+                ResultStatus.NotFound,
+                _localizer["ServiceNotFound"]);
         }
 
-        public async Task<Result<bool>> Handle(
-            UpdateServiceCommand request,
-            CancellationToken cancellationToken)
+        var nameEn = request.NameEn.Trim();
+        var nameAr = request.NameAr.Trim();
+
+        var duplicateName = await _unitOfWork.Services
+            .Query()
+            .AnyAsync(
+                x =>
+                    x.Id != request.Id &&
+                    !x.IsDeleted &&
+                    (
+                        x.NameEn == nameEn ||
+                        x.NameAr == nameAr
+                    ),
+                cancellationToken);
+
+        if (duplicateName)
         {
-            var service = await _unitOfWork.Services
-                .Query()
-                .FirstOrDefaultAsync(
-                    x => x.Id == request.Id && !x.IsDeleted,
-                    cancellationToken);
-
-            if (service == null)
-            {
-                return Result<bool>.Failure(
-                    ResultStatus.NotFound,
-                    "Service not found.");
-            }
-
-            var duplicateName = await _unitOfWork.Services
-                .Query()
-                .AnyAsync(
-                    x =>
-                        x.Id != request.Id &&
-                        !x.IsDeleted &&
-                        (
-                            x.NameEn == request.NameEn ||
-                            x.NameAr == request.NameAr
-                        ),
-                    cancellationToken);
-
-            if (duplicateName)
-            {
-                return Result<bool>.Failure(
-                    ResultStatus.Conflict,
-                    "A service with the same name already exists.");
-            }
-
-            service.NameEn = request.NameEn.Trim();
-            service.NameAr = request.NameAr.Trim();
-            service.DescriptionEn = request.DescriptionEn?.Trim();
-            service.DescriptionAr = request.DescriptionAr?.Trim();
-            service.Price = request.Price;
-            service.IsActive = request.IsActive;
-            service.UpdatedAt = DateTime.UtcNow;
-            service.UpdatedBy = _currentUser.UserId;
-
-            _unitOfWork.Services.Update(service);
-
-            await _unitOfWork.SaveAsync();
-
-            return Result<bool>.Success(
-                true,
-                "Service updated successfully.");
+            return Result<bool>.Failure(
+                ResultStatus.Conflict,
+                _localizer["ServiceWithSameNameAlreadyExists"]);
         }
+
+        service.NameEn = nameEn;
+        service.NameAr = nameAr;
+        service.DescriptionEn = request.DescriptionEn?.Trim();
+        service.DescriptionAr = request.DescriptionAr?.Trim();
+        service.Price = request.Price;
+        service.IsActive = request.IsActive;
+        service.UpdatedAt = DateTime.UtcNow;
+        service.UpdatedBy = _currentUser.UserId;
+
+        _unitOfWork.Services.Update(service);
+
+        await _unitOfWork.SaveAsync();
+
+        return Result<bool>.Success(
+            true,
+            _localizer["ServiceUpdatedSuccessfully"]);
     }
 }

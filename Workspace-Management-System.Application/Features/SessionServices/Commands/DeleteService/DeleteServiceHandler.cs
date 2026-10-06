@@ -1,7 +1,8 @@
 ﻿using MediatR;
-using Workspace_Management_System.Application.Contracts;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Services.Commands.DeleteService;
@@ -10,13 +11,16 @@ public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IStringLocalizer<SharedResources> _localizer;
 
     public DeleteServiceHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IStringLocalizer<SharedResources> localizer)
     {
         _unitOfWork = unitOfWork;
         _currentUserService = currentUserService;
+        _localizer = localizer;
     }
 
     public async Task<bool> Handle(
@@ -27,11 +31,12 @@ public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, bool>
             .GetByIdAsync(request.SessionId);
 
         if (session == null)
-            throw new KeyNotFoundException("Session not found.");
+            throw new KeyNotFoundException(
+                _localizer["SessionNotFound"]);
 
         if (session.Status != SessionStatus.Active)
             throw new InvalidOperationException(
-                "Service can only be deleted from an active session.");
+                _localizer["ServiceCanOnlyBeDeletedFromActiveSession"]);
 
         var sessionService = await _unitOfWork.SessionServices
             .GetBySessionAndServiceAsync(
@@ -40,7 +45,7 @@ public class DeleteServiceHandler : IRequestHandler<DeleteServiceCommand, bool>
 
         if (sessionService == null)
             throw new KeyNotFoundException(
-                "Service is not added to this session.");
+                _localizer["ServiceNotAddedToSession"]);
 
         sessionService.IsDeleted = true;
         sessionService.IsDeletedBy = _currentUserService.UserId;

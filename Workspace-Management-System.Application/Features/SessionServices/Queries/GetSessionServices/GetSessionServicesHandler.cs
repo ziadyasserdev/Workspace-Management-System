@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Services.Queries.GetSessionServices;
 
@@ -11,13 +13,16 @@ public class GetSessionServicesHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer<SharedResources> _localizer;
 
     public GetSessionServicesHandler(
         IUnitOfWork unitOfWork,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IStringLocalizer<SharedResources> localizer)
     {
         _unitOfWork = unitOfWork;
         _localizationService = localizationService;
+        _localizer = localizer;
     }
 
     public async Task<PaginatedResult<SessionServiceResponseDto>> Handle(
@@ -28,7 +33,8 @@ public class GetSessionServicesHandler
             .GetByIdAsync(request.SessionId);
 
         if (session == null)
-            throw new KeyNotFoundException("Session not found.");
+            throw new KeyNotFoundException(
+                _localizer["SessionNotFound"]);
 
         var services = await _unitOfWork.SessionServices
             .GetAllAsync();
