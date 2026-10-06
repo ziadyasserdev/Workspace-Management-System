@@ -12,16 +12,16 @@ public class GetSessionServiceByIdHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILocalizationService _localizationService;
-    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly IStringLocalizer _localizer;
 
     public GetSessionServiceByIdHandler(
         IUnitOfWork unitOfWork,
         ILocalizationService localizationService,
-        IStringLocalizer<SharedResources> localizer)
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _localizationService = localizationService;
-        _localizer = localizer;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -32,15 +32,19 @@ public class GetSessionServiceByIdHandler
             .GetByIdAsync(request.Id);
 
         if (sessionService == null)
+        {
             throw new KeyNotFoundException(
                 _localizer["SessionServiceNotFound"]);
+        }
 
         var service = await _unitOfWork.Services
             .GetByIdAsync(sessionService.ServiceId);
 
         if (service == null)
+        {
             throw new KeyNotFoundException(
                 _localizer["ServiceNotFound"]);
+        }
 
         return new SessionServiceResponseDto
         {

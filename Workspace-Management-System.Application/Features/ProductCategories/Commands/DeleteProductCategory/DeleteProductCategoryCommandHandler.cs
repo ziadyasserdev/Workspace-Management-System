@@ -1,53 +1,57 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.ProductCategories.Commands.DeleteProductCategory
+namespace Workspace_Management_System.Application.Features.ProductCategories.Commands.DeleteProductCategory;
+
+public class DeleteProductCategoryCommandHandler
+    : IRequestHandler<DeleteProductCategoryCommand, Result<bool>>
 {
-    public class DeleteProductCategoryCommandHandler
-        : IRequestHandler<DeleteProductCategoryCommand, Result<bool>>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
+
+    public DeleteProductCategoryCommandHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly ICurrentUserService currentUser;
+        _unitOfWork = unitOfWork;
+        _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
+    }
 
-        public DeleteProductCategoryCommandHandler(
-            IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+    public async Task<Result<bool>> Handle(
+        DeleteProductCategoryCommand request,
+        CancellationToken cancellationToken)
+    {
+        var category = await _unitOfWork.ProductCategories
+            .Query()
+            .FirstOrDefaultAsync(
+                x => x.Id == request.Id && !x.IsDeleted,
+                cancellationToken);
+
+        if (category == null)
         {
-            this.unitOfWork = unitOfWork;
-            this.currentUser = currentUser;
+            return Result<bool>.Failure(
+                ResultStatus.NotFound,
+                _localizer["ProductCategoryNotFound"]);
         }
 
-        public async Task<Result<bool>> Handle(
-            DeleteProductCategoryCommand request,
-            CancellationToken cancellationToken)
-        {
-            var category = await unitOfWork.ProductCategories
-                .Query()
-                .FirstOrDefaultAsync(
-                    x => x.Id == request.Id && !x.IsDeleted,
-                    cancellationToken);
+        category.IsDeleted = true;
+        category.IsActive = false;
+        category.IsDeletedBy = _currentUser.UserId;
+        category.UpdatedAt = DateTime.UtcNow;
+        category.UpdatedBy = _currentUser.UserId;
 
-            if (category == null)
-            {
-                return Result<bool>.Failure(
-                    ResultStatus.NotFound,
-                    "Product category not found.");
-            }
+        await _unitOfWork.SaveAsync();
 
-            category.IsDeleted = true;
-            category.IsActive = false;
-            category.IsDeletedBy = currentUser.UserId;
-            category.UpdatedAt = DateTime.UtcNow;
-            category.UpdatedBy = currentUser.UserId;
-
-            await unitOfWork.SaveAsync();
-
-            return Result<bool>.Success(
-                true,
-                "Product category deleted successfully.");
-        }
+        return Result<bool>.Success(
+            true,
+            _localizer["ProductCategoryDeletedSuccessfully"]);
     }
 }

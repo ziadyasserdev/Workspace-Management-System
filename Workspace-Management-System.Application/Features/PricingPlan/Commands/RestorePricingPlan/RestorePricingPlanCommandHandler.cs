@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.RestorePricingPlan
 {
@@ -11,13 +13,16 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public RestorePricingPlanCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -35,7 +40,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Deleted pricing plan not found.");
+                    _localizer["DeletedPricingPlanNotFound"]);
             }
 
             var duplicateName = await _unitOfWork.PricingPlans
@@ -55,7 +60,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A pricing plan with the same name already exists.");
+                    _localizer["PricingPlanWithSameNameAlreadyExists"]);
             }
 
             pricingPlan.IsDeleted = false;
@@ -68,7 +73,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
 
             return Result<bool>.Success(
                 true,
-                "Pricing plan restored successfully.");
+                _localizer["PricingPlanRestoredSuccessfully"]);
         }
     }
 }

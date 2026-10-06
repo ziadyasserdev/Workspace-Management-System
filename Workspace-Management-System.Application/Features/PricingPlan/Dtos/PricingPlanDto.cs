@@ -3,10 +3,8 @@
     public class PricingPlanDto
     {
         public int Id { get; set; }
-        public string NameEn { get; set; } = null!;
-        public string NameAr { get; set; } = null!;
-        public string? DescriptionEn { get; set; }
-        public string? DescriptionAr { get; set; }
+        public string Name{ get; set; } = null!;
+        public string? Description { get; set; }
         public bool IsActive { get; set; }
     }
 }

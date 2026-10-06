@@ -15,16 +15,16 @@ public class GetSessionProductsHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILocalizationService _localizationService;
-    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly IStringLocalizer _localizer;
 
     public GetSessionProductsHandler(
         IUnitOfWork unitOfWork,
         ILocalizationService localizationService,
-        IStringLocalizer<SharedResources> localizer)
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _localizationService = localizationService;
-        _localizer = localizer;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<List<SessionProductResponseDto>> Handle(
@@ -33,6 +33,7 @@ public class GetSessionProductsHandler
     {
         var session = await _unitOfWork.Sessions
             .Query()
+            .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.Id == request.SessionId,
                 cancellationToken);
@@ -45,6 +46,7 @@ public class GetSessionProductsHandler
 
         var sessionProducts = await _unitOfWork.SessionProducts
             .Query()
+            .AsNoTracking()
             .Include(x => x.Product)
             .Where(x => x.SessionId == request.SessionId)
             .ToListAsync(cancellationToken);

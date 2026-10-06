@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.DeactivatePackage;
@@ -12,11 +15,16 @@ public class DeactivatePackageHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
-    public DeactivatePackageHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public DeactivatePackageHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -30,14 +38,14 @@ public class DeactivatePackageHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         if (!package.IsActive)
         {
             return Result<int>.Failure(
                 ResultStatus.Conflict,
-                "Package is already inactive.");
+                _localizer["PackageAlreadyInactive"]);
         }
 
         var hasActiveCustomers = await _unitOfWork.CustomerPackages
@@ -53,7 +61,7 @@ public class DeactivatePackageHandler
         {
             return Result<int>.Failure(
                 ResultStatus.Conflict,
-                "Cannot deactivate a package with active customers.");
+                _localizer["CannotDeactivatePackageWithActiveCustomers"]);
         }
 
         package.IsActive = false;
@@ -65,6 +73,7 @@ public class DeactivatePackageHandler
 
         return Result<int>.Success(
             package.Id,
-            "Package deactivated successfully.");
+            _localizer["PackageDeactivatedSuccessfully"]);
     }
 }
+

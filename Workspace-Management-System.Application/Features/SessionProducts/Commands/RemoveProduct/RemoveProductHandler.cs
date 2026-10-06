@@ -13,16 +13,16 @@ public class RemoveProductHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
-    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly IStringLocalizer _localizer;
 
     public RemoveProductHandler(
         IUnitOfWork unitOfWork,
         ICurrentUserService currentUser,
-        IStringLocalizer<SharedResources> localizer)
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
-        _localizer = localizer;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Unit> Handle(

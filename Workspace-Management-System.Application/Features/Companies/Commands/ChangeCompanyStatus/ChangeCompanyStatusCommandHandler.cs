@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Companies.Commands.ChangeCompanyStatus
 {
@@ -13,13 +15,16 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Ch
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public ChangeCompanyStatusCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -36,14 +41,14 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Ch
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Company not found.");
+                    _localizer["CompanyNotFound"]);
             }
 
             if (company.IsDeleted)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Company is deleted.");
+                    _localizer["CompanyIsDeleted"]);
             }
 
             company.IsActive = request.IsActive;
@@ -55,7 +60,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Ch
 
             return Result<bool>.Success(
                 true,
-                "Company status changed successfully.");
+                _localizer["CompanyStatusChangedSuccessfully"]);
         }
     }
 }

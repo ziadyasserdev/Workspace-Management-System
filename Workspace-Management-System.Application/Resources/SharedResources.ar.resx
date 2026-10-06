@@ -117,8 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActiveConflictingPricingRuleAlreadyExists" xml:space="preserve">
+    <value> توجد قاعدة {0} نشطة بالفعل لخطة التسعير ونوع مساحة العمل المحددين.</value>
+  </data>
+  <data name="ActiveCustomerPackageNotFound" xml:space="preserve">
+    <value>لم يتم العثور على باقة نشطة للعميل.</value>
+  </data>
   <data name="ActiveServiceWithSameNameAlreadyExists" xml:space="preserve">
     <value> توجد خدمة نشطة بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="AnotherActiveCompanyWithSameName" xml:space="preserve">
+    <value>توجد شركة نشطة أخرى بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="AnotherActiveCustomerUsesMobileNumber" xml:space="preserve">
+    <value>يوجد عميل نشط آخر يستخدم رقم الهاتف المحمول هذا بالفعل.</value>
+  </data>
+  <data name="ArabicContractDetailsMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز تفاصيل العقد باللغة العربية 1000 حرف.</value>
+  </data>
+  <data name="ArabicDescriptionMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف باللغة العربية 500 حرف.</value>
+  </data>
+  <data name="ArabicNotesMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز الملاحظات باللغة العربية 500 حرف.</value>
+  </data>
+  <data name="ArabicPackageDescriptionMaxLength" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز وصف الباقة باللغة العربية 500 حرف.</value>
+  </data>
+  <data name="ArabicPackageNameMaxLength" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز اسم الباقة باللغة العربية 100 حرف.</value>
+  </data>
+  <data name="ArabicPackageNameRequired" xml:space="preserve">
+    <value> اسم الباقة باللغة العربية مطلوب.</value>
   </data>
   <data name="ArabicServiceNameMaxLength" xml:space="preserve">
     <value>لا يمكن أن يتجاوز اسم الخدمة باللغة العربية 100 حرف.</value>
@@ -126,14 +156,605 @@
   <data name="ArabicServiceNameRequired" xml:space="preserve">
     <value>اسم الخدمة باللغة العربية مطلوب.</value>
   </data>
+  <data name="ArabicTaxInformationMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز المعلومات الضريبية باللغة العربية 500 حرف.</value>
+  </data>
+  <data name="CannotAssignInactivePackage" xml:space="preserve">
+    <value> لا يمكن تعيين باقة غير مفعّلة.</value>
+  </data>
+  <data name="CannotDeactivatePackageWithActiveCustomers" xml:space="preserve">
+    <value> لا يمكن إلغاء تفعيل باقة لديها عملاء مفعّلون.</value>
+  </data>
+  <data name="CannotDeletePackageWithActiveCustomers" xml:space="preserve">
+    <value>لا يمكن حذف باقة لديها عملاء مفعّلون.</value>
+  </data>
+  <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
+    <value>لا يمكن الترقية إلى باقة غير مفعّلة.</value>
+  </data>
+  <data name="CheckoutRequestRequired" xml:space="preserve">
+    <value>طلب إتمام الدفع مطلوب.</value>
+  </data>
+  <data name="CheckoutTimeCannotBeBeforeSessionStart" xml:space="preserve">
+    <value>لا يمكن أن يكون وقت إتمام الدفع قبل وقت بدء الجلسة.</value>
+  </data>
+  <data name="CompaniesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الشركات بنجاح.</value>
+  </data>
+  <data name="CompanyAlreadyActive" xml:space="preserve">
+    <value>الشركة نشطة بالفعل.</value>
+  </data>
+  <data name="CompanyAlreadyDeleted" xml:space="preserve">
+    <value>الشركة محذوفة بالفعل.</value>
+  </data>
+  <data name="CompanyArabicNameMaxLength" xml:space="preserve">
+    <value> يجب ألا يتجاوز اسم الشركة باللغة العربية 150 حرفًا.</value>
+  </data>
+  <data name="CompanyArabicNameRequired" xml:space="preserve">
+    <value>اسم الشركة باللغة العربية مطلوب.</value>
+  </data>
+  <data name="CompanyCreatedSuccessfully" xml:space="preserve">
+    <value> تم إنشاء الشركة بنجاح.</value>
+  </data>
+  <data name="CompanyCustomersRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع عملاء الشركة بنجاح.</value>
+  </data>
+  <data name="CompanyDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف الشركة بنجاح.</value>
+  </data>
+  <data name="CompanyEmailMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز البريد الإلكتروني 150 حرفًا.</value>
+  </data>
+  <data name="CompanyEnglishNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم الشركة باللغة الإنجليزية 150 حرفًا.</value>
+  </data>
+  <data name="CompanyEnglishNameRequired" xml:space="preserve">
+    <value> اسم الشركة باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="CompanyIsDeleted" xml:space="preserve">
+    <value>الشركة محذوفة.</value>
+  </data>
+  <data name="CompanyNotFound" xml:space="preserve">
+    <value> الشركة غير موجودة.</value>
+  </data>
+  <data name="CompanyRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة الشركة بنجاح.</value>
+  </data>
+  <data name="CompanyRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الشركة بنجاح.</value>
+  </data>
+  <data name="CompanySameNameAlreadyExists" xml:space="preserve">
+    <value>توجد شركة بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="CompanyStatusChangedSuccessfully" xml:space="preserve">
+    <value>تم تغيير حالة الشركة بنجاح.</value>
+  </data>
+  <data name="CompanyUpdatedSuccessfully" xml:space="preserve">
+    <value> تم تحديث الشركة بنجاح.</value>
+  </data>
+  <data name="ContactPersonMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم الشخص المسؤول 150 حرفًا.</value>
+  </data>
+  <data name="ContactPersonRequired" xml:space="preserve">
+    <value>اسم الشخص المسؤول مطلوب.</value>
+  </data>
+  <data name="CorporateCustomerRequiresCompay" xml:space="preserve">
+    <value>يجب أن يكون العملاء من نوع الشركات مرتبطين بشركة.</value>
+  </data>
+  <data name="CostPriceGreaterThanOrEqualZero" xml:space="preserve">
+    <value>يجب أن يكون سعر التكلفة أكبر من أو يساوي صفرًا.</value>
+  </data>
+  <data name="CreditLimitCannotBeNegative" xml:space="preserve">
+    <value>لا يمكن أن يكون حد الائتمان سالبًا.</value>
+  </data>
+  <data name="CustomerAlreadyActive" xml:space="preserve">
+    <value>العميل نشط بالفعل.</value>
+  </data>
+  <data name="CustomerAlreadyDeleted" xml:space="preserve">
+    <value>العميل محذوف بالفعل.</value>
+  </data>
+  <data name="CustomerAlreadyHasActivePackage" xml:space="preserve">
+    <value> العميل لديه بالفعل باقة مفعّلة.</value>
+  </data>
+  <data name="CustomerAlreadyHasThisPackage" xml:space="preserve">
+    <value>العميل لديه هذه الباقة بالفعل.</value>
+  </data>
+  <data name="CustomerArabicFullNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم العميل الكامل باللغة العربية 150 حرفًا.</value>
+  </data>
+  <data name="CustomerArabicFullNameRequired" xml:space="preserve">
+    <value>اسم العميل الكامل باللغة العربية مطلوب.</value>
+  </data>
+  <data name="CustomerAssignedToPackageSuccessfully" xml:space="preserve">
+    <value>تم تعيين العميل إلى الباقة بنجاح.</value>
+  </data>
+  <data name="CustomerCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء العميل بنجاح.</value>
+  </data>
+  <data name="CustomerDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف العميل بنجاح.</value>
+  </data>
+  <data name="CustomerDoesNotHaveActivePackage" xml:space="preserve">
+    <value>العميل ليس لديه باقة نشطة.</value>
+  </data>
+  <data name="CustomerEnglishFullNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم العميل الكامل باللغة الإنجليزية 150 حرفًا.</value>
+  </data>
+  <data name="CustomerEnglishFullNameRequired" xml:space="preserve">
+    <value>اسم العميل الكامل باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="CustomerIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون معرّف العميل أكبر من صفر.</value>
+  </data>
+  <data name="CustomerNotFound" xml:space="preserve">
+    <value>العميل غير موجود.</value>
+  </data>
+  <data name="CustomerPackageStatus_Active" xml:space="preserve">
+    <value>نشطة</value>
+  </data>
+  <data name="CustomerPackageStatus_Cancelled" xml:space="preserve">
+    <value>ملغاة</value>
+  </data>
+  <data name="CustomerPackageStatus_Completed" xml:space="preserve">
+    <value>مكتملة</value>
+  </data>
+  <data name="CustomerPackageStatus_Expired" xml:space="preserve">
+    <value>منتهية</value>
+  </data>
+  <data name="CustomerPackageStatus_Upgraded" xml:space="preserve">
+    <value>تمت ترقيتها</value>
+  </data>
+  <data name="CustomerPackageUpgradedSuccessfully" xml:space="preserve">
+    <value>تمت ترقية باقة العميل بنجاح.</value>
+  </data>
+  <data name="CustomerRemovedFromPackageSuccessfully" xml:space="preserve">
+    <value>تم إزالة العميل من الباقة بنجاح.</value>
+  </data>
+  <data name="CustomerRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة العميل بنجاح.</value>
+  </data>
+  <data name="CustomerRetrievedSuccessfully" xml:space="preserve">
+    <value> تم استرجاع العميل بنجاح.</value>
+  </data>
+  <data name="CustomerSameMobileNumberAlreadyExists" xml:space="preserve">
+    <value> يوجد عميل بنفس رقم الهاتف المحمول بالفعل.</value>
+  </data>
+  <data name="CustomersRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع العملاء بنجاح.</value>
+  </data>
+  <data name="CustomersSearchedSuccessfully" xml:space="preserve">
+    <value>تم البحث عن العملاء بنجاح.</value>
+  </data>
+  <data name="CustomerStatus_Active" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="CustomerStatus_Blocked" xml:space="preserve">
+    <value>محظور</value>
+  </data>
+  <data name="CustomerStatus_Inactive" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+  <data name="CustomerTypeCannotBeAssociatedWithCompany" xml:space="preserve">
+    <value>لا يمكن ربط نوع العميل هذا بشركة.</value>
+  </data>
+  <data name="CustomerTypesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع أنواع العملاء بنجاح.</value>
+  </data>
+  <data name="CustomerType_Corporate" xml:space="preserve">
+    <value>شركة</value>
+  </data>
+  <data name="CustomerType_Individual" xml:space="preserve">
+    <value>فرد</value>
+  </data>
+  <data name="CustomerType_Member" xml:space="preserve">
+    <value>عضو</value>
+  </data>
+  <data name="CustomerType_WalkIn" xml:space="preserve">
+    <value>عميل عابر</value>
+  </data>
+  <data name="CustomerUpdatedSuccessfully" xml:space="preserve">
+    <value> تم تحديث العميل بنجاح.</value>
+  </data>
+  <data name="DeletedDiscountNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الخصم المحذوف.</value>
+  </data>
+  <data name="DeletedPackageNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الباقة المحذوفة.</value>
+  </data>
+  <data name="DeletedPricingPlanNotFound" xml:space="preserve">
+    <value>خطة التسعير المحذوفة غير موجودة.</value>
+  </data>
+  <data name="DeletedPricingRuleNotFound" xml:space="preserve">
+    <value> قاعدة التسعير المحذوفة غير موجودة.</value>
+  </data>
+  <data name="DeletedProductNotFound" xml:space="preserve">
+    <value>المنتج المحذوف غير موجود.</value>
+  </data>
   <data name="DeletedServiceNotFound" xml:space="preserve">
     <value>الخدمة المحذوفة غير موجودة.</value>
+  </data>
+  <data name="DiscountArabicNameMaxLength" xml:space="preserve">
+    <value> يجب ألا يتجاوز اسم الخصم باللغة العربية 100 حرف.</value>
+  </data>
+  <data name="DiscountArabicNameRequired" xml:space="preserve">
+    <value>اسم الخصم باللغة العربية مطلوب.</value>
+  </data>
+  <data name="DiscountCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء الخصم بنجاح.</value>
+  </data>
+  <data name="DiscountDeletedSuccessfully" xml:space="preserve">
+    <value> تم حذف الخصم بنجاح.</value>
+  </data>
+  <data name="DiscountEnglishNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم الخصم باللغة الإنجليزية 100 حرف.</value>
+  </data>
+  <data name="DiscountEnglishNameRequired" xml:space="preserve">
+    <value>اسم الخصم باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="DiscountIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون معرّف الخصم أكبر من صفر.</value>
+  </data>
+  <data name="DiscountIsNotActive" xml:space="preserve">
+    <value> الخصم غير مفعّل.</value>
+  </data>
+  <data name="DiscountNotFound" xml:space="preserve">
+    <value> الخصم غير موجود.</value>
+  </data>
+  <data name="DiscountPercentageCannotExceed100" xml:space="preserve">
+    <value>لا يمكن أن تتجاوز نسبة الخصم 100.</value>
+  </data>
+  <data name="DiscountRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة الخصم بنجاح.</value>
+  </data>
+  <data name="DiscountRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الخصم بنجاح.</value>
+  </data>
+  <data name="DiscountSameNameAlreadyExists" xml:space="preserve">
+    <value>يوجد خصم بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="DiscountsRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الخصومات بنجاح.</value>
+  </data>
+  <data name="DiscountType_FixedAmount" xml:space="preserve">
+    <value>مبلغ ثابت</value>
+  </data>
+  <data name="DiscountType_Percentage" xml:space="preserve">
+    <value>نسبة مئوية</value>
+  </data>
+  <data name="DiscountUpdatedSuccessfully" xml:space="preserve">
+    <value> تم تحديث الخصم بنجاح.</value>
+  </data>
+  <data name="DiscountValueCannotBeNegative" xml:space="preserve">
+    <value>لا يمكن أن تكون قيمة الخصم سالبة.</value>
+  </data>
+  <data name="DiscountValueMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن تكون قيمة الخصم أكبر من صفر.</value>
+  </data>
+  <data name="DurationDaysMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن تكون مدة الباقة بالأيام أكبر من صفر.</value>
+  </data>
+  <data name="EndDateCannotBeBeforeStartDate" xml:space="preserve">
+    <value>لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء.</value>
+  </data>
+  <data name="EnglishContractDetailsMaxLength" xml:space="preserve">
+    <value> يجب ألا تتجاوز تفاصيل العقد باللغة الإنجليزية 1000 حرف.</value>
+  </data>
+  <data name="EnglishDescriptionMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف باللغة الإنجليزية 500 حرف.</value>
+  </data>
+  <data name="EnglishNotesMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز الملاحظات باللغة الإنجليزية 500 حرف.</value>
+  </data>
+  <data name="EnglishPackageDescriptionMaxLength" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز وصف الباقة باللغة الإنجليزية 500 حرف.</value>
+  </data>
+  <data name="EnglishPackageNameMaxLength" xml:space="preserve">
+    <value> لا يمكن أن يتجاوز اسم الباقة باللغة الإنجليزية 100 حرف.</value>
+  </data>
+  <data name="EnglishPackageNameRequired" xml:space="preserve">
+    <value>اسم الباقة باللغة الإنجليزية مطلوب.</value>
   </data>
   <data name="EnglishServiceNameMaxLength" xml:space="preserve">
     <value>لا يمكن أن يتجاوز اسم الخدمة باللغة الإنجليزية 100 حرف.</value>
   </data>
   <data name="EnglishServiceNameRequired" xml:space="preserve">
     <value>اسم الخدمة باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="EnglishTaxInformationMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز المعلومات الضريبية باللغة الإنجليزية 500 حرف.</value>
+  </data>
+  <data name="Gender_Female" xml:space="preserve">
+    <value>أنثى</value>
+  </data>
+  <data name="Gender_Male" xml:space="preserve">
+    <value>ذكر</value>
+  </data>
+  <data name="InsufficientPackageHours" xml:space="preserve">
+    <value>لدى العميل {0} ساعة فقط متبقية في الباقة، بينما تتطلب هذه الجلسة {1:F2} ساعة.</value>
+  </data>
+  <data name="InvalidCustomerType" xml:space="preserve">
+    <value>نوع العميل غير صالح.</value>
+  </data>
+  <data name="InvalidEgyptianMobileNumber" xml:space="preserve">
+    <value>يجب أن يكون رقم الهاتف المحمول رقمًا مصريًا صالحًا.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>يجب أن يكون البريد الإلكتروني صالحًا.</value>
+  </data>
+  <data name="ItemType_Product" xml:space="preserve">
+    <value>منتج</value>
+  </data>
+  <data name="ItemType_Service" xml:space="preserve">
+    <value>خدمة</value>
+  </data>
+  <data name="ItemType_Workspace" xml:space="preserve">
+    <value>مساحة العمل</value>
+  </data>
+  <data name="MobileNumberRequired" xml:space="preserve">
+    <value>رقم الهاتف المحمول مطلوب.</value>
+  </data>
+  <data name="NewPackageIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون معرّف الباقة الجديدة أكبر من صفر.</value>
+  </data>
+  <data name="NewPackageNotFound" xml:space="preserve">
+    <value>الباقة الجديدة غير موجودة.</value>
+  </data>
+  <data name="NoApplicablePricingRules" xml:space="preserve">
+    <value>لم يتم العثور على قواعد تسعير مناسبة لهذه الجلسة.</value>
+  </data>
+  <data name="OnlyActiveSessionsCanBeCheckedOut" xml:space="preserve">
+    <value>يمكن إتمام الدفع للجلسات النشطة فقط.</value>
+  </data>
+  <data name="PackageActivatedSuccessfully" xml:space="preserve">
+    <value>تم تفعيل الباقة بنجاح.</value>
+  </data>
+  <data name="PackageAlreadyActive" xml:space="preserve">
+    <value>الباقة مفعّلة بالفعل.</value>
+  </data>
+  <data name="PackageAlreadyActiveOrNotDeleted" xml:space="preserve">
+    <value>الباقة مفعّلة بالفعل أو غير محذوفة.</value>
+  </data>
+  <data name="PackageAlreadyInactive" xml:space="preserve">
+    <value>الباقة غير مفعّلة بالفعل.</value>
+  </data>
+  <data name="PackageCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء الباقة بنجاح.</value>
+  </data>
+  <data name="PackageCustomersRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع عملاء الباقة بنجاح.</value>
+  </data>
+  <data name="PackageDeactivatedSuccessfully" xml:space="preserve">
+    <value> تم إلغاء تفعيل الباقة بنجاح.</value>
+  </data>
+  <data name="PackageDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف الباقة بنجاح.</value>
+  </data>
+  <data name="PackageIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون معرّف الباقة أكبر من صفر.</value>
+  </data>
+  <data name="PackageNotFound" xml:space="preserve">
+    <value>الباقة غير موجودة.</value>
+  </data>
+  <data name="PackageRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة الباقة بنجاح.</value>
+  </data>
+  <data name="PackageRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الباقة بنجاح.</value>
+  </data>
+  <data name="PackagesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الباقات بنجاح.</value>
+  </data>
+  <data name="PackageType_MeetingRoomHours" xml:space="preserve">
+    <value>ساعات غرفة الاجتماعات</value>
+  </data>
+  <data name="PackageType_Mixed" xml:space="preserve">
+    <value>مختلط</value>
+  </data>
+  <data name="PackageType_WorkspaceHours" xml:space="preserve">
+    <value>ساعات مساحة العمل</value>
+  </data>
+  <data name="PackageUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث الباقة بنجاح.</value>
+  </data>
+  <data name="PageNumberGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون رقم الصفحة أكبر من صفر.</value>
+  </data>
+  <data name="PageSizeBetweenOneAndOneHundred" xml:space="preserve">
+    <value>يجب أن يكون حجم الصفحة بين 1 و100.</value>
+  </data>
+  <data name="PercentageDiscountCannotExceed100" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز الخصم بالنسبة المئوية 100.</value>
+  </data>
+  <data name="PriceCannotBeNegative" xml:space="preserve">
+    <value>لا يمكن أن يكون السعر سالبًا.</value>
+  </data>
+  <data name="PricingPlanArabicNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم خطة التسعير باللغة العربية 100 حرف.</value>
+  </data>
+  <data name="PricingPlanArabicNameRequired" xml:space="preserve">
+    <value>اسم خطة التسعير باللغة العربية مطلوب.</value>
+  </data>
+  <data name="PricingPlanCannotBeDeletedAssignedToCompany" xml:space="preserve">
+    <value>لا يمكن حذف خطة التسعير لأنها مرتبطة بشركة.</value>
+  </data>
+  <data name="PricingPlanCannotBeDeletedHasPricingRules" xml:space="preserve">
+    <value>لا يمكن حذف خطة التسعير لأنها تحتوي على قواعد تسعير.</value>
+  </data>
+  <data name="PricingPlanCreatedSuccessfully" xml:space="preserve">
+    <value> تم إنشاء خطة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingPlanDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف خطة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingPlanEnglishNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم خطة التسعير باللغة الإنجليزية 100 حرف.</value>
+  </data>
+  <data name="PricingPlanEnglishNameRequired" xml:space="preserve">
+    <value>اسم خطة التسعير باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="PricingPlanIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون رقم خطة التسعير أكبر من صفر.</value>
+  </data>
+  <data name="PricingPlanNotFound" xml:space="preserve">
+    <value>خطة التسعير غير موجودة.</value>
+  </data>
+  <data name="PricingPlanRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة خطة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingPlanUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث خطة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingPlanWithSameNameAlreadyExists" xml:space="preserve">
+    <value>توجد خطة تسعير بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="PricingRuleCreatedSuccessfully" xml:space="preserve">
+    <value> تم إنشاء قاعدة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingRuleDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف قاعدة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingRuleEndDateGreaterThanOrEqualStartDate" xml:space="preserve">
+    <value>يجب أن يكون تاريخ الانتهاء أكبر من أو يساوي تاريخ البدء.</value>
+  </data>
+  <data name="PricingRuleIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون رقم قاعدة التسعير أكبر من صفر.</value>
+  </data>
+  <data name="PricingRuleNotFound" xml:space="preserve">
+    <value>قاعدة التسعير غير موجودة.</value>
+  </data>
+  <data name="PricingRuleRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة قاعدة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingRuleRetrievedSuccessfully" xml:space="preserve">
+    <value> تم استرجاع قاعدة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingRulesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع قواعد التسعير بنجاح.</value>
+  </data>
+  <data name="PricingRuleType_ExtraHourPrice" xml:space="preserve">
+    <value>سعر الساعة الإضافية</value>
+  </data>
+  <data name="PricingRuleType_FullDayMaximum" xml:space="preserve">
+    <value>الحد الأقصى لليوم الكامل</value>
+  </data>
+  <data name="PricingRuleType_HalfHourRate" xml:space="preserve">
+    <value>السعر لنصف الساعة</value>
+  </data>
+  <data name="PricingRuleType_HourlyRae" xml:space="preserve">
+    <value>السعر بالساعة</value>
+  </data>
+  <data name="PricingRuleType_MemberPricing" xml:space="preserve">
+    <value>تسعير الأعضاء</value>
+  </data>
+  <data name="PricingRuleType_MinimumCharge" xml:space="preserve">
+    <value> الحد الأدنى للتكلفة</value>
+  </data>
+  <data name="PricingRuleType_PackagePrice" xml:space="preserve">
+    <value>سعر الباقة</value>
+  </data>
+  <data name="PricingRuleType_RoundDown" xml:space="preserve">
+    <value>التقريب لأسفل</value>
+  </data>
+  <data name="PricingRuleType_RoundUp" xml:space="preserve">
+    <value>التقريب لأعلى</value>
+  </data>
+  <data name="PricingRuleType_SpecialPricing" xml:space="preserve">
+    <value>التسعير الخاص</value>
+  </data>
+  <data name="PricingRuleType_WeekendPricing" xml:space="preserve">
+    <value>تسعير عطلة نهاية الأسبوع</value>
+  </data>
+  <data name="PricingRuleUpdatedSuccessfully" xml:space="preserve">
+    <value> تم تحديث قاعدة التسعير بنجاح.</value>
+  </data>
+  <data name="PricingRuleValueGreaterThanOrEqualZero" xml:space="preserve">
+    <value>يجب أن تكون قيمة قاعدة التسعير أكبر من أو تساوي صفرًا.</value>
+  </data>
+  <data name="PricingRuleWithSameTypeAlreadyExists" xml:space="preserve">
+    <value>توجد قاعدة تسعير من نفس النوع بالفعل لخطة التسعير ونوع مساحة العمل المحددين.</value>
+  </data>
+  <data name="ProductArabicDescriptionMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف باللغة العربية 500 حرف.</value>
+  </data>
+  <data name="ProductArabicNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم المنتج باللغة العربية 150 حرفًا.</value>
+  </data>
+  <data name="ProductArabicNameRequired" xml:space="preserve">
+    <value>اسم المنتج باللغة العربية مطلوب.</value>
+  </data>
+  <data name="ProductCategoriesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع فئات المنتجات بنجاح.</value>
+  </data>
+  <data name="ProductCategoryArabicDescriptionMaxLength" xml:space="preserve">
+    <value> يجب ألا يتجاوز الوصف باللغة العربية 500 حرف.</value>
+  </data>
+  <data name="ProductCategoryArabicNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم فئة المنتج باللغة العربية 100 حرف.</value>
+  </data>
+  <data name="ProductCategoryArabicNameRequired" xml:space="preserve">
+    <value> اسم فئة المنتج باللغة العربية مطلوب.</value>
+  </data>
+  <data name="ProductCategoryCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء فئة المنتج بنجاح.</value>
+  </data>
+  <data name="ProductCategoryDeletedOrNotFound" xml:space="preserve">
+    <value>فئة المنتج محذوفة أو غير موجودة.</value>
+  </data>
+  <data name="ProductCategoryDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف فئة المنتج بنجاح.</value>
+  </data>
+  <data name="ProductCategoryEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف باللغة الإنجليزية 500 حرف.</value>
+  </data>
+  <data name="ProductCategoryEnglishNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم فئة المنتج باللغة الإنجليزية 100 حرف.</value>
+  </data>
+  <data name="ProductCategoryEnglishNameRequired" xml:space="preserve">
+    <value>اسم فئة المنتج باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="ProductCategoryIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون رقم فئة المنتج أكبر من صفر.</value>
+  </data>
+  <data name="ProductCategoryIsNotDeleted" xml:space="preserve">
+    <value>فئة المنتج غير محذوفة.</value>
+  </data>
+  <data name="ProductCategoryNotFound" xml:space="preserve">
+    <value>فئة المنتج غير موجودة.</value>
+  </data>
+  <data name="ProductCategoryRequired" xml:space="preserve">
+    <value>فئة المنتج مطلوبة.</value>
+  </data>
+  <data name="ProductCategoryRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة فئة المنتج بنجاح.</value>
+  </data>
+  <data name="ProductCategoryRestoreDuplicateName" xml:space="preserve">
+    <value>لا يمكن استعادة الفئة لأن هناك فئة نشطة أخرى بنفس الاسم.</value>
+  </data>
+  <data name="ProductCategoryRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع فئة المنتج بنجاح.</value>
+  </data>
+  <data name="ProductCategoryUpdatedSuccessfully" xml:space="preserve">
+    <value> تم تحديث فئة المنتج بنجاح.</value>
+  </data>
+  <data name="ProductCategoryWithSameNameAlreadyExists" xml:space="preserve">
+    <value>توجد فئة منتجات بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="ProductCouldNotBeLoaded" xml:space="preserve">
+    <value>تعذر تحميل المنتج ذي المعرّف {0}.</value>
+  </data>
+  <data name="ProductCreatedSuccessfully" xml:space="preserve">
+    <value> تم إنشاء المنتج بنجاح.</value>
+  </data>
+  <data name="ProductDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف المنتج بنجاح.</value>
+  </data>
+  <data name="ProductEnglishDescriptionMaxLength" xml:space="preserve">
+    <value> يجب ألا يتجاوز الوصف باللغة الإنجليزية 500 حرف.</value>
+  </data>
+  <data name="ProductEnglishNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم المنتج باللغة الإنجليزية 150 حرفًا.</value>
+  </data>
+  <data name="ProductEnglishNameRequired" xml:space="preserve">
+    <value>اسم المنتج باللغة الإنجليزية مطلوب.</value>
   </data>
   <data name="ProductIdGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون رقم المنتج أكبر من صفر.</value>
@@ -150,6 +771,12 @@
   <data name="ProductQuantityCanOnlyBeUpdatedForActiveSession" xml:space="preserve">
     <value> يمكن تحديث كمية المنتج في الجلسات النشطة فقط.</value>
   </data>
+  <data name="ProductRestoredSuccessfully" xml:space="preserve">
+    <value>تم استعادة المنتج بنجاح.</value>
+  </data>
+  <data name="ProductRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع المنتج بنجاح.</value>
+  </data>
   <data name="ProductsCanOnlyBeAddedToActiveSession" xml:space="preserve">
     <value>يمكن إضافة المنتجات إلى الجلسات النشطة فقط.</value>
   </data>
@@ -159,8 +786,35 @@
   <data name="ProductsCanOnlyBeRemovedFromActiveSession" xml:space="preserve">
     <value>يمكن حذف المنتجات من الجلسات النشطة فقط.</value>
   </data>
+  <data name="ProductSearchMaxLength" xml:space="preserve">
+    <value> يجب ألا يتجاوز البحث 150 حرفًا.</value>
+  </data>
+  <data name="ProductsRetrievedSuccessfully" xml:space="preserve">
+    <value> تم استرجاع المنتجات بنجاح.</value>
+  </data>
+  <data name="ProductUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث المنتج بنجاح.</value>
+  </data>
+  <data name="ProductWithSameNameAlreadyExists" xml:space="preserve">
+    <value>يوجد منتج بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="ProductWithSameSkuAlreadyExists" xml:space="preserve">
+    <value>يوجد منتج بنفس رمز SKU بالفعل.</value>
+  </data>
   <data name="QuantityGreaterThanZero" xml:space="preserve">
     <value>يجب أن تكون الكمية أكبر من صفر.</value>
+  </data>
+  <data name="QuantityMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن تكون الكمية أكبر من صفر.</value>
+  </data>
+  <data name="SearchMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز البحث 100 حرف.</value>
+  </data>
+  <data name="SearchTermRequired" xml:space="preserve">
+    <value>مصطلح البحث مطلوب.</value>
+  </data>
+  <data name="SellingPriceGreaterThanOrEqualZero" xml:space="preserve">
+    <value> يجب أن يكون سعر البيع أكبر من أو يساوي صفرًا.</value>
   </data>
   <data name="ServiceAlreadyAddedToSession" xml:space="preserve">
     <value>الخدمة مضافة بالفعل إلى هذه الجلسة.</value>
@@ -186,6 +840,9 @@
   <data name="ServicePriceGreaterThanZero" xml:space="preserve">
     <value> يجب أن يكون سعر الخدمة أكبر من صفر.</value>
   </data>
+  <data name="ServicePriceMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون سعر الخدمة أكبر من صفر.</value>
+  </data>
   <data name="ServiceRestoredSuccessfully" xml:space="preserve">
     <value>تم استعادة الخدمة بنجاح.</value>
   </data>
@@ -206,5 +863,53 @@
   </data>
   <data name="SessionNotFound" xml:space="preserve">
     <value>الجلسة غير موجودة.</value>
+  </data>
+  <data name="SessionNotFoundWithId" xml:space="preserve">
+    <value>لم يتم العثور على الجلسة ذات المعرّف {0}.</value>
+  </data>
+  <data name="SkuMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز رمز SKU 50 حرفًا.</value>
+  </data>
+  <data name="SkuRequired" xml:space="preserve">
+    <value>رمز SKU مطلوب.</value>
+  </data>
+  <data name="TaxNumberMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الرقم الضريبي 50 حرفًا.</value>
+  </data>
+  <data name="TaxRateCannotBeNegative" xml:space="preserve">
+    <value> لا يمكن أن تكون نسبة الضريبة سالبة.</value>
+  </data>
+  <data name="TaxRateCannotExceed100" xml:space="preserve">
+    <value>لا يمكن أن تتجاوز نسبة الضريبة 100.</value>
+  </data>
+  <data name="TaxRateMustBeBetween0And100" xml:space="preserve">
+    <value>يجب أن تكون نسبة الضريبة بين 0 و100.</value>
+  </data>
+  <data name="TotalHoursMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون إجمالي الساعات أكبر من صفر.</value>
+  </data>
+  <data name="TransactionStatus_Cancelled" xml:space="preserve">
+    <value>ملغاة</value>
+  </data>
+  <data name="TransactionStatus_Completed" xml:space="preserve">
+    <value>مكتملة</value>
+  </data>
+  <data name="TransactionStatus_PartiallyRefunded" xml:space="preserve">
+    <value>مستردة جزئيًا</value>
+  </data>
+  <data name="TransactionStatus_Pending" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
+  <data name="TransactionStatus_Refunded" xml:space="preserve">
+    <value>مستردة</value>
+  </data>
+  <data name="WorkspaceTypeIdGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون رقم نوع مساحة العمل أكبر من صفر.</value>
+  </data>
+  <data name="WorkspaceTypeNotFound" xml:space="preserve">
+    <value>نوع مساحة العمل غير موجود.</value>
+  </data>
+  <data name="WorkspaceUsage" xml:space="preserve">
+    <value>استخدام مساحة العمل.</value>
   </data>
 </root>

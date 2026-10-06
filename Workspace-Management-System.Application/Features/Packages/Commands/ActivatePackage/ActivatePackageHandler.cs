@@ -1,7 +1,10 @@
-﻿using MediatR;
+﻿
+using MediatR;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.ActivatePackage;
 
@@ -10,11 +13,16 @@ public class ActivatePackageHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
-    public ActivatePackageHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public ActivatePackageHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -28,14 +36,14 @@ public class ActivatePackageHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         if (package.IsActive)
         {
             return Result<int>.Failure(
                 ResultStatus.Conflict,
-                "Package is already active.");
+                _localizer["PackageAlreadyActive"]);
         }
 
         package.IsActive = true;
@@ -47,6 +55,7 @@ public class ActivatePackageHandler
 
         return Result<int>.Success(
             package.Id,
-            "Package activated successfully.");
+            _localizer["PackageActivatedSuccessfully"]);
     }
 }
+

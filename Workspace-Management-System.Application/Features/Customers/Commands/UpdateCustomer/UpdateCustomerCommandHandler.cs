@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.UpdateCustomer
 {
@@ -11,13 +14,16 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public UpdateCustomerCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -36,7 +42,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Customer not found.");
+                    _localizer["CustomerNotFound"]);
             }
 
             var exists = await _unitOfWork.Customers
@@ -52,7 +58,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A customer with the same mobile number already exists.");
+                    _localizer["CustomerSameMobileNumberAlreadyExists"]);
             }
 
             customer.FullNameEn = request.FullNameEn.Trim();
@@ -70,7 +76,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
 
             return Result<bool>.Success(
                 true,
-                "Customer updated successfully.");
+                _localizer["CustomerUpdatedSuccessfully"]);
         }
     }
 }

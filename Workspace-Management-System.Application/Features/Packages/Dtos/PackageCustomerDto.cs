@@ -7,7 +7,7 @@ public class PackageCustomerDto
     public int CustomerId { get; set; }
     public string FullName { get; set; } = null!;
     public string MobileNumber { get; set; } = null!;
-    public CustomerPackageStatus Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 
     public DateTime PurchaseDate { get; set; }
     public DateTime StartDate { get; set; }

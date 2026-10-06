@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.RestoreCustomer
 {
@@ -11,13 +14,16 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Re
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ICurrentUserService currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public RestoreCustomerCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             this.unitOfWork = unitOfWork;
             this.currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -35,14 +41,14 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Re
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Customer not found.");
+                    _localizer["CustomerNotFound"]);
             }
 
             if (!customer.IsDeleted)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Customer is already active.");
+                    _localizer["CustomerAlreadyActive"]);
             }
 
             var mobileExists = await unitOfWork.Customers
@@ -57,7 +63,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Re
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Another active customer already uses this mobile number.");
+                    _localizer["AnotherActiveCustomerUsesMobileNumber"]);
             }
 
             customer.IsDeleted = false;
@@ -69,7 +75,7 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Re
 
             return Result<bool>.Success(
                 true,
-                "Customer restored successfully.");
+                _localizer["CustomerRestoredSuccessfully"]);
         }
     }
 }

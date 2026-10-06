@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Packages.Dtos;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Packages.Queries.GetPackages;
@@ -16,13 +18,16 @@ public class GetPackagesHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer _localizer;
 
     public GetPackagesHandler(
         IUnitOfWork unitOfWork,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _localizationService = localizationService;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<PaginatedResult<PackageDto>>> Handle(
@@ -47,8 +52,8 @@ public class GetPackagesHandler
                  x.DescriptionAr.Contains(search)));
         }
 
-        var totalCount = await query
-            .CountAsync(cancellationToken);
+        var totalCount = await query.CountAsync(
+            cancellationToken);
 
         var packages = await query
             .OrderBy(x => x.NameEn)
@@ -66,11 +71,13 @@ public class GetPackagesHandler
                 x.DurationDays,
                 x.Price,
                 x.IsActive,
+
                 CustomerCount = x.CustomerPackages
                     .Count(cp =>
                         !cp.IsDeleted &&
                         !cp.Customer.IsDeleted &&
                         cp.Status == CustomerPackageStatus.Active),
+
                 Customers = x.CustomerPackages
                     .Where(cp =>
                         !cp.IsDeleted &&
@@ -96,11 +103,14 @@ public class GetPackagesHandler
             .Select(x => new PackageDto
             {
                 Id = x.Id,
-                NameEn = x.NameEn,
-                NameAr = x.NameAr,
-                DescriptionEn = x.DescriptionEn,
-                DescriptionAr = x.DescriptionAr,
-                PackageType = x.PackageType,
+                Name = _localizationService.GetLocalizedValue(
+                    x.NameEn,
+                    x.NameAr),
+                Description = _localizationService.GetLocalizedValue(
+                    x.DescriptionEn,
+                    x.DescriptionAr),
+                PackageType = _localizer[
+                    $"PackageType_{x.PackageType}"],
                 TotalHours = x.TotalHours,
                 DurationDays = x.DurationDays,
                 Price = x.Price,
@@ -114,7 +124,8 @@ public class GetPackagesHandler
                             cp.CustomerNameEn,
                             cp.CustomerNameAr),
                         MobileNumber = cp.MobileNumber,
-                        Status = cp.Status,
+                        Status = _localizer[
+                            $"CustomerPackageStatus_{cp.Status}"],
                         PurchaseDate = cp.PurchaseDate,
                         StartDate = cp.StartDate,
                         EndDate = cp.EndDate,
@@ -132,6 +143,6 @@ public class GetPackagesHandler
 
         return Result<PaginatedResult<PackageDto>>.Success(
             result,
-            "Packages retrieved successfully.");
+            _localizer["PackagesRetrievedSuccessfully"]);
     }
 }

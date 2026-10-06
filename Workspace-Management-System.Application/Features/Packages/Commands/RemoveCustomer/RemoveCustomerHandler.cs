@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.RemoveCustomer;
@@ -12,11 +14,16 @@ public class RemoveCustomerHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
-    public RemoveCustomerHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public RemoveCustomerHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -38,7 +45,7 @@ public class RemoveCustomerHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Active customer package not found.");
+                _localizer["ActiveCustomerPackageNotFound"]);
         }
 
         customerPackage.Status =
@@ -55,6 +62,6 @@ public class RemoveCustomerHandler
 
         return Result<int>.Success(
             customerPackage.Id,
-            "Customer removed from package successfully.");
+            _localizer["CustomerRemovedFromPackageSuccessfully"]);
     }
 }

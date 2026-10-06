@@ -117,8 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActiveConflictingPricingRuleAlreadyExists" xml:space="preserve">
+    <value> An active {0} rule already exists for this pricing plan and workspace type.</value>
+  </data>
+  <data name="ActiveCustomerPackageNotFound" xml:space="preserve">
+    <value>Active customer package not found.</value>
+  </data>
   <data name="ActiveServiceWithSameNameAlreadyExists" xml:space="preserve">
     <value>An active service with the same name already exists.</value>
+  </data>
+  <data name="AnotherActiveCompanyWithSameName" xml:space="preserve">
+    <value>Another active company with the same name already exists.</value>
+  </data>
+  <data name="AnotherActiveCustomerUsesMobileNumber" xml:space="preserve">
+    <value>Another active customer already uses this mobile number.</value>
+  </data>
+  <data name="ArabicContractDetailsMaxLength" xml:space="preserve">
+    <value>Arabic contract details must not exceed 1000 characters.</value>
+  </data>
+  <data name="ArabicDescriptionMaxLength" xml:space="preserve">
+    <value>Arabic description must not exceed 500 characters.</value>
+  </data>
+  <data name="ArabicNotesMaxLength" xml:space="preserve">
+    <value> Arabic notes must not exceed 500 characters.</value>
+  </data>
+  <data name="ArabicPackageDescriptionMaxLength" xml:space="preserve">
+    <value>Arabic package description cannot exceed 500 characters.</value>
+  </data>
+  <data name="ArabicPackageNameMaxLength" xml:space="preserve">
+    <value>Arabic package name cannot exceed 100 characters.</value>
+  </data>
+  <data name="ArabicPackageNameRequired" xml:space="preserve">
+    <value> Arabic package name is required</value>
   </data>
   <data name="ArabicServiceNameMaxLength" xml:space="preserve">
     <value>Arabic service name cannot exceed 100 characters.</value>
@@ -126,14 +156,605 @@
   <data name="ArabicServiceNameRequired" xml:space="preserve">
     <value>Arabic service name is required.</value>
   </data>
+  <data name="ArabicTaxInformationMaxLength" xml:space="preserve">
+    <value> Arabic tax information must not exceed 500 characters.</value>
+  </data>
+  <data name="CannotAssignInactivePackage" xml:space="preserve">
+    <value>Cannot assign an inactive package.</value>
+  </data>
+  <data name="CannotDeactivatePackageWithActiveCustomers" xml:space="preserve">
+    <value>Cannot deactivate a package with active customers.</value>
+  </data>
+  <data name="CannotDeletePackageWithActiveCustomers" xml:space="preserve">
+    <value>Cannot delete a package with active customers.</value>
+  </data>
+  <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
+    <value>Cannot upgrade to an inactive package.</value>
+  </data>
+  <data name="CheckoutRequestRequired" xml:space="preserve">
+    <value>Checkout request is required.</value>
+  </data>
+  <data name="CheckoutTimeCannotBeBeforeSessionStart" xml:space="preserve">
+    <value>Checkout time cannot be before session start time.</value>
+  </data>
+  <data name="CompaniesRetrievedSuccessfully" xml:space="preserve">
+    <value>Companies retrieved successfully.</value>
+  </data>
+  <data name="CompanyAlreadyActive" xml:space="preserve">
+    <value>Company is already active.</value>
+  </data>
+  <data name="CompanyAlreadyDeleted" xml:space="preserve">
+    <value>Company is already deleted.</value>
+  </data>
+  <data name="CompanyArabicNameMaxLength" xml:space="preserve">
+    <value>Company Arabic name must not exceed 150 characters.</value>
+  </data>
+  <data name="CompanyArabicNameRequired" xml:space="preserve">
+    <value> Company Arabic name is required.</value>
+  </data>
+  <data name="CompanyCreatedSuccessfully" xml:space="preserve">
+    <value> Company created successfully.</value>
+  </data>
+  <data name="CompanyCustomersRetrievedSuccessfully" xml:space="preserve">
+    <value>Company customers retrieved successfully.</value>
+  </data>
+  <data name="CompanyDeletedSuccessfully" xml:space="preserve">
+    <value>Company deleted successfully.</value>
+  </data>
+  <data name="CompanyEmailMaxLength" xml:space="preserve">
+    <value>Email must not exceed 150 characters.</value>
+  </data>
+  <data name="CompanyEnglishNameMaxLength" xml:space="preserve">
+    <value> Company English name must not exceed 150 characters.</value>
+  </data>
+  <data name="CompanyEnglishNameRequired" xml:space="preserve">
+    <value>Company English name is required.</value>
+  </data>
+  <data name="CompanyIsDeleted" xml:space="preserve">
+    <value> Company is deleted.</value>
+  </data>
+  <data name="CompanyNotFound" xml:space="preserve">
+    <value>Company not found.</value>
+  </data>
+  <data name="CompanyRestoredSuccessfully" xml:space="preserve">
+    <value>Company restored successfully.</value>
+  </data>
+  <data name="CompanyRetrievedSuccessfully" xml:space="preserve">
+    <value>Company retrieved successfully.</value>
+  </data>
+  <data name="CompanySameNameAlreadyExists" xml:space="preserve">
+    <value>A company with the same name already exists.</value>
+  </data>
+  <data name="CompanyStatusChangedSuccessfully" xml:space="preserve">
+    <value>Company status changed successfully.</value>
+  </data>
+  <data name="CompanyUpdatedSuccessfully" xml:space="preserve">
+    <value>Company updated successfully.</value>
+  </data>
+  <data name="ContactPersonMaxLength" xml:space="preserve">
+    <value>Contact person must not exceed 150 characters.</value>
+  </data>
+  <data name="ContactPersonRequired" xml:space="preserve">
+    <value>Contact person is required.</value>
+  </data>
+  <data name="CorporateCustomerRequiresCompay" xml:space="preserve">
+    <value>Corporate customers must be associated with a company.</value>
+  </data>
+  <data name="CostPriceGreaterThanOrEqualZero" xml:space="preserve">
+    <value>Cost price must be greater than or equal to 0.</value>
+  </data>
+  <data name="CreditLimitCannotBeNegative" xml:space="preserve">
+    <value> Credit limit must not be negative.</value>
+  </data>
+  <data name="CustomerAlreadyActive" xml:space="preserve">
+    <value>Customer is already active.</value>
+  </data>
+  <data name="CustomerAlreadyDeleted" xml:space="preserve">
+    <value>Customer is already deleted.</value>
+  </data>
+  <data name="CustomerAlreadyHasActivePackage" xml:space="preserve">
+    <value>Customer already has an active package.</value>
+  </data>
+  <data name="CustomerAlreadyHasThisPackage" xml:space="preserve">
+    <value>Customer already has this package.</value>
+  </data>
+  <data name="CustomerArabicFullNameMaxLength" xml:space="preserve">
+    <value>Customer Arabic full name must not exceed 150 characters.</value>
+  </data>
+  <data name="CustomerArabicFullNameRequired" xml:space="preserve">
+    <value>Customer Arabic full name is required.</value>
+  </data>
+  <data name="CustomerAssignedToPackageSuccessfully" xml:space="preserve">
+    <value>Customer assigned to package successfully.</value>
+  </data>
+  <data name="CustomerCreatedSuccessfully" xml:space="preserve">
+    <value> Customer created successfully.</value>
+  </data>
+  <data name="CustomerDeletedSuccessfully" xml:space="preserve">
+    <value>Customer deleted successfully.</value>
+  </data>
+  <data name="CustomerDoesNotHaveActivePackage" xml:space="preserve">
+    <value>Customer does not have an active package.</value>
+  </data>
+  <data name="CustomerEnglishFullNameMaxLength" xml:space="preserve">
+    <value>Customer English full name must not exceed 150 characters.</value>
+  </data>
+  <data name="CustomerEnglishFullNameRequired" xml:space="preserve">
+    <value>Customer English full name is required.</value>
+  </data>
+  <data name="CustomerIdGreaterThanZero" xml:space="preserve">
+    <value> Customer ID must be greater than zero.</value>
+  </data>
+  <data name="CustomerNotFound" xml:space="preserve">
+    <value>Customer not found.</value>
+  </data>
+  <data name="CustomerPackageStatus_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="CustomerPackageStatus_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="CustomerPackageStatus_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="CustomerPackageStatus_Expired" xml:space="preserve">
+    <value>Expired</value>
+  </data>
+  <data name="CustomerPackageStatus_Upgraded" xml:space="preserve">
+    <value>Upgraded</value>
+  </data>
+  <data name="CustomerPackageUpgradedSuccessfully" xml:space="preserve">
+    <value>Customer package upgraded successfully.</value>
+  </data>
+  <data name="CustomerRemovedFromPackageSuccessfully" xml:space="preserve">
+    <value> Customer removed from package successfully.</value>
+  </data>
+  <data name="CustomerRestoredSuccessfully" xml:space="preserve">
+    <value>Customer restored successfully.</value>
+  </data>
+  <data name="CustomerRetrievedSuccessfully" xml:space="preserve">
+    <value>Customer retrieved successfully.</value>
+  </data>
+  <data name="CustomerSameMobileNumberAlreadyExists" xml:space="preserve">
+    <value>A customer with the same mobile number already exists.</value>
+  </data>
+  <data name="CustomersRetrievedSuccessfully" xml:space="preserve">
+    <value>Customers retrieved successfully.</value>
+  </data>
+  <data name="CustomersSearchedSuccessfully" xml:space="preserve">
+    <value>Customers searched successfully.</value>
+  </data>
+  <data name="CustomerStatus_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="CustomerStatus_Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="CustomerStatus_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="CustomerTypeCannotBeAssociatedWithCompany" xml:space="preserve">
+    <value>This customer type cannot be associated with a company.</value>
+  </data>
+  <data name="CustomerTypesRetrievedSuccessfully" xml:space="preserve">
+    <value>Customer types retrieved successfully.</value>
+  </data>
+  <data name="CustomerType_Corporate" xml:space="preserve">
+    <value>Corporate</value>
+  </data>
+  <data name="CustomerType_Individual" xml:space="preserve">
+    <value>Individual</value>
+  </data>
+  <data name="CustomerType_Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="CustomerType_WalkIn" xml:space="preserve">
+    <value>Walk-in</value>
+  </data>
+  <data name="CustomerUpdatedSuccessfully" xml:space="preserve">
+    <value>Customer updated successfully.</value>
+  </data>
+  <data name="DeletedDiscountNotFound" xml:space="preserve">
+    <value>Deleted discount not found.</value>
+  </data>
+  <data name="DeletedPackageNotFound" xml:space="preserve">
+    <value>Deleted package not found.</value>
+  </data>
+  <data name="DeletedPricingPlanNotFound" xml:space="preserve">
+    <value>Deleted pricing plan not found.</value>
+  </data>
+  <data name="DeletedPricingRuleNotFound" xml:space="preserve">
+    <value>Deleted pricing rule not found.</value>
+  </data>
+  <data name="DeletedProductNotFound" xml:space="preserve">
+    <value>Deleted product not found.</value>
+  </data>
   <data name="DeletedServiceNotFound" xml:space="preserve">
     <value>Deleted service not found.</value>
+  </data>
+  <data name="DiscountArabicNameMaxLength" xml:space="preserve">
+    <value>Discount Arabic name must not exceed 100 characters.</value>
+  </data>
+  <data name="DiscountArabicNameRequired" xml:space="preserve">
+    <value>Discount Arabic name is required.</value>
+  </data>
+  <data name="DiscountCreatedSuccessfully" xml:space="preserve">
+    <value>Discount created successfully.</value>
+  </data>
+  <data name="DiscountDeletedSuccessfully" xml:space="preserve">
+    <value>Discount deleted successfully.</value>
+  </data>
+  <data name="DiscountEnglishNameMaxLength" xml:space="preserve">
+    <value>Discount English name must not exceed 100 characters.</value>
+  </data>
+  <data name="DiscountEnglishNameRequired" xml:space="preserve">
+    <value>Discount English name is required.</value>
+  </data>
+  <data name="DiscountIdGreaterThanZero" xml:space="preserve">
+    <value>Discount ID must be greater than zero.</value>
+  </data>
+  <data name="DiscountIsNotActive" xml:space="preserve">
+    <value> Discount is not active.</value>
+  </data>
+  <data name="DiscountNotFound" xml:space="preserve">
+    <value>Discount not found.</value>
+  </data>
+  <data name="DiscountPercentageCannotExceed100" xml:space="preserve">
+    <value>Discount percentage cannot be greater than 100.</value>
+  </data>
+  <data name="DiscountRestoredSuccessfully" xml:space="preserve">
+    <value>Discount restored successfully.</value>
+  </data>
+  <data name="DiscountRetrievedSuccessfully" xml:space="preserve">
+    <value>Discount retrieved successfully.</value>
+  </data>
+  <data name="DiscountSameNameAlreadyExists" xml:space="preserve">
+    <value>A discount with the same name already exists.</value>
+  </data>
+  <data name="DiscountsRetrievedSuccessfully" xml:space="preserve">
+    <value>Discounts retrieved successfully.</value>
+  </data>
+  <data name="DiscountType_FixedAmount" xml:space="preserve">
+    <value>Fixed Amount</value>
+  </data>
+  <data name="DiscountType_Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="DiscountUpdatedSuccessfully" xml:space="preserve">
+    <value>Discount updated successfully.</value>
+  </data>
+  <data name="DiscountValueCannotBeNegative" xml:space="preserve">
+    <value>Discount value cannot be negative.</value>
+  </data>
+  <data name="DiscountValueMustBeGreaterThanZero" xml:space="preserve">
+    <value>Discount value must be greater than zero.</value>
+  </data>
+  <data name="DurationDaysMustBeGreaterThanZero" xml:space="preserve">
+    <value> Duration days must be greater than zero.</value>
+  </data>
+  <data name="EndDateCannotBeBeforeStartDate" xml:space="preserve">
+    <value>End date cannot be before start date.</value>
+  </data>
+  <data name="EnglishContractDetailsMaxLength" xml:space="preserve">
+    <value>English contract details must not exceed 1000 characters.</value>
+  </data>
+  <data name="EnglishDescriptionMaxLength" xml:space="preserve">
+    <value>English description must not exceed 500 characters.</value>
+  </data>
+  <data name="EnglishNotesMaxLength" xml:space="preserve">
+    <value>English notes must not exceed 500 characters.</value>
+  </data>
+  <data name="EnglishPackageDescriptionMaxLength" xml:space="preserve">
+    <value>English package description cannot exceed 500 characters.</value>
+  </data>
+  <data name="EnglishPackageNameMaxLength" xml:space="preserve">
+    <value>English package name cannot exceed 100 characters.</value>
+  </data>
+  <data name="EnglishPackageNameRequired" xml:space="preserve">
+    <value>English package name is required.</value>
   </data>
   <data name="EnglishServiceNameMaxLength" xml:space="preserve">
     <value>English service name cannot exceed 100 characters.</value>
   </data>
   <data name="EnglishServiceNameRequired" xml:space="preserve">
     <value>English service name is required.</value>
+  </data>
+  <data name="EnglishTaxInformationMaxLength" xml:space="preserve">
+    <value>English tax information must not exceed 500 characters.</value>
+  </data>
+  <data name="Gender_Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Gender_Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="InsufficientPackageHours" xml:space="preserve">
+    <value>Customer has only {0} package hours remaining, but this session requires {1:F2} hours.</value>
+  </data>
+  <data name="InvalidCustomerType" xml:space="preserve">
+    <value>Invalid customer type.</value>
+  </data>
+  <data name="InvalidEgyptianMobileNumber" xml:space="preserve">
+    <value> Mobile number must be a valid Egyptian mobile number.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Email must be valid.</value>
+  </data>
+  <data name="ItemType_Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="ItemType_Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="ItemType_Workspace" xml:space="preserve">
+    <value>Workspace</value>
+  </data>
+  <data name="MobileNumberRequired" xml:space="preserve">
+    <value>Mobile number is required.</value>
+  </data>
+  <data name="NewPackageIdGreaterThanZero" xml:space="preserve">
+    <value>New package ID must be greater than zero.</value>
+  </data>
+  <data name="NewPackageNotFound" xml:space="preserve">
+    <value>New package not found.</value>
+  </data>
+  <data name="NoApplicablePricingRules" xml:space="preserve">
+    <value>No applicable pricing rules were found for this session.</value>
+  </data>
+  <data name="OnlyActiveSessionsCanBeCheckedOut" xml:space="preserve">
+    <value>Only active sessions can be checked out.</value>
+  </data>
+  <data name="PackageActivatedSuccessfully" xml:space="preserve">
+    <value>Package activated successfully.</value>
+  </data>
+  <data name="PackageAlreadyActive" xml:space="preserve">
+    <value>Package is already active.</value>
+  </data>
+  <data name="PackageAlreadyActiveOrNotDeleted" xml:space="preserve">
+    <value>Package is already active or not deleted.</value>
+  </data>
+  <data name="PackageAlreadyInactive" xml:space="preserve">
+    <value>Package is already inactive.</value>
+  </data>
+  <data name="PackageCreatedSuccessfully" xml:space="preserve">
+    <value>Package created successfully.</value>
+  </data>
+  <data name="PackageCustomersRetrievedSuccessfully" xml:space="preserve">
+    <value>Package customers retrieved successfully.</value>
+  </data>
+  <data name="PackageDeactivatedSuccessfully" xml:space="preserve">
+    <value>Package deactivated successfully.</value>
+  </data>
+  <data name="PackageDeletedSuccessfully" xml:space="preserve">
+    <value>Package deleted successfully.</value>
+  </data>
+  <data name="PackageIdGreaterThanZero" xml:space="preserve">
+    <value>Package ID must be greater than zero.</value>
+  </data>
+  <data name="PackageNotFound" xml:space="preserve">
+    <value>Package not found.</value>
+  </data>
+  <data name="PackageRestoredSuccessfully" xml:space="preserve">
+    <value>Package restored successfully.</value>
+  </data>
+  <data name="PackageRetrievedSuccessfully" xml:space="preserve">
+    <value>Package retrieved successfully.</value>
+  </data>
+  <data name="PackagesRetrievedSuccessfully" xml:space="preserve">
+    <value>Packages retrieved successfully.</value>
+  </data>
+  <data name="PackageType_MeetingRoomHours" xml:space="preserve">
+    <value>Meeting Room Hours</value>
+  </data>
+  <data name="PackageType_Mixed" xml:space="preserve">
+    <value>Mixed</value>
+  </data>
+  <data name="PackageType_WorkspaceHours" xml:space="preserve">
+    <value>Workspace Hours</value>
+  </data>
+  <data name="PackageUpdatedSuccessfully" xml:space="preserve">
+    <value>Package updated successfully.</value>
+  </data>
+  <data name="PageNumberGreaterThanZero" xml:space="preserve">
+    <value>Page number must be greater than 0.</value>
+  </data>
+  <data name="PageSizeBetweenOneAndOneHundred" xml:space="preserve">
+    <value>Page size must be between 1 and 100.</value>
+  </data>
+  <data name="PercentageDiscountCannotExceed100" xml:space="preserve">
+    <value>Discount value must be greater than zero.</value>
+  </data>
+  <data name="PriceCannotBeNegative" xml:space="preserve">
+    <value>Price cannot be negative.</value>
+  </data>
+  <data name="PricingPlanArabicNameMaxLength" xml:space="preserve">
+    <value>Pricing plan Arabic name must not exceed 100 characters.</value>
+  </data>
+  <data name="PricingPlanArabicNameRequired" xml:space="preserve">
+    <value>Pricing plan Arabic name is required.</value>
+  </data>
+  <data name="PricingPlanCannotBeDeletedAssignedToCompany" xml:space="preserve">
+    <value>Pricing plan cannot be deleted because it is assigned to a company.</value>
+  </data>
+  <data name="PricingPlanCannotBeDeletedHasPricingRules" xml:space="preserve">
+    <value>Pricing plan cannot be deleted because it has pricing rules.</value>
+  </data>
+  <data name="PricingPlanCreatedSuccessfully" xml:space="preserve">
+    <value>Pricing plan created successfully.</value>
+  </data>
+  <data name="PricingPlanDeletedSuccessfully" xml:space="preserve">
+    <value> Pricing plan deleted successfully.</value>
+  </data>
+  <data name="PricingPlanEnglishNameMaxLength" xml:space="preserve">
+    <value>Pricing plan English name must not exceed 100 characters.</value>
+  </data>
+  <data name="PricingPlanEnglishNameRequired" xml:space="preserve">
+    <value>Pricing plan English name is required.</value>
+  </data>
+  <data name="PricingPlanIdGreaterThanZero" xml:space="preserve">
+    <value>Pricing plan ID must be greater than zero.</value>
+  </data>
+  <data name="PricingPlanNotFound" xml:space="preserve">
+    <value>Pricing plan not found.</value>
+  </data>
+  <data name="PricingPlanRestoredSuccessfully" xml:space="preserve">
+    <value>Pricing plan restored successfully.</value>
+  </data>
+  <data name="PricingPlanUpdatedSuccessfully" xml:space="preserve">
+    <value>Pricing plan updated successfully.</value>
+  </data>
+  <data name="PricingPlanWithSameNameAlreadyExists" xml:space="preserve">
+    <value>A pricing plan with the same name already exists.</value>
+  </data>
+  <data name="PricingRuleCreatedSuccessfully" xml:space="preserve">
+    <value>Pricing rule created successfully.</value>
+  </data>
+  <data name="PricingRuleDeletedSuccessfully" xml:space="preserve">
+    <value>Pricing rule deleted successfully.</value>
+  </data>
+  <data name="PricingRuleEndDateGreaterThanOrEqualStartDate" xml:space="preserve">
+    <value>End date must be greater than or equal to start date.</value>
+  </data>
+  <data name="PricingRuleIdGreaterThanZero" xml:space="preserve">
+    <value>Pricing rule ID must be greater than zero.</value>
+  </data>
+  <data name="PricingRuleNotFound" xml:space="preserve">
+    <value>Pricing rule not found.</value>
+  </data>
+  <data name="PricingRuleRestoredSuccessfully" xml:space="preserve">
+    <value>Pricing rule restored successfully.</value>
+  </data>
+  <data name="PricingRuleRetrievedSuccessfully" xml:space="preserve">
+    <value>Pricing rule retrieved successfully.</value>
+  </data>
+  <data name="PricingRulesRetrievedSuccessfully" xml:space="preserve">
+    <value>Pricing rules retrieved successfully.</value>
+  </data>
+  <data name="PricingRuleType_ExtraHourPrice" xml:space="preserve">
+    <value>Extra Hour Price</value>
+  </data>
+  <data name="PricingRuleType_FullDayMaximum" xml:space="preserve">
+    <value>Full-Day Maximum</value>
+  </data>
+  <data name="PricingRuleType_HalfHourRate" xml:space="preserve">
+    <value>Half-Hour Rate</value>
+  </data>
+  <data name="PricingRuleType_HourlyRae" xml:space="preserve">
+    <value> Hourly Rate</value>
+  </data>
+  <data name="PricingRuleType_MemberPricing" xml:space="preserve">
+    <value>Member Pricing</value>
+  </data>
+  <data name="PricingRuleType_MinimumCharge" xml:space="preserve">
+    <value> Minimum Charge</value>
+  </data>
+  <data name="PricingRuleType_PackagePrice" xml:space="preserve">
+    <value>Package Price</value>
+  </data>
+  <data name="PricingRuleType_RoundDown" xml:space="preserve">
+    <value>Round Down</value>
+  </data>
+  <data name="PricingRuleType_RoundUp" xml:space="preserve">
+    <value>Round Up</value>
+  </data>
+  <data name="PricingRuleType_SpecialPricing" xml:space="preserve">
+    <value> Special Pricing</value>
+  </data>
+  <data name="PricingRuleType_WeekendPricing" xml:space="preserve">
+    <value> Weekend Pricing</value>
+  </data>
+  <data name="PricingRuleUpdatedSuccessfully" xml:space="preserve">
+    <value>Pricing rule updated successfully.</value>
+  </data>
+  <data name="PricingRuleValueGreaterThanOrEqualZero" xml:space="preserve">
+    <value>Pricing rule value must be greater than or equal to zero.</value>
+  </data>
+  <data name="PricingRuleWithSameTypeAlreadyExists" xml:space="preserve">
+    <value>A pricing rule with the same type already exists for this pricing plan and workspace type.</value>
+  </data>
+  <data name="ProductArabicDescriptionMaxLength" xml:space="preserve">
+    <value>Arabic description must not exceed 500 characters.</value>
+  </data>
+  <data name="ProductArabicNameMaxLength" xml:space="preserve">
+    <value>Product Arabic name must not exceed 150 characters.</value>
+  </data>
+  <data name="ProductArabicNameRequired" xml:space="preserve">
+    <value>Product Arabic name is required.</value>
+  </data>
+  <data name="ProductCategoriesRetrievedSuccessfully" xml:space="preserve">
+    <value>Product categories retrieved successfully.</value>
+  </data>
+  <data name="ProductCategoryArabicDescriptionMaxLength" xml:space="preserve">
+    <value>Arabic description must not exceed 500 characters.</value>
+  </data>
+  <data name="ProductCategoryArabicNameMaxLength" xml:space="preserve">
+    <value>Category Arabic name must not exceed 100 characters.</value>
+  </data>
+  <data name="ProductCategoryArabicNameRequired" xml:space="preserve">
+    <value>Category Arabic name is required.</value>
+  </data>
+  <data name="ProductCategoryCreatedSuccessfully" xml:space="preserve">
+    <value> Product category created successfully.</value>
+  </data>
+  <data name="ProductCategoryDeletedOrNotFound" xml:space="preserve">
+    <value>The product category is deleted or no longer exists.</value>
+  </data>
+  <data name="ProductCategoryDeletedSuccessfully" xml:space="preserve">
+    <value>Product category deleted successfully.</value>
+  </data>
+  <data name="ProductCategoryEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>English description must not exceed 500 characters.</value>
+  </data>
+  <data name="ProductCategoryEnglishNameMaxLength" xml:space="preserve">
+    <value>Category English name must not exceed 100 characters.</value>
+  </data>
+  <data name="ProductCategoryEnglishNameRequired" xml:space="preserve">
+    <value>Category English name is required.</value>
+  </data>
+  <data name="ProductCategoryIdGreaterThanZero" xml:space="preserve">
+    <value>Category ID must be greater than zero.</value>
+  </data>
+  <data name="ProductCategoryIsNotDeleted" xml:space="preserve">
+    <value>Product category is not deleted.</value>
+  </data>
+  <data name="ProductCategoryNotFound" xml:space="preserve">
+    <value>Product category not found.</value>
+  </data>
+  <data name="ProductCategoryRequired" xml:space="preserve">
+    <value>Product category is required.</value>
+  </data>
+  <data name="ProductCategoryRestoredSuccessfully" xml:space="preserve">
+    <value>Product category restored successfully.</value>
+  </data>
+  <data name="ProductCategoryRestoreDuplicateName" xml:space="preserve">
+    <value>Cannot restore category because another active category has the same name.</value>
+  </data>
+  <data name="ProductCategoryRetrievedSuccessfully" xml:space="preserve">
+    <value>Product category retrieved successfully.</value>
+  </data>
+  <data name="ProductCategoryUpdatedSuccessfully" xml:space="preserve">
+    <value>Product category updated successfully.</value>
+  </data>
+  <data name="ProductCategoryWithSameNameAlreadyExists" xml:space="preserve">
+    <value>A product category with the same name already exists.</value>
+  </data>
+  <data name="ProductCouldNotBeLoaded" xml:space="preserve">
+    <value> Product with ID {0} could not be loaded.</value>
+  </data>
+  <data name="ProductCreatedSuccessfully" xml:space="preserve">
+    <value>Product created successfully.</value>
+  </data>
+  <data name="ProductDeletedSuccessfully" xml:space="preserve">
+    <value>Product deleted successfully.</value>
+  </data>
+  <data name="ProductEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>English description must not exceed 500 characters.</value>
+  </data>
+  <data name="ProductEnglishNameMaxLength" xml:space="preserve">
+    <value>Product English name must not exceed 150 characters.</value>
+  </data>
+  <data name="ProductEnglishNameRequired" xml:space="preserve">
+    <value>Product English name is required.</value>
   </data>
   <data name="ProductIdGreaterThanZero" xml:space="preserve">
     <value>Product ID must be greater than zero.</value>
@@ -150,6 +771,12 @@
   <data name="ProductQuantityCanOnlyBeUpdatedForActiveSession" xml:space="preserve">
     <value>Product quantity can only be updated for active sessions.</value>
   </data>
+  <data name="ProductRestoredSuccessfully" xml:space="preserve">
+    <value>Product restored successfully.</value>
+  </data>
+  <data name="ProductRetrievedSuccessfully" xml:space="preserve">
+    <value>Product retrieved successfully.</value>
+  </data>
   <data name="ProductsCanOnlyBeAddedToActiveSession" xml:space="preserve">
     <value>Products can only be added to active sessions.</value>
   </data>
@@ -159,8 +786,35 @@
   <data name="ProductsCanOnlyBeRemovedFromActiveSession" xml:space="preserve">
     <value>Products can only be removed from active sessions.</value>
   </data>
+  <data name="ProductSearchMaxLength" xml:space="preserve">
+    <value>Search must not exceed 150 characters.</value>
+  </data>
+  <data name="ProductsRetrievedSuccessfully" xml:space="preserve">
+    <value>Products retrieved successfully.</value>
+  </data>
+  <data name="ProductUpdatedSuccessfully" xml:space="preserve">
+    <value>Product updated successfully.</value>
+  </data>
+  <data name="ProductWithSameNameAlreadyExists" xml:space="preserve">
+    <value>A product with the same name already exists.</value>
+  </data>
+  <data name="ProductWithSameSkuAlreadyExists" xml:space="preserve">
+    <value>A product with the same SKU already exists.</value>
+  </data>
   <data name="QuantityGreaterThanZero" xml:space="preserve">
     <value>Quantity must be greater than zero.</value>
+  </data>
+  <data name="QuantityMustBeGreaterThanZero" xml:space="preserve">
+    <value>Quantity must be greater than zero.</value>
+  </data>
+  <data name="SearchMaxLength" xml:space="preserve">
+    <value>Search must not exceed 100 characters.</value>
+  </data>
+  <data name="SearchTermRequired" xml:space="preserve">
+    <value>Search term is required.</value>
+  </data>
+  <data name="SellingPriceGreaterThanOrEqualZero" xml:space="preserve">
+    <value>Selling price must be greater than or equal to 0.</value>
   </data>
   <data name="ServiceAlreadyAddedToSession" xml:space="preserve">
     <value>Service is already added to this session.</value>
@@ -186,6 +840,9 @@
   <data name="ServicePriceGreaterThanZero" xml:space="preserve">
     <value>Service price must be greater than zero.</value>
   </data>
+  <data name="ServicePriceMustBeGreaterThanZero" xml:space="preserve">
+    <value>Service price must be greater than zero.</value>
+  </data>
   <data name="ServiceRestoredSuccessfully" xml:space="preserve">
     <value>Service restored successfully.</value>
   </data>
@@ -206,5 +863,53 @@
   </data>
   <data name="SessionNotFound" xml:space="preserve">
     <value>Session not found.</value>
+  </data>
+  <data name="SessionNotFoundWithId" xml:space="preserve">
+    <value>Session with ID {0} was not found.</value>
+  </data>
+  <data name="SkuMaxLength" xml:space="preserve">
+    <value>SKU must not exceed 50 characters.</value>
+  </data>
+  <data name="SkuRequired" xml:space="preserve">
+    <value> SKU is required.</value>
+  </data>
+  <data name="TaxNumberMaxLength" xml:space="preserve">
+    <value> Tax number must not exceed 50 characters.</value>
+  </data>
+  <data name="TaxRateCannotBeNegative" xml:space="preserve">
+    <value>Tax rate cannot be negative</value>
+  </data>
+  <data name="TaxRateCannotExceed100" xml:space="preserve">
+    <value>Tax rate cannot be greater than 100.</value>
+  </data>
+  <data name="TaxRateMustBeBetween0And100" xml:space="preserve">
+    <value>Tax rate must be between 0 and 100.</value>
+  </data>
+  <data name="TotalHoursMustBeGreaterThanZero" xml:space="preserve">
+    <value>Total hours must be greater than zero.</value>
+  </data>
+  <data name="TransactionStatus_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="TransactionStatus_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="TransactionStatus_PartiallyRefunded" xml:space="preserve">
+    <value>Partially Refunded</value>
+  </data>
+  <data name="TransactionStatus_Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="TransactionStatus_Refunded" xml:space="preserve">
+    <value>RefundedRefunded</value>
+  </data>
+  <data name="WorkspaceTypeIdGreaterThanZero" xml:space="preserve">
+    <value> Workspace type ID must be greater than zero.</value>
+  </data>
+  <data name="WorkspaceTypeNotFound" xml:space="preserve">
+    <value>Workspace type not found.</value>
+  </data>
+  <data name="WorkspaceUsage" xml:space="preserve">
+    <value>Workspace Usage.</value>
   </data>
 </root>

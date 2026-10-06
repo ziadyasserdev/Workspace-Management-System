@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Packages.Dtos;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Packages.Queries.GetPackageCustomers;
@@ -16,13 +18,16 @@ public class GetPackageCustomersHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer _localizer;
 
     public GetPackageCustomersHandler(
         IUnitOfWork unitOfWork,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _localizationService = localizationService;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<PaginatedResult<PackageCustomerDto>>> Handle(
@@ -41,7 +46,7 @@ public class GetPackageCustomersHandler
         {
             return Result<PaginatedResult<PackageCustomerDto>>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         var query = _unitOfWork.CustomerPackages
@@ -65,8 +70,7 @@ public class GetPackageCustomersHandler
                  x.Customer.Email.Contains(search)));
         }
 
-        var totalCount = await query
-            .CountAsync(cancellationToken);
+        var totalCount = await query.CountAsync(cancellationToken);
 
         var customers = await query
             .OrderBy(x => x.Customer.FullNameEn)
@@ -94,7 +98,8 @@ public class GetPackageCustomersHandler
                     x.CustomerNameEn,
                     x.CustomerNameAr),
                 MobileNumber = x.MobileNumber,
-                Status = x.Status,
+                Status = _localizer[
+                    $"CustomerPackageStatus_{x.Status}"],
                 PurchaseDate = x.PurchaseDate,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
@@ -110,6 +115,6 @@ public class GetPackageCustomersHandler
 
         return Result<PaginatedResult<PackageCustomerDto>>.Success(
             result,
-            "Package customers retrieved successfully.");
+            _localizer["PackageCustomersRetrievedSuccessfully"]);
     }
 }

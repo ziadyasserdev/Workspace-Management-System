@@ -6,15 +6,11 @@ public class PackageDto
 {
     public int Id { get; set; }
 
-    public string NameEn { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string NameAr { get; set; } = null!;
+    public string? Description { get; set; }
 
-    public string? DescriptionEn { get; set; }
-
-    public string? DescriptionAr { get; set; }
-
-    public PackageType PackageType { get; set; }
+    public string PackageType { get; set; } = string.Empty;
 
     public decimal TotalHours { get; set; }
 

@@ -1,14 +1,18 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.Packages.Commands.ActivatePackage;
-
-public class ActivatePackageValidator
-    : AbstractValidator<ActivatePackageCommand>
+namespace Workspace_Management_System.Application.Features.Packages.Commands.ActivatePackage
 {
-    public ActivatePackageValidator()
+    public class ActivatePackageValidator
+        : AbstractValidator<ActivatePackageCommand>
     {
-        RuleFor(x => x.Id)
-            .GreaterThan(0)
-            .WithMessage("Package ID must be greater than zero.");
+        public ActivatePackageValidator(
+            IStringLocalizer<SharedResources> localizer)
+        {
+            RuleFor(x => x.Id)
+                .GreaterThan(0)
+                .WithMessage(localizer["PackageIdGreaterThanZero"]);
+        }
     }
 }

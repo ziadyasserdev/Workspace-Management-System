@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.PricingRule.Commands.UpdatePricingRule
@@ -12,13 +14,16 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ICurrentUserService currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public UpdatePricingRuleCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             this.unitOfWork = unitOfWork;
             this.currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -36,7 +41,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Pricing rule not found.");
+                    _localizer["PricingRuleNotFound"]);
             }
 
             var pricingPlanExists = await unitOfWork.PricingPlans
@@ -50,7 +55,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Pricing plan not found.");
+                    _localizer["PricingPlanNotFound"]);
             }
 
             var workspaceTypeExists = await unitOfWork.WorkspaceTypes
@@ -64,7 +69,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Workspace type not found.");
+                    _localizer["WorkspaceTypeNotFound"]);
             }
 
             var duplicateRule = await unitOfWork.PricingRules
@@ -81,7 +86,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A pricing rule with the same type already exists for this pricing plan and workspace type.");
+                    _localizer["PricingRuleWithSameTypeAlreadyExists"]);
             }
 
             if (request.IsActive &&
@@ -108,7 +113,9 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Conflict,
-                        $"An active {conflictingRuleType} rule already exists for this pricing plan and workspace type.");
+                        _localizer[
+                            "ActiveConflictingPricingRuleAlreadyExists",
+                            conflictingRuleType]);
                 }
             }
 
@@ -120,7 +127,6 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             pricingRule.EndDate = request.EndDate;
             pricingRule.DayOfWeek = request.DayOfWeek;
             pricingRule.IsActive = request.IsActive;
-
             pricingRule.UpdatedAt = DateTime.UtcNow;
             pricingRule.UpdatedBy = currentUser.UserId;
 
@@ -128,7 +134,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
 
             return Result<bool>.Success(
                 true,
-                "Pricing rule updated successfully.");
+                _localizer["PricingRuleUpdatedSuccessfully"]);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.PricingRule.Commands.DeletePricingRule
 {
@@ -11,13 +13,16 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ICurrentUserService currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public DeletePricingRuleCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             this.unitOfWork = unitOfWork;
             this.currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -34,7 +39,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Pricing rule not found.");
+                    _localizer["PricingRuleNotFound"]);
             }
 
             pricingRule.IsDeleted = true;
@@ -47,7 +52,7 @@ namespace Workspace_Management_System.Application.Features.PricingRule.Commands.
 
             return Result<bool>.Success(
                 true,
-                "Pricing rule deleted successfully.");
+                _localizer["PricingRuleDeletedSuccessfully"]);
         }
     }
 }

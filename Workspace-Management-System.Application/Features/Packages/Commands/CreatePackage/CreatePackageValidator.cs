@@ -1,43 +1,47 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.CreatePackage;
 
 public class CreatePackageValidator
     : AbstractValidator<CreatePackageCommand>
 {
-    public CreatePackageValidator()
+    public CreatePackageValidator(
+        IStringLocalizer<SharedResources> localizer)
     {
         RuleFor(x => x.NameEn)
             .NotEmpty()
-            .WithMessage("English package name is required.")
+            .WithMessage(localizer["EnglishPackageNameRequired"])
             .MaximumLength(100)
-            .WithMessage("English package name cannot exceed 100 characters.");
+            .WithMessage(localizer["EnglishPackageNameMaxLength"]);
 
         RuleFor(x => x.NameAr)
             .NotEmpty()
-            .WithMessage("Arabic package name is required.")
+            .WithMessage(localizer["ArabicPackageNameRequired"])
             .MaximumLength(100)
-            .WithMessage("Arabic package name cannot exceed 100 characters.");
+            .WithMessage(localizer["ArabicPackageNameMaxLength"]);
 
         RuleFor(x => x.DescriptionEn)
             .MaximumLength(500)
-            .WithMessage("English package description cannot exceed 500 characters.");
+            .WithMessage(localizer["EnglishPackageDescriptionMaxLength"]);
 
         RuleFor(x => x.DescriptionAr)
             .MaximumLength(500)
-            .WithMessage("Arabic package description cannot exceed 500 characters.");
+            .WithMessage(localizer["ArabicPackageDescriptionMaxLength"]);
 
         RuleFor(x => x.TotalHours)
             .GreaterThan(0)
-            .WithMessage("Total hours must be greater than zero.");
+            .WithMessage(localizer["TotalHoursMustBeGreaterThanZero"]);
 
         RuleFor(x => x.Price)
             .GreaterThanOrEqualTo(0)
-            .WithMessage("Price cannot be negative.");
+            .WithMessage(localizer["PriceCannotBeNegative"]);
 
         RuleFor(x => x.DurationDays)
             .GreaterThan(0)
             .When(x => x.DurationDays.HasValue)
-            .WithMessage("Duration days must be greater than zero.");
+            .WithMessage(localizer["DurationDaysMustBeGreaterThanZero"]);
     }
 }
