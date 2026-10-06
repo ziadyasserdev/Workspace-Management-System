@@ -11,7 +11,9 @@ public class UpdatePackageHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
 
-    public UpdatePackageHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+    public UpdatePackageHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
@@ -31,12 +33,18 @@ public class UpdatePackageHandler
                 "Package not found.");
         }
 
-        package.Name = request.Name.Trim();
+        package.NameEn = request.NameEn.Trim();
+        package.NameAr = request.NameAr.Trim();
 
-        package.Description =
-            string.IsNullOrWhiteSpace(request.Description)
+        package.DescriptionEn =
+            string.IsNullOrWhiteSpace(request.DescriptionEn)
                 ? null
-                : request.Description.Trim();
+                : request.DescriptionEn.Trim();
+
+        package.DescriptionAr =
+            string.IsNullOrWhiteSpace(request.DescriptionAr)
+                ? null
+                : request.DescriptionAr.Trim();
 
         package.PackageType = request.PackageType;
         package.TotalHours = request.TotalHours;
@@ -46,6 +54,7 @@ public class UpdatePackageHandler
 
         package.UpdatedAt = DateTime.UtcNow;
         package.UpdatedBy = _currentUser.UserId;
+
         _unitOfWork.Packages.Update(package);
 
         await _unitOfWork.SaveAsync();

@@ -8,26 +8,38 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
     {
         public UpdateCustomerCommandValidator()
         {
-            RuleFor(x => x.FullName)
+            RuleFor(x => x.Id)
+                .GreaterThan(0)
+                .WithMessage("Customer ID must be greater than zero.");
+
+            RuleFor(x => x.FullNameEn)
                 .NotEmpty()
-                .WithMessage("Full name is required")
+                .WithMessage("Customer English full name is required.")
                 .MaximumLength(150)
-                .WithMessage("Full name must not exceed 150 characters");
+                .WithMessage("Customer English full name must not exceed 150 characters.");
+
+            RuleFor(x => x.FullNameAr)
+                .NotEmpty()
+                .WithMessage("Customer Arabic full name is required.")
+                .MaximumLength(150)
+                .WithMessage("Customer Arabic full name must not exceed 150 characters.");
 
             RuleFor(x => x.MobileNumber)
-           .NotEmpty()
-           .WithMessage("Mobile number is required")
-           .Matches(@"^01[0125][0-9]{8}$")
-           .WithMessage("Mobile number must be a valid Egyptian mobile number");
+                .NotEmpty()
+                .WithMessage("Mobile number is required.")
+                .Matches(@"^01[0125][0-9]{8}$")
+                .WithMessage("Mobile number must be a valid Egyptian mobile number.");
 
             RuleFor(x => x.Email)
-             .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
-             .When(x => !string.IsNullOrEmpty(x.Email))
-             .WithMessage("Email must be valid");
+                .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+                .When(x => !string.IsNullOrEmpty(x.Email))
+                .WithMessage("Email must be valid.");
 
             RuleFor(x => x.CustomerType)
                 .IsInEnum()
-                .WithMessage("Invalid customer type."); RuleFor(x => x.CompanyId)
+                .WithMessage("Invalid customer type.");
+
+            RuleFor(x => x.CompanyId)
                 .NotNull()
                 .When(x => x.CustomerType == CustomerType.Corporate)
                 .WithMessage("Corporate customers must be associated with a company.");
@@ -40,9 +52,13 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Up
                     x.CustomerType == CustomerType.WalkIn)
                 .WithMessage("This customer type cannot be associated with a company.");
 
-            RuleFor(x => x.Notes)
+            RuleFor(x => x.NotesEn)
                 .MaximumLength(500)
-                .WithMessage("Notes must not exceed 500 characters");
+                .WithMessage("English notes must not exceed 500 characters.");
+
+            RuleFor(x => x.NotesAr)
+                .MaximumLength(500)
+                .WithMessage("Arabic notes must not exceed 500 characters.");
         }
     }
 }

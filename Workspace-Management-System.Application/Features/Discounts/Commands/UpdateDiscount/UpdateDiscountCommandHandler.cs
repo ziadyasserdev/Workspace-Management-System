@@ -37,15 +37,19 @@ namespace Workspace_Management_System.Application.Features.Discounts.Commands.Up
                     "Discount not found.");
             }
 
-            var name = request.Name.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
             var duplicate = await _unitOfWork.Discounts
                 .Query()
                 .AnyAsync(
                     x =>
                         x.Id != request.Id &&
-                        x.Name == name &&
-                        !x.IsDeleted,
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == nameEn.ToLower() ||
+                            x.NameAr.ToLower() == nameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (duplicate)
@@ -55,13 +59,15 @@ namespace Workspace_Management_System.Application.Features.Discounts.Commands.Up
                     "A discount with the same name already exists.");
             }
 
-            discount.Name = name;
+            discount.NameEn = nameEn;
+            discount.NameAr = nameAr;
+            discount.DescriptionEn = request.DescriptionEn?.Trim();
+            discount.DescriptionAr = request.DescriptionAr?.Trim();
             discount.DiscountType = request.Type;
             discount.Value = request.Value;
             discount.IsActive = request.IsActive;
             discount.StartDate = request.StartDate;
             discount.EndDate = request.EndDate;
-
             discount.UpdatedAt = DateTime.UtcNow;
             discount.UpdatedBy = _currentUser.UserId;
 

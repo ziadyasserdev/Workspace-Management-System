@@ -7,9 +7,11 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Cre
     {
         public int ProductCategoryId { get; set; }
 
-        public string EnglishName { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
 
         public string Sku { get; set; } = null!;
 

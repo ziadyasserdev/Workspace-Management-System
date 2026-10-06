@@ -8,12 +8,15 @@ using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerCommandHandler: IRequestHandler<CreateCustomerCommand, Result<int>>
+    public class CreateCustomerCommandHandler
+        : IRequestHandler<CreateCustomerCommand, Result<int>>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ICurrentUserService currentUser;
 
-        public CreateCustomerCommandHandler(IUnitOfWork unitOfWork, ICurrentUserService currentUser)
+        public CreateCustomerCommandHandler(
+            IUnitOfWork unitOfWork,
+            ICurrentUserService currentUser)
         {
             this.unitOfWork = unitOfWork;
             this.currentUser = currentUser;
@@ -26,25 +29,33 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
             var checkExist = await unitOfWork.Customers
                 .Query()
                 .AnyAsync(
-                    x => x.MobileNumber == request.MobileNumber && !x.IsDeleted,
+                    x =>
+                        x.MobileNumber == request.MobileNumber &&
+                        !x.IsDeleted,
                     cancellationToken);
+
             if (checkExist)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
                     "A customer with the same mobile number already exists.");
             }
+
+            var now = DateTime.UtcNow;
+
             var customer = new Customer
             {
-                FullName = request.FullName,
+                FullNameEn = request.FullNameEn.Trim(),
+                FullNameAr = request.FullNameAr.Trim(),
                 MobileNumber = request.MobileNumber,
                 Email = request.Email,
                 CompanyId = request.CompanyId,
                 CustomerType = request.CustomerType,
-                Notes = request.Notes,
-                RegistrationDate = DateTime.UtcNow,
+                NotesEn = request.NotesEn?.Trim(),
+                NotesAr = request.NotesAr?.Trim(),
+                RegistrationDate = now,
                 Status = CustomerStatus.Active,
-                 CreatedAt = DateTime.UtcNow,
+                CreatedAt = now,
                 CreatedBy = currentUser.UserId
             };
 
@@ -52,7 +63,9 @@ namespace Workspace_Management_System.Application.Features.Customers.Commands.Cr
 
             await unitOfWork.SaveAsync();
 
-            return Result<int>.Success(customer.Id,"Customer created successfully.");
+            return Result<int>.Success(
+                customer.Id,
+                "Customer created successfully.");
         }
     }
 }

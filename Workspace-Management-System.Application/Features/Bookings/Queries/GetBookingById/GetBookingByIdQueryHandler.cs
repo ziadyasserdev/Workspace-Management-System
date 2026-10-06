@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Bookings.Dtos;
 
@@ -15,10 +16,12 @@ namespace Workspace_Management_System.Application.Features.Bookings.Queries.GetB
     : IRequestHandler<GetBookingByIdQuery, Result<BookingDetailsDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILocalizationService _localizationService;
 
-        public GetBookingByIdQueryHandler(IUnitOfWork unitOfWork)
+        public GetBookingByIdQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
         {
             _unitOfWork = unitOfWork;
+            _localizationService = localizationService;
         }
 
         public async Task<Result<BookingDetailsDto>> Handle(
@@ -39,8 +42,10 @@ namespace Workspace_Management_System.Application.Features.Bookings.Queries.GetB
 
                     CustomerId = x.CustomerId,
 
-                    CustomerName =
-                        x.Customer.FullName,
+                      CustomerName =
+                _localizationService.GetLocalizedValue(
+                    x.Customer.FullNameEn,
+                    x.Customer.FullNameAr),
 
                     WorkspaceId = x.WorkspaceId,
 

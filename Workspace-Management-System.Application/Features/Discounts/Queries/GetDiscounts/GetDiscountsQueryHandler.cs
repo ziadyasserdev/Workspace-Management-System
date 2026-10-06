@@ -33,7 +33,12 @@ namespace Workspace_Management_System.Application.Features.Discounts.Queries.Get
                 var search = request.Search.Trim();
 
                 query = query.Where(x =>
-                    x.Name.Contains(search));
+                    x.NameEn.Contains(search) ||
+                    x.NameAr.Contains(search) ||
+                    (x.DescriptionEn != null &&
+                     x.DescriptionEn.Contains(search)) ||
+                    (x.DescriptionAr != null &&
+                     x.DescriptionAr.Contains(search)));
             }
 
             if (request.IsActive.HasValue)
@@ -46,13 +51,16 @@ namespace Workspace_Management_System.Application.Features.Discounts.Queries.Get
                 cancellationToken);
 
             var items = await query
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.NameEn)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new DiscountResponseDto
                 {
                     Id = x.Id,
-                    Name = x.Name,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
                     Type = x.DiscountType,
                     Value = x.Value,
                     IsActive = x.IsActive,

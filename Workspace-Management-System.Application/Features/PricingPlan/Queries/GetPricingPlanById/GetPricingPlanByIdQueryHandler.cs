@@ -23,14 +23,17 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Queries.G
         {
             var pricingPlan = await unitOfWork.PricingPlans
                 .Query()
+                .AsNoTracking()
                 .Where(x =>
                     x.Id == request.Id &&
                     !x.IsDeleted)
                 .Select(x => new PricingPlanDto
                 {
                     Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
                     IsActive = x.IsActive
                 })
                 .FirstOrDefaultAsync(cancellationToken);

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Dtos;
 
@@ -15,10 +16,12 @@ namespace Workspace_Management_System.Application.Features.Sessions.Queries.GetS
      : IRequestHandler<GetSessionDetailsQuery, Result<SessionDetailsDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILocalizationService _localizationService;
 
-        public GetSessionDetailsQueryHandler(IUnitOfWork unitOfWork)
+        public GetSessionDetailsQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
         {
             _unitOfWork = unitOfWork;
+            _localizationService = localizationService;
         }
 
         public async Task<Result<SessionDetailsDto>> Handle(
@@ -37,7 +40,9 @@ namespace Workspace_Management_System.Application.Features.Sessions.Queries.GetS
 
                     CustomerId = x.CustomerId,
                     CustomerName =
-                        x.Customer.FullName,
+                _localizationService.GetLocalizedValue(
+                    x.Customer.FullNameEn,
+                    x.Customer.FullNameAr),
 
                     BookingId = x.BookingId,
 
@@ -46,7 +51,10 @@ namespace Workspace_Management_System.Application.Features.Sessions.Queries.GetS
                     WorkspaceCode = x.Workspace.Code,
 
                     PricingPlanId = x.PricingPlanId,
-                    PricingPlanName = x.PricingPlan.Name,
+                    PricingPlanName =
+                   _localizationService.GetLocalizedValue(
+                    x.PricingPlan.NameEn,
+                    x.PricingPlan.NameAr),
 
                     EmployeeId = x.EmployeeId,
                     EmployeeName =

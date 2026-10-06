@@ -5,7 +5,6 @@ using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Customers.Dtos;
 
-
 namespace Workspace_Management_System.Application.Features.Companies.Queries.GetCompanyCustomers
 {
     public class GetCompanyCustomersQueryHandler
@@ -28,8 +27,9 @@ namespace Workspace_Management_System.Application.Features.Companies.Queries.Get
             var companyExists = await _unitOfWork.Companies
                 .Query()
                 .AnyAsync(
-                    x => x.Id == request.CompanyId &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id == request.CompanyId &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (!companyExists)
@@ -50,18 +50,20 @@ namespace Workspace_Management_System.Application.Features.Companies.Queries.Get
                 cancellationToken);
 
             var items = await query
-                .OrderBy(x => x.FullName)
+                .OrderBy(x => x.FullNameEn)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new CustomerDto
                 {
                     Id = x.Id,
-                    FullName = x.FullName,
+                    FullNameEn = x.FullNameEn,
+                    FullNameAr = x.FullNameAr,
                     MobileNumber = x.MobileNumber,
                     Email = x.Email,
                     CompanyId = x.CompanyId,
                     CustomerType = x.CustomerType,
-                    Notes = x.Notes,
+                    NotesEn = x.NotesEn,
+                    NotesAr = x.NotesAr,
                     RegistrationDate = x.RegistrationDate,
                     Status = x.Status
                 })

@@ -32,6 +32,7 @@ public class CheckoutResponseDto
 
     public List<CheckoutResponseItemDto> Items { get; set; } = new();
 }
+
 public class CheckoutResponseItemDto
 {
     public string Description { get; set; } = string.Empty;

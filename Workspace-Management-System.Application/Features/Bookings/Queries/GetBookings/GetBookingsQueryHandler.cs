@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Bookings.Dtos;
 using Workspace_Management_System.Application.Features.Bookings.Queries.GetBookings;
@@ -12,10 +13,12 @@ public class GetBookingsQueryHandler
         Result<PaginatedResult<BookingListDto>>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILocalizationService _localizationService;
 
-    public GetBookingsQueryHandler(IUnitOfWork unitOfWork)
+    public GetBookingsQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
     {
         _unitOfWork = unitOfWork;
+        _localizationService = localizationService;
     }
 
     public async Task<Result<PaginatedResult<BookingListDto>>> Handle(
@@ -35,8 +38,9 @@ public class GetBookingsQueryHandler
             query = query.Where(x =>
                 x.BookingNumber.Contains(search) ||
 
-                x.Customer.FullName.Contains(search) ||
-            
+                x.Customer.FullNameEn.Contains(search) ||
+                x.Customer.FullNameAr.Contains(search) ||
+
 
                 x.Workspace.Name.Contains(search) ||
                 x.Workspace.Code.Contains(search));
@@ -105,8 +109,9 @@ public class GetBookingsQueryHandler
                 BookingNumber = x.BookingNumber,
 
                 CustomerId = x.CustomerId,
-                CustomerName =
-                    x.Customer.FullName,
+                CustomerNameEn = x.Customer.FullNameEn,
+                CustomerNameAr = x.Customer.FullNameAr,
+
 
                 WorkspaceId = x.WorkspaceId,
                 WorkspaceName = x.Workspace.Name,

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.PaginatedResults;
 using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Dtos;
 using Workspace_Management_System.Domain.Enums;
@@ -19,10 +20,12 @@ namespace Workspace_Management_System.Application.Features.Sessions.Queries.GetA
         Result<PaginatedResult<ActiveSessionDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILocalizationService _localizationService;
 
-        public GetActiveSessionsQueryHandler(IUnitOfWork unitOfWork)
+        public GetActiveSessionsQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
         {
             _unitOfWork = unitOfWork;
+            _localizationService = localizationService;
         }
 
         public async Task<Result<PaginatedResult<ActiveSessionDto>>> Handle(
@@ -49,7 +52,8 @@ namespace Workspace_Management_System.Application.Features.Sessions.Queries.GetA
                 var search = request.Search.Trim();
 
                 query = query.Where(x =>
-                    x.Customer.FullName.Contains(search) );
+               x.Customer.FullNameEn.Contains(search) ||
+               x.Customer.FullNameAr.Contains(search));
             }
 
             var totalCount = await query.CountAsync(cancellationToken);
@@ -64,14 +68,19 @@ namespace Workspace_Management_System.Application.Features.Sessions.Queries.GetA
 
                     CustomerId = x.CustomerId,
                     CustomerName =
-                        x.Customer.FullName,
+                    _localizationService.GetLocalizedValue(
+                        x.Customer.FullNameEn,
+                        x.Customer.FullNameAr),
 
                     WorkspaceId = x.WorkspaceId,
                     WorkspaceName = x.Workspace.Name,
                     WorkspaceCode = x.Workspace.Code,
 
                     PricingPlanId = x.PricingPlanId,
-                    PricingPlanName = x.PricingPlan.Name,
+                    PricingPlanName =
+                    _localizationService.GetLocalizedValue(
+                        x.PricingPlan.NameEn,
+                        x.PricingPlan.NameAr),
 
                     EmployeeId = x.EmployeeId,
                     EmployeeName =

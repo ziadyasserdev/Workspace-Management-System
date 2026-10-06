@@ -31,29 +31,43 @@ namespace Workspace_Management_System.Application.Features.Companies.Queries.Sea
                 .AsNoTracking()
                 .Where(x => !x.IsDeleted)
                 .Where(x =>
-                    x.Name.Contains(searchTerm) ||
+                    x.NameEn.Contains(searchTerm) ||
+                    x.NameAr.Contains(searchTerm) ||
                     x.ContactPerson.Contains(searchTerm) ||
                     x.Phone.Contains(searchTerm) ||
                     (x.Email != null &&
-                     x.Email.Contains(searchTerm)));
+                     x.Email.Contains(searchTerm)) ||
+                    (x.TaxNumber != null &&
+                     x.TaxNumber.Contains(searchTerm)) ||
+                    (x.TaxInformationEn != null &&
+                     x.TaxInformationEn.Contains(searchTerm)) ||
+                    (x.TaxInformationAr != null &&
+                     x.TaxInformationAr.Contains(searchTerm)) ||
+                    (x.ContractDetailsEn != null &&
+                     x.ContractDetailsEn.Contains(searchTerm)) ||
+                    (x.ContractDetailsAr != null &&
+                     x.ContractDetailsAr.Contains(searchTerm)));
 
             var totalCount = await query.CountAsync(
                 cancellationToken);
 
             var items = await query
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.NameEn)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new CompanyDto
                 {
                     Id = x.Id,
-                    Name = x.Name,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
                     ContactPerson = x.ContactPerson,
                     Phone = x.Phone,
                     Email = x.Email,
                     TaxNumber = x.TaxNumber,
-                    TaxInformation = x.TaxInformation,
-                    ContractDetails = x.ContractDetails,
+                    TaxInformationEn = x.TaxInformationEn,
+                    TaxInformationAr = x.TaxInformationAr,
+                    ContractDetailsEn = x.ContractDetailsEn,
+                    ContractDetailsAr = x.ContractDetailsAr,
                     PricingPlanId = x.PricingPlanId,
                     CreditLimit = x.CreditLimit,
                     IsActive = x.IsActive

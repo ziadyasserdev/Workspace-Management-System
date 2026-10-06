@@ -22,6 +22,7 @@ namespace Workspace_Management_System.Application.Features.Discounts.Queries.Get
         {
             var discount = await _unitOfWork.Discounts
                 .Query()
+                .AsNoTracking()
                 .FirstOrDefaultAsync(
                     x => x.Id == request.Id && !x.IsDeleted,
                     cancellationToken);
@@ -36,7 +37,10 @@ namespace Workspace_Management_System.Application.Features.Discounts.Queries.Get
             var dto = new DiscountResponseDto
             {
                 Id = discount.Id,
-                Name = discount.Name,
+                NameEn = discount.NameEn,
+                NameAr = discount.NameAr,
+                DescriptionEn = discount.DescriptionEn,
+                DescriptionAr = discount.DescriptionAr,
                 Type = discount.DiscountType,
                 Value = discount.Value,
                 IsActive = discount.IsActive,

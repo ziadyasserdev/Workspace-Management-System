@@ -34,7 +34,12 @@ namespace Workspace_Management_System.Application.Features.Products.Queries.GetP
                 var search = request.Search.Trim();
 
                 query = query.Where(x =>
-                    x.EnglishName.Contains(search) ||
+                    x.NameEn.Contains(search) ||
+                    x.NameAr.Contains(search) ||
+                    (x.DescriptionEn != null &&
+                     x.DescriptionEn.Contains(search)) ||
+                    (x.DescriptionAr != null &&
+                     x.DescriptionAr.Contains(search)) ||
                     x.Sku.Contains(search));
             }
 
@@ -55,16 +60,19 @@ namespace Workspace_Management_System.Application.Features.Products.Queries.GetP
                 cancellationToken);
 
             var items = await query
-                .OrderBy(x => x.EnglishName)
+                .OrderBy(x => x.NameEn)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new ProductDto
                 {
                     Id = x.Id,
                     ProductCategoryId = x.ProductCategoryId,
-                    ProductCategoryName = x.ProductCategory.Name,
-                    EnglishName = x.EnglishName,
-                    Description = x.Description,
+                    ProductCategoryNameEn = x.ProductCategory.NameEn,
+                    ProductCategoryNameAr = x.ProductCategory.NameAr,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
                     Sku = x.Sku,
                     SellingPrice = x.SellingPrice,
                     CostPrice = x.CostPrice,

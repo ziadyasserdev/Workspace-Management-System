@@ -2,7 +2,8 @@
 
 namespace Workspace_Management_System.Application.Features.Services.Commands.UpdateService
 {
-    public class UpdateServiceValidator : AbstractValidator<UpdateServiceCommand>
+    public class UpdateServiceValidator
+        : AbstractValidator<UpdateServiceCommand>
     {
         public UpdateServiceValidator()
         {
@@ -10,11 +11,17 @@ namespace Workspace_Management_System.Application.Features.Services.Commands.Upd
                 .GreaterThan(0)
                 .WithMessage("Service ID must be greater than 0.");
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Service name is required.")
+                .WithMessage("English service name is required.")
                 .MaximumLength(100)
-                .WithMessage("Service name cannot exceed 100 characters.");
+                .WithMessage("English service name cannot exceed 100 characters.");
+
+            RuleFor(x => x.NameAr)
+                .NotEmpty()
+                .WithMessage("Arabic service name is required.")
+                .MaximumLength(100)
+                .WithMessage("Arabic service name cannot exceed 100 characters.");
 
             RuleFor(x => x.Price)
                 .GreaterThan(0)

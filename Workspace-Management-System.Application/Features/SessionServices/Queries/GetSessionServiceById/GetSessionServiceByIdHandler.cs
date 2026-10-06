@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Services.Queries.GetSessionServiceById;
 
@@ -8,10 +11,17 @@ public class GetSessionServiceByIdHandler
     : IRequestHandler<GetSessionServiceByIdQuery, SessionServiceResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer<SharedResources> _localizer;
 
-    public GetSessionServiceByIdHandler(IUnitOfWork unitOfWork)
+    public GetSessionServiceByIdHandler(
+        IUnitOfWork unitOfWork,
+        ILocalizationService localizationService,
+        IStringLocalizer<SharedResources> localizer)
     {
         _unitOfWork = unitOfWork;
+        _localizationService = localizationService;
+        _localizer = localizer;
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -22,20 +32,24 @@ public class GetSessionServiceByIdHandler
             .GetByIdAsync(request.Id);
 
         if (sessionService == null)
-            throw new KeyNotFoundException("Session service not found.");
+            throw new KeyNotFoundException(
+                _localizer["SessionServiceNotFound"]);
 
         var service = await _unitOfWork.Services
             .GetByIdAsync(sessionService.ServiceId);
 
         if (service == null)
-            throw new KeyNotFoundException("Service not found.");
+            throw new KeyNotFoundException(
+                _localizer["ServiceNotFound"]);
 
         return new SessionServiceResponseDto
         {
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
             ServiceId = sessionService.ServiceId,
-            ServiceName = service.Name,
+            ServiceName = _localizationService.GetLocalizedValue(
+                service.NameEn,
+                service.NameAr),
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
             TotalPrice = sessionService.Quantity * sessionService.UnitPrice

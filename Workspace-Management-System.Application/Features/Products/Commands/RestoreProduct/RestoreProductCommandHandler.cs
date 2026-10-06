@@ -40,9 +40,10 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Res
             var skuExists = await _unitOfWork.Products
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id
-                         && x.Sku.ToLower() == product.Sku.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        x.Sku.ToLower() == product.Sku.ToLower() &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (skuExists)
@@ -55,23 +56,28 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Res
             var nameExists = await _unitOfWork.Products
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id
-                         && x.EnglishName.ToLower() == product.EnglishName.ToLower()
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        !x.IsDeleted &&
+                        (
+                            x.NameEn.ToLower() == product.NameEn.ToLower() ||
+                            x.NameAr.ToLower() == product.NameAr.ToLower()
+                        ),
                     cancellationToken);
 
             if (nameExists)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A product with the same English name already exists.");
+                    "A product with the same name already exists.");
             }
 
             var categoryExists = await _unitOfWork.ProductCategories
                 .Query()
                 .AnyAsync(
-                    x => x.Id == product.ProductCategoryId
-                         && !x.IsDeleted,
+                    x =>
+                        x.Id == product.ProductCategoryId &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (!categoryExists)
@@ -86,6 +92,7 @@ namespace Workspace_Management_System.Application.Features.Products.Commands.Res
             product.UpdatedAt = DateTime.UtcNow;
             product.UpdatedBy = _currentUser.UserId;
             product.IsDeletedBy = null;
+
             await _unitOfWork.SaveAsync();
 
             return Result<bool>.Success(

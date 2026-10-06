@@ -48,9 +48,11 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Re
             var activeCompanyWithSameName = await _unitOfWork.Companies
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id &&
-                         x.Name == company.Name &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        (x.NameEn == company.NameEn ||
+                         x.NameAr == company.NameAr) &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (activeCompanyWithSameName)

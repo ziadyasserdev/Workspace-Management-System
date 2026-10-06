@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Sessions.Services.Dtos;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Services.Commands.UpdateService;
@@ -12,13 +14,19 @@ public class UpdateServiceHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer<SharedResources> _localizer;
 
     public UpdateServiceHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        ILocalizationService localizationService,
+        IStringLocalizer<SharedResources> localizer)
     {
         _unitOfWork = unitOfWork;
         _currentUserService = currentUserService;
+        _localizationService = localizationService;
+        _localizer = localizer;
     }
 
     public async Task<SessionServiceResponseDto> Handle(
@@ -29,15 +37,16 @@ public class UpdateServiceHandler
             .GetByIdAsync(request.SessionId);
 
         if (session == null)
-            throw new KeyNotFoundException("Session not found.");
+            throw new KeyNotFoundException(
+                _localizer["SessionNotFound"]);
 
         if (session.Status != SessionStatus.Active)
             throw new InvalidOperationException(
-                "Service can only be updated in an active session.");
+                _localizer["ServiceCanOnlyBeUpdatedInActiveSession"]);
 
         if (request.Quantity <= 0)
             throw new ArgumentException(
-                "Quantity must be greater than zero.");
+                _localizer["QuantityGreaterThanZero"]);
 
         var sessionService = await _unitOfWork.SessionServices
             .GetBySessionAndServiceAsync(
@@ -46,13 +55,14 @@ public class UpdateServiceHandler
 
         if (sessionService == null)
             throw new KeyNotFoundException(
-                "Service is not added to this session.");
+                _localizer["ServiceNotAddedToSession"]);
 
         var service = await _unitOfWork.Services
             .GetByIdAsync(sessionService.ServiceId);
 
         if (service == null)
-            throw new KeyNotFoundException("Service not found.");
+            throw new KeyNotFoundException(
+                _localizer["ServiceNotFound"]);
 
         sessionService.Quantity = request.Quantity;
         sessionService.UpdatedAt = DateTime.UtcNow;
@@ -67,7 +77,9 @@ public class UpdateServiceHandler
             Id = sessionService.Id,
             SessionId = sessionService.SessionId,
             ServiceId = sessionService.ServiceId,
-            ServiceName = service.Name,
+            ServiceName = _localizationService.GetLocalizedValue(
+                service.NameEn,
+                service.NameAr),
             Quantity = sessionService.Quantity,
             UnitPrice = sessionService.UnitPrice,
             TotalPrice = sessionService.Quantity * sessionService.UnitPrice

@@ -27,8 +27,9 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
             var company = await _unitOfWork.Companies
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id == request.Id &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (company is null)
@@ -41,9 +42,11 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
             var exists = await _unitOfWork.Companies
                 .Query()
                 .AnyAsync(
-                    x => x.Id != request.Id &&
-                         x.Name == request.Name &&
-                         !x.IsDeleted,
+                    x =>
+                        x.Id != request.Id &&
+                        (x.NameEn == request.NameEn ||
+                         x.NameAr == request.NameAr) &&
+                        !x.IsDeleted,
                     cancellationToken);
 
             if (exists)
@@ -52,13 +55,15 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
                     ResultStatus.Conflict,
                     "A company with the same name already exists.");
             }
+
             if (request.PricingPlanId.HasValue)
             {
                 var pricingPlanExists = await _unitOfWork.PricingPlans
                     .Query()
                     .AnyAsync(
-                        x => x.Id == request.PricingPlanId.Value &&
-                             !x.IsDeleted,
+                        x =>
+                            x.Id == request.PricingPlanId.Value &&
+                            !x.IsDeleted,
                         cancellationToken);
 
                 if (!pricingPlanExists)
@@ -68,16 +73,19 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
                         "Pricing plan not found.");
                 }
             }
-            company.Name = request.Name;
+
+            company.NameEn = request.NameEn.Trim();
+            company.NameAr = request.NameAr.Trim();
             company.ContactPerson = request.ContactPerson;
             company.Phone = request.Phone;
             company.Email = request.Email;
             company.TaxNumber = request.TaxNumber;
-            company.TaxInformation = request.TaxInformation;
-            company.ContractDetails = request.ContractDetails;
+            company.TaxInformationEn = request.TaxInformationEn?.Trim();
+            company.TaxInformationAr = request.TaxInformationAr?.Trim();
+            company.ContractDetailsEn = request.ContractDetailsEn?.Trim();
+            company.ContractDetailsAr = request.ContractDetailsAr?.Trim();
             company.PricingPlanId = request.PricingPlanId;
             company.CreditLimit = request.CreditLimit;
-
             company.UpdatedAt = DateTime.UtcNow;
             company.UpdatedBy = _currentUser.UserId;
 
