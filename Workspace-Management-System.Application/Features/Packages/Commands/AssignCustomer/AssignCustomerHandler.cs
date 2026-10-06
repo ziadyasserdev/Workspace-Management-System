@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
 
@@ -13,11 +15,16 @@ public class AssignCustomerHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
-    public AssignCustomerHandler(IUnitOfWork unitOfWork,ICurrentUserService currentUser)
+    private readonly IStringLocalizer _localizer;
+
+    public AssignCustomerHandler(
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
-
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -36,7 +43,7 @@ public class AssignCustomerHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Customer not found.");
+                _localizer["CustomerNotFound"]);
         }
 
         var package = await _unitOfWork.Packages
@@ -46,14 +53,14 @@ public class AssignCustomerHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         if (!package.IsActive)
         {
             return Result<int>.Failure(
                 ResultStatus.Conflict,
-                "Cannot assign an inactive package.");
+                _localizer["CannotAssignInactivePackage"]);
         }
 
         var existingActivePackage =
@@ -70,7 +77,7 @@ public class AssignCustomerHandler
         {
             return Result<int>.Failure(
                 ResultStatus.Conflict,
-                "Customer already has an active package.");
+                _localizer["CustomerAlreadyHasActivePackage"]);
         }
 
         var now = DateTime.UtcNow;
@@ -83,18 +90,13 @@ public class AssignCustomerHandler
         {
             CustomerId = request.CustomerId,
             PackageId = request.PackageId,
-
             PurchaseDate = now,
             StartDate = now,
             EndDate = endDate,
-
             RemainingHours = package.TotalHours,
-
             Status = CustomerPackageStatus.Active,
-
             CreatedAt = now,
             CreatedBy = _currentUser.UserId
-
         };
 
         await _unitOfWork.CustomerPackages
@@ -104,6 +106,7 @@ public class AssignCustomerHandler
 
         return Result<int>.Success(
             customerPackage.Id,
-            "Customer assigned to package successfully.");
+            _localizer["CustomerAssignedToPackageSuccessfully"]);
     }
 }
+

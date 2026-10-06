@@ -1,69 +1,73 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Companies.Commands.CreateCompany
 {
     public class CreateCompanyCommandValidator
         : AbstractValidator<CreateCompanyCommand>
     {
-        public CreateCompanyCommandValidator()
+        public CreateCompanyCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Company English name is required.")
+                .WithMessage(localizer["CompanyEnglishNameRequired"])
                 .MaximumLength(150)
-                .WithMessage("Company English name must not exceed 150 characters.");
+                .WithMessage(localizer["CompanyEnglishNameMaxLength"]);
 
             RuleFor(x => x.NameAr)
                 .NotEmpty()
-                .WithMessage("Company Arabic name is required.")
+                .WithMessage(localizer["CompanyArabicNameRequired"])
                 .MaximumLength(150)
-                .WithMessage("Company Arabic name must not exceed 150 characters.");
+                .WithMessage(localizer["CompanyArabicNameMaxLength"]);
 
             RuleFor(x => x.ContactPerson)
                 .NotEmpty()
-                .WithMessage("Contact person is required.")
+                .WithMessage(localizer["ContactPersonRequired"])
                 .MaximumLength(150)
-                .WithMessage("Contact person must not exceed 150 characters.");
+                .WithMessage(localizer["ContactPersonMaxLength"]);
 
             RuleFor(x => x.Phone)
                 .NotEmpty()
-                .WithMessage("Mobile number is required.")
+                .WithMessage(localizer["MobileNumberRequired"])
                 .Matches(@"^01[0125][0-9]{8}$")
-                .WithMessage("Mobile number must be a valid Egyptian mobile number.");
+                .WithMessage(localizer["InvalidEgyptianMobileNumber"]);
 
             RuleFor(x => x.Email)
                 .MaximumLength(150)
                 .When(x => !string.IsNullOrWhiteSpace(x.Email))
-                .WithMessage("Email must not exceed 150 characters.");
+                .WithMessage(localizer["CompanyEmailMaxLength"]);
 
             RuleFor(x => x.Email)
                 .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
                 .When(x => !string.IsNullOrWhiteSpace(x.Email))
-                .WithMessage("Email must be valid.");
+                .WithMessage(localizer["InvalidEmail"]);
 
             RuleFor(x => x.TaxNumber)
                 .MaximumLength(50)
-                .WithMessage("Tax number must not exceed 50 characters.");
+                .WithMessage(localizer["TaxNumberMaxLength"]);
 
             RuleFor(x => x.TaxInformationEn)
                 .MaximumLength(500)
-                .WithMessage("English tax information must not exceed 500 characters.");
+                .WithMessage(localizer["EnglishTaxInformationMaxLength"]);
 
             RuleFor(x => x.TaxInformationAr)
                 .MaximumLength(500)
-                .WithMessage("Arabic tax information must not exceed 500 characters.");
+                .WithMessage(localizer["ArabicTaxInformationMaxLength"]);
 
             RuleFor(x => x.ContractDetailsEn)
                 .MaximumLength(1000)
-                .WithMessage("English contract details must not exceed 1000 characters.");
+                .WithMessage(localizer["EnglishContractDetailsMaxLength"]);
 
             RuleFor(x => x.ContractDetailsAr)
                 .MaximumLength(1000)
-                .WithMessage("Arabic contract details must not exceed 1000 characters.");
+                .WithMessage(localizer["ArabicContractDetailsMaxLength"]);
 
             RuleFor(x => x.CreditLimit)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Credit limit must not be negative.");
+                .WithMessage(localizer["CreditLimitCannotBeNegative"]);
         }
     }
 }
+

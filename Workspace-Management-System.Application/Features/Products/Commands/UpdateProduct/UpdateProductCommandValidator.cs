@@ -1,48 +1,57 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Products.Commands.UpdateProduct
 {
     public class UpdateProductCommandValidator
         : AbstractValidator<UpdateProductCommand>
     {
-        public UpdateProductCommandValidator()
+        public UpdateProductCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0);
+                .GreaterThan(0)
+                .WithMessage(localizer["ProductIdGreaterThanZero"]);
 
             RuleFor(x => x.ProductCategoryId)
                 .GreaterThan(0)
-                .WithMessage("Product category is required.");
+                .WithMessage(localizer["ProductCategoryRequired"]);
 
             RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Product English name is required.")
+                .WithMessage(localizer["ProductEnglishNameRequired"])
                 .MaximumLength(150)
-                .WithMessage("Product English name must not exceed 150 characters.");
+                .WithMessage(localizer["ProductEnglishNameMaxLength"]);
 
             RuleFor(x => x.NameAr)
                 .NotEmpty()
-                .WithMessage("Product Arabic name is required.")
+                .WithMessage(localizer["ProductArabicNameRequired"])
                 .MaximumLength(150)
-                .WithMessage("Product Arabic name must not exceed 150 characters.");
+                .WithMessage(localizer["ProductArabicNameMaxLength"]);
 
             RuleFor(x => x.DescriptionEn)
                 .MaximumLength(500)
-                .WithMessage("English description must not exceed 500 characters.");
+                .WithMessage(localizer["EnglishDescriptionMaxLength"]);
 
             RuleFor(x => x.DescriptionAr)
                 .MaximumLength(500)
-                .WithMessage("Arabic description must not exceed 500 characters.");
+                .WithMessage(localizer["ArabicDescriptionMaxLength"]);
 
             RuleFor(x => x.Sku)
                 .NotEmpty()
-                .MaximumLength(50);
+                .WithMessage(localizer["SkuRequired"])
+                .MaximumLength(50)
+                .WithMessage(localizer["SkuMaxLength"]);
 
             RuleFor(x => x.SellingPrice)
-                .GreaterThanOrEqualTo(0);
+                .GreaterThanOrEqualTo(0)
+                .WithMessage(localizer["SellingPriceGreaterThanOrEqualZero"]);
 
             RuleFor(x => x.CostPrice)
-                .GreaterThanOrEqualTo(0);
+                .GreaterThanOrEqualTo(0)
+                .WithMessage(localizer["CostPriceGreaterThanOrEqualZero"]);
         }
     }
 }

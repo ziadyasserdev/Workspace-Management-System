@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using PricingPlanModel = Workspace_Management_System.Domain.Models.PricingPlan;
 
 namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.CreatePricingPlan
@@ -12,13 +14,16 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public CreatePricingPlanCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<int>> Handle(
@@ -43,7 +48,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "A pricing plan with the same name already exists.");
+                    _localizer["PricingPlanWithSameNameAlreadyExists"]);
             }
 
             var pricingPlan = new PricingPlanModel
@@ -63,7 +68,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
 
             return Result<int>.Success(
                 pricingPlan.Id,
-                "Pricing plan created successfully.");
+                _localizer["PricingPlanCreatedSuccessfully"]);
         }
     }
 }

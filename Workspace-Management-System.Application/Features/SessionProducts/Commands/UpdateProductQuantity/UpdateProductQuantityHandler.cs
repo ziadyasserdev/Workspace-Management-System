@@ -18,18 +18,18 @@ public class UpdateProductQuantityHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
     private readonly ILocalizationService _localizationService;
-    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly IStringLocalizer _localizer;
 
     public UpdateProductQuantityHandler(
         IUnitOfWork unitOfWork,
         ICurrentUserService currentUser,
         ILocalizationService localizationService,
-        IStringLocalizer<SharedResources> localizer)
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
         _localizationService = localizationService;
-        _localizer = localizer;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<SessionProductResponseDto> Handle(

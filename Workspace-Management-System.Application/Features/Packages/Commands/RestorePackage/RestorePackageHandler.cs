@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.RestorePackage;
 
@@ -11,13 +13,16 @@ public class RestorePackageHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
     public RestorePackageHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -41,12 +46,12 @@ public class RestorePackageHandler
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "Package is already active or not deleted.");
+                    _localizer["PackageAlreadyActiveOrNotDeleted"]);
             }
 
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Deleted package not found.");
+                _localizer["DeletedPackageNotFound"]);
         }
 
         deletedPackage.IsDeleted = false;
@@ -61,6 +66,6 @@ public class RestorePackageHandler
 
         return Result<int>.Success(
             deletedPackage.Id,
-            "Package restored successfully.");
+            _localizer["PackageRestoredSuccessfully"]);
     }
 }

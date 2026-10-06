@@ -1,9 +1,14 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using System;
+using System.Resources;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.UpgradeCustomerPackage;
 
@@ -11,10 +16,14 @@ public class UpgradeCustomerPackageHandler
     : IRequestHandler<UpgradeCustomerPackageCommand, Result<int>>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IStringLocalizer _localizer;
 
-    public UpgradeCustomerPackageHandler(IUnitOfWork unitOfWork)
+    public UpgradeCustomerPackageHandler(
+        IUnitOfWork unitOfWork,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -38,7 +47,7 @@ public class UpgradeCustomerPackageHandler
             {
                 return Result<int>.Failure(
                     ResultStatus.NotFound,
-                    "Customer not found.");
+                    _localizer["CustomerNotFound"]);
             }
 
             var currentCustomerPackage =
@@ -55,7 +64,7 @@ public class UpgradeCustomerPackageHandler
             {
                 return Result<int>.Failure(
                     ResultStatus.NotFound,
-                    "Customer does not have an active package.");
+                    _localizer["CustomerDoesNotHaveActivePackage"]);
             }
 
             var newPackage = await _unitOfWork.Packages
@@ -65,14 +74,14 @@ public class UpgradeCustomerPackageHandler
             {
                 return Result<int>.Failure(
                     ResultStatus.NotFound,
-                    "New package not found.");
+                    _localizer["NewPackageNotFound"]);
             }
 
             if (!newPackage.IsActive)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "Cannot upgrade to an inactive package.");
+                    _localizer["CannotUpgradeToInactivePackage"]);
             }
 
             if (currentCustomerPackage.PackageId ==
@@ -80,7 +89,7 @@ public class UpgradeCustomerPackageHandler
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "Customer already has this package.");
+                    _localizer["CustomerAlreadyHasThisPackage"]);
             }
 
             var now = DateTime.UtcNow;
@@ -123,7 +132,7 @@ public class UpgradeCustomerPackageHandler
 
             return Result<int>.Success(
                 newCustomerPackage.Id,
-                "Customer package upgraded successfully.");
+                _localizer["CustomerPackageUpgradedSuccessfully"]);
         }
         catch
         {

@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.DeletePackage;
@@ -12,13 +14,16 @@ public class DeletePackageHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
     public DeletePackageHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -32,7 +37,7 @@ public class DeletePackageHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         var hasActiveCustomers = await _unitOfWork.CustomerPackages
@@ -48,7 +53,7 @@ public class DeletePackageHandler
         {
             return Result<int>.Failure(
                 ResultStatus.Conflict,
-                "Cannot delete a package with active customers.");
+                _localizer["CannotDeletePackageWithActiveCustomers"]);
         }
 
         package.IsDeleted = true;
@@ -63,6 +68,6 @@ public class DeletePackageHandler
 
         return Result<int>.Success(
             package.Id,
-            "Package deleted successfully.");
+            _localizer["PackageDeletedSuccessfully"]);
     }
 }

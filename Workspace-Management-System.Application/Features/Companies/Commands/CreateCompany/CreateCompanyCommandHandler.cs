@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Companies.Commands.CreateCompany
@@ -12,13 +15,16 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public CreateCompanyCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<int>> Handle(
@@ -38,7 +44,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "A company with the same name already exists.");
+                    _localizer["CompanySameNameAlreadyExists"]);
             }
 
             if (request.PricingPlanId.HasValue)
@@ -55,7 +61,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Pricing plan not found.");
+                        _localizer["PricingPlanNotFound"]);
                 }
             }
 
@@ -83,7 +89,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Cr
 
             return Result<int>.Success(
                 company.Id,
-                "Company created successfully.");
+                _localizer["CompanyCreatedSuccessfully"]);
         }
     }
 }

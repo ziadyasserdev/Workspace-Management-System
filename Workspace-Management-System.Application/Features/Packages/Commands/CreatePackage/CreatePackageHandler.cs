@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.CreatePackage;
@@ -11,13 +13,16 @@ public class CreatePackageCommandHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
     public CreatePackageCommandHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -61,7 +66,7 @@ public class CreatePackageCommandHandler
 
             return Result<int>.Success(
                 package.Id,
-                "Package created successfully.");
+                _localizer["PackageCreatedSuccessfully"]);
         }
         catch
         {

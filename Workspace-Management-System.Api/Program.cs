@@ -133,10 +133,7 @@ namespace Workspace_Management_System.Api
                         .AllowAnyHeader();
                 });
             });
-            builder.Services.AddLocalization(options =>
-            {
-                options.ResourcesPath = "Resources";
-            });
+         
 
             var supportedCultures = new[]
 {

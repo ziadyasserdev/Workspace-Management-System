@@ -1,15 +1,18 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.PricingRule.Commands.RestorePricingRule
 {
     public class RestorePricingRuleValidator
         : AbstractValidator<RestorePricingRuleCommand>
     {
-        public RestorePricingRuleValidator()
+        public RestorePricingRuleValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Pricing rule ID must be greater than zero.");
+                .WithMessage(localizer["PricingRuleIdGreaterThanZero"]);
         }
     }
 }

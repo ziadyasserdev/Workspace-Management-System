@@ -1,23 +1,25 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategories
+namespace Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategories;
+
+public class GetProductCategoriesQueryValidator
+    : AbstractValidator<GetProductCategoriesQuery>
 {
-    public class GetProductCategoriesQueryValidator
-        : AbstractValidator<GetProductCategoriesQuery>
+    public GetProductCategoriesQueryValidator(
+        IStringLocalizer<SharedResources> localizer)
     {
-        public GetProductCategoriesQueryValidator()
-        {
-            RuleFor(x => x.Search)
-                .MaximumLength(100)
-                .WithMessage("Search must not exceed 100 characters.");
+        RuleFor(x => x.Search)
+            .MaximumLength(100)
+            .WithMessage(localizer["SearchMaxLength"]);
 
-            RuleFor(x => x.PageNumber)
-                .GreaterThan(0)
-                .WithMessage("Page number must be greater than 0.");
+        RuleFor(x => x.PageNumber)
+            .GreaterThan(0)
+            .WithMessage(localizer["PageNumberGreaterThanZero"]);
 
-            RuleFor(x => x.PageSize)
-                .InclusiveBetween(1, 100)
-                .WithMessage("Page size must be between 1 and 100.");
-        }
+        RuleFor(x => x.PageSize)
+            .InclusiveBetween(1, 100)
+            .WithMessage(localizer["PageSizeBetweenOneAndOneHundred"]);
     }
 }

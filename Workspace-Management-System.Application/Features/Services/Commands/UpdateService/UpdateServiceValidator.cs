@@ -1,31 +1,35 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Services.Commands.UpdateService
 {
     public class UpdateServiceValidator
         : AbstractValidator<UpdateServiceCommand>
     {
-        public UpdateServiceValidator()
+        public UpdateServiceValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Service ID must be greater than 0.");
+                .WithMessage(localizer["ServiceIdGreaterThanZero"]);
 
             RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("English service name is required.")
+                .WithMessage(localizer["EnglishServiceNameRequired"])
                 .MaximumLength(100)
-                .WithMessage("English service name cannot exceed 100 characters.");
+                .WithMessage(localizer["EnglishServiceNameMaxLength"]);
 
             RuleFor(x => x.NameAr)
                 .NotEmpty()
-                .WithMessage("Arabic service name is required.")
+                .WithMessage(localizer["ArabicServiceNameRequired"])
                 .MaximumLength(100)
-                .WithMessage("Arabic service name cannot exceed 100 characters.");
+                .WithMessage(localizer["ArabicServiceNameMaxLength"]);
 
             RuleFor(x => x.Price)
                 .GreaterThan(0)
-                .WithMessage("Service price must be greater than 0.");
+                .WithMessage(localizer["ServicePriceMustBeGreaterThanZero"]);
         }
     }
 }

@@ -1,56 +1,66 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.ProductCategories.DTOs;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategoryById
+namespace Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategoryById;
+
+public class GetProductCategoryByIdQueryHandler
+    : IRequestHandler<
+        GetProductCategoryByIdQuery,
+        Result<ProductCategoryDto>>
 {
-    public class GetProductCategoryByIdQueryHandler
-        : IRequestHandler<
-            GetProductCategoryByIdQuery,
-            Result<ProductCategoryDto>>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IStringLocalizer<SharedResources> _localizer;
+
+    public GetProductCategoryByIdQueryHandler(
+        IUnitOfWork unitOfWork,
+        IStringLocalizer<SharedResources> localizer)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+        _localizer = localizer;
+    }
 
-        public GetProductCategoryByIdQueryHandler(
-            IUnitOfWork unitOfWork)
+    public async Task<Result<ProductCategoryDto>> Handle(
+        GetProductCategoryByIdQuery request,
+        CancellationToken cancellationToken)
+    {
+        var isArabic =
+            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
+        var category = await _unitOfWork.ProductCategories
+            .Query()
+            .AsNoTracking()
+            .Where(x =>
+                x.Id == request.Id &&
+                !x.IsDeleted)
+            .Select(x => new ProductCategoryDto
+            {
+                Id = x.Id,
+                Name = isArabic
+                    ? x.NameAr
+                    : x.NameEn,
+                Description = isArabic
+                    ? x.DescriptionAr
+                    : x.DescriptionEn,
+                IsActive = x.IsActive,
+                IsDeleted = x.IsDeleted
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (category == null)
         {
-            _unitOfWork = unitOfWork;
+            return Result<ProductCategoryDto>.Failure(
+                ResultStatus.NotFound,
+                _localizer["ProductCategoryNotFound"]);
         }
 
-        public async Task<Result<ProductCategoryDto>> Handle(
-            GetProductCategoryByIdQuery request,
-            CancellationToken cancellationToken)
-        {
-            var category = await _unitOfWork.ProductCategories
-                .Query()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(
-                    x => x.Id == request.Id && !x.IsDeleted,
-                    cancellationToken);
-
-            if (category == null)
-            {
-                return Result<ProductCategoryDto>.Failure(
-                    ResultStatus.NotFound,
-                    "Product category not found.");
-            }
-
-            var dto = new ProductCategoryDto
-            {
-                Id = category.Id,
-                NameEn = category.NameEn,
-                NameAr = category.NameAr,
-                DescriptionEn = category.DescriptionEn,
-                DescriptionAr = category.DescriptionAr,
-                IsActive = category.IsActive,
-                IsDeleted = category.IsDeleted
-            };
-
-            return Result<ProductCategoryDto>.Success(
-                dto,
-                "Product category retrieved successfully.");
-        }
+        return Result<ProductCategoryDto>.Success(
+            category,
+            _localizer["ProductCategoryRetrievedSuccessfully"]);
     }
 }

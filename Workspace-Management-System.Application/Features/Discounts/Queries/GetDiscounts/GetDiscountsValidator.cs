@@ -1,25 +1,29 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.Discounts.Queries.GetDiscounts
+namespace Workspace_Management_System.Application.Features.Discounts.Queries.GetDiscounts;
+
+public class GetDiscountsValidator
+    : AbstractValidator<GetDiscountsQuery>
 {
-    public class GetDiscountsValidator
-        : AbstractValidator<GetDiscountsQuery>
+    public GetDiscountsValidator(
+        IStringLocalizer<SharedResources> localizer)
     {
-        public GetDiscountsValidator()
-        {
-            RuleFor(x => x.PageNumber)
-                .GreaterThan(0)
-                .WithMessage("Page number must be greater than 0.");
+        RuleFor(x => x.PageNumber)
+            .GreaterThan(0)
+            .WithMessage(localizer["PageNumberGreaterThanZero"]);
 
-            RuleFor(x => x.PageSize)
-                .GreaterThan(0)
-                .LessThanOrEqualTo(100)
-                .WithMessage("Page size must be between 1 and 100.");
+        RuleFor(x => x.PageSize)
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100)
+            .WithMessage(localizer["PageSizeMustBeBetween1And100"]);
 
-            RuleFor(x => x.Search)
-                .MaximumLength(100)
-                .When(x => !string.IsNullOrWhiteSpace(x.Search))
-                .WithMessage("Search cannot exceed 100 characters.");
-        }
+        RuleFor(x => x.Search)
+            .MaximumLength(100)
+            .When(x => !string.IsNullOrWhiteSpace(x.Search))
+            .WithMessage(localizer["SearchCannotExceed100Characters"]);
     }
 }
+

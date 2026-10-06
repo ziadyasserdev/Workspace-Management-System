@@ -1,53 +1,56 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
-namespace Workspace_Management_System.Application.Features.Discounts.Commands.UpdateDiscount
+namespace Workspace_Management_System.Application.Features.Discounts.Commands.UpdateDiscount;
+
+public class UpdateDiscountValidator
+    : AbstractValidator<UpdateDiscountCommand>
 {
-    public class UpdateDiscountValidator
-        : AbstractValidator<UpdateDiscountCommand>
+    public UpdateDiscountValidator(
+        IStringLocalizer<SharedResources> localizer)
     {
-        public UpdateDiscountValidator()
-        {
-            RuleFor(x => x.Id)
-                .GreaterThan(0);
+        RuleFor(x => x.Id)
+            .GreaterThan(0)
+            .WithMessage(localizer["DiscountIdGreaterThanZero"]);
 
-            RuleFor(x => x.NameEn)
-                .NotEmpty()
-                .WithMessage("Discount English name is required.")
-                .MaximumLength(100)
-                .WithMessage("Discount English name must not exceed 100 characters.");
+        RuleFor(x => x.NameEn)
+            .NotEmpty()
+            .WithMessage(localizer["DiscountEnglishNameRequired"])
+            .MaximumLength(100)
+            .WithMessage(localizer["DiscountEnglishNameMaxLength"]);
 
-            RuleFor(x => x.NameAr)
-                .NotEmpty()
-                .WithMessage("Discount Arabic name is required.")
-                .MaximumLength(100)
-                .WithMessage("Discount Arabic name must not exceed 100 characters.");
+        RuleFor(x => x.NameAr)
+            .NotEmpty()
+            .WithMessage(localizer["DiscountArabicNameRequired"])
+            .MaximumLength(100)
+            .WithMessage(localizer["DiscountArabicNameMaxLength"]);
 
-            RuleFor(x => x.DescriptionEn)
-                .MaximumLength(500)
-                .WithMessage("English description must not exceed 500 characters.");
+        RuleFor(x => x.DescriptionEn)
+            .MaximumLength(500)
+            .WithMessage(localizer["EnglishDescriptionMaxLength"]);
 
-            RuleFor(x => x.DescriptionAr)
-                .MaximumLength(500)
-                .WithMessage("Arabic description must not exceed 500 characters.");
+        RuleFor(x => x.DescriptionAr)
+            .MaximumLength(500)
+            .WithMessage(localizer["ArabicDescriptionMaxLength"]);
 
-            RuleFor(x => x.Value)
-                .GreaterThan(0);
+        RuleFor(x => x.Value)
+            .GreaterThan(0)
+            .WithMessage(localizer["DiscountValueMustBeGreaterThanZero"]);
 
-            RuleFor(x => x)
-                .Must(x =>
-                    x.Type != DiscountType.Percentage ||
-                    x.Value <= 100)
-                .WithMessage(
-                    "Percentage discount cannot be greater than 100.");
+        RuleFor(x => x)
+            .Must(x =>
+                x.Type != DiscountType.Percentage ||
+                x.Value <= 100)
+            .WithMessage(localizer["PercentageDiscountCannotExceed100"]);
 
-            RuleFor(x => x)
-                .Must(x =>
-                    !x.StartDate.HasValue ||
-                    !x.EndDate.HasValue ||
-                    x.EndDate >= x.StartDate)
-                .WithMessage(
-                    "End date cannot be before start date.");
-        }
+        RuleFor(x => x)
+            .Must(x =>
+                !x.StartDate.HasValue ||
+                !x.EndDate.HasValue ||
+                x.EndDate >= x.StartDate)
+            .WithMessage(localizer["EndDateCannotBeBeforeStartDate"]);
     }
 }

@@ -1,31 +1,34 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Checkout.Commands.CheckoutSession;
 
 public class CheckoutSessionValidator
     : AbstractValidator<CheckoutSessionCommand>
 {
-    public CheckoutSessionValidator()
+    public CheckoutSessionValidator(
+        IStringLocalizer<SharedResources> localizer)
     {
         RuleFor(x => x.SessionId)
             .GreaterThan(0)
-            .WithMessage("Session ID must be greater than zero.");
+            .WithMessage(localizer["SessionIdGreaterThanZero"]);
 
         RuleFor(x => x.Request)
             .NotNull()
-            .WithMessage("Checkout request is required.");
+            .WithMessage(localizer["CheckoutRequestRequired"]);
 
         When(x => x.Request != null, () =>
         {
             RuleFor(x => x.Request.DiscountId)
                 .GreaterThan(0)
                 .When(x => x.Request.DiscountId.HasValue)
-                .WithMessage("Discount ID must be greater than zero.");
+                .WithMessage(localizer["DiscountIdGreaterThanZero"]);
 
             RuleFor(x => x.Request.TaxRate)
                 .InclusiveBetween(0, 100)
                 .When(x => x.Request.TaxRate.HasValue)
-                .WithMessage("Tax rate must be between 0 and 100.");
+                .WithMessage(localizer["TaxRateMustBeBetween0And100"]);
         });
     }
 }

@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Pricing;
 using Workspace_Management_System.Application.Contracts.Repositories;
-using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Features.Checkout.Dtos;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Application.Services.Pricing;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
@@ -18,17 +20,20 @@ public class CheckoutSessionHandler
     private readonly IPricingCalculator _pricingCalculator;
     private readonly ICurrentUserService _currentUser;
     private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer _localizer;
 
     public CheckoutSessionHandler(
         IUnitOfWork unitOfWork,
         IPricingCalculator pricingCalculator,
         ICurrentUserService currentUser,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _pricingCalculator = pricingCalculator;
         _currentUser = currentUser;
         _localizationService = localizationService;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<CheckoutResponseDto> Handle(
@@ -55,13 +60,13 @@ public class CheckoutSessionHandler
             if (session is null)
             {
                 throw new KeyNotFoundException(
-                    $"Session with ID {request.SessionId} was not found.");
+                    _localizer["SessionNotFoundWithId", request.SessionId]);
             }
 
             if (session.Status != SessionStatus.Active)
             {
                 throw new InvalidOperationException(
-                    "Only active sessions can be checked out.");
+                    _localizer["OnlyActiveSessionsCanBeCheckedOut"]);
             }
 
             var endTime = now;
@@ -69,13 +74,12 @@ public class CheckoutSessionHandler
             if (endTime < session.StartTime)
             {
                 throw new InvalidOperationException(
-                    "Checkout time cannot be before session start time.");
+                    _localizer["CheckoutTimeCannotBeBeforeSessionStart"]);
             }
 
             session.EndTime = endTime;
 
             var duration = endTime - session.StartTime;
-
             var sessionHours = (decimal)duration.TotalHours;
 
             var customerPackage = await _unitOfWork.CustomerPackages
@@ -102,8 +106,10 @@ public class CheckoutSessionHandler
                 if (remainingHours < sessionHours)
                 {
                     throw new InvalidOperationException(
-                        $"Customer has only {remainingHours} package hours remaining, " +
-                        $"but this session requires {sessionHours:F2} hours.");
+                        _localizer[
+                            "InsufficientPackageHours",
+                            remainingHours,
+                            sessionHours]);
                 }
 
                 packageHoursUsed = sessionHours;
@@ -136,34 +142,29 @@ public class CheckoutSessionHandler
                 if (pricingRules.Count == 0)
                 {
                     throw new InvalidOperationException(
-                        "No applicable pricing rules were found for this session.");
+                        _localizer["NoApplicablePricingRules"]);
                 }
 
                 var pricingInput = new PricingCalculationInput
                 {
                     StartTime = session.StartTime,
                     EndTime = endTime,
-
                     HourlyRate = pricingRules
                         .FirstOrDefault(x =>
                             x.RuleType == PricingRuleType.HourlyRate)
                         ?.Value ?? 0,
-
                     HalfHourRate = pricingRules
                         .FirstOrDefault(x =>
                             x.RuleType == PricingRuleType.HalfHourRate)
                         ?.Value,
-
                     MinimumCharge = pricingRules
                         .FirstOrDefault(x =>
                             x.RuleType == PricingRuleType.MinimumCharge)
                         ?.Value ?? 0,
-
                     FullDayMaximum = pricingRules
                         .FirstOrDefault(x =>
                             x.RuleType == PricingRuleType.FullDayMaximum)
                         ?.Value,
-
                     RoundingMinutes = 0,
                     RoundingMode = RoundingMode.None
                 };
@@ -187,7 +188,7 @@ public class CheckoutSessionHandler
                 EmployeeId = session.EmployeeId,
                 TransactionNumber =
                     $"TRX-{now:yyyyMMddHHmmssfff}",
-                Status = "Completed",
+                Status = TransactionStatus.Completed.ToString(),
                 CreatedAt = now,
                 CreatedBy = _currentUser.UserId
             };
@@ -196,8 +197,8 @@ public class CheckoutSessionHandler
             {
                 transaction.Items.Add(new TransactionItem
                 {
-                    ItemType = "Workspace",
-                    Description = "Workspace Usage",
+                    ItemType = ItemType.Workspace.ToString(),
+                    Description = _localizer["WorkspaceUsage"],
                     Quantity = 1,
                     UnitPrice = workspaceAmount,
                     Total = workspaceAmount,
@@ -207,8 +208,9 @@ public class CheckoutSessionHandler
 
                 responseItems.Add(new CheckoutResponseItemDto
                 {
-                    Description = "Workspace Usage",
-                    ItemType = "Workspace",
+                    Description = _localizer["WorkspaceUsage"],
+                    ItemType = _localizer[
+                        $"ItemType_{ItemType.Workspace}"],
                     Quantity = 1,
                     UnitPrice = workspaceAmount,
                     Total = workspaceAmount
@@ -220,7 +222,9 @@ public class CheckoutSessionHandler
                 if (sessionProduct.Product is null)
                 {
                     throw new InvalidOperationException(
-                        $"Product with ID {sessionProduct.ProductId} could not be loaded.");
+                        _localizer[
+                            "ProductCouldNotBeLoaded",
+                            sessionProduct.ProductId]);
                 }
 
                 var itemTotal =
@@ -236,7 +240,7 @@ public class CheckoutSessionHandler
 
                 transaction.Items.Add(new TransactionItem
                 {
-                    ItemType = "Product",
+                    ItemType = ItemType.Product.ToString(),
                     ProductId = sessionProduct.ProductId,
                     Description = productName,
                     Quantity = sessionProduct.Quantity,
@@ -249,7 +253,8 @@ public class CheckoutSessionHandler
                 responseItems.Add(new CheckoutResponseItemDto
                 {
                     Description = productName,
-                    ItemType = "Product",
+                    ItemType = _localizer[
+                        $"ItemType_{ItemType.Product}"],
                     Quantity = sessionProduct.Quantity,
                     UnitPrice = sessionProduct.UnitPrice,
                     Total = itemTotal
@@ -261,7 +266,9 @@ public class CheckoutSessionHandler
                 if (sessionService.Service is null)
                 {
                     throw new InvalidOperationException(
-                        $"Service with ID {sessionService.ServiceId} could not be loaded.");
+                        _localizer[
+                            "ServiceCouldNotBeLoaded",
+                            sessionService.ServiceId]);
                 }
 
                 var itemTotal =
@@ -277,7 +284,7 @@ public class CheckoutSessionHandler
 
                 transaction.Items.Add(new TransactionItem
                 {
-                    ItemType = "Service",
+                    ItemType = ItemType.Service.ToString(),
                     Description = serviceName,
                     Quantity = sessionService.Quantity,
                     UnitPrice = sessionService.UnitPrice,
@@ -289,7 +296,8 @@ public class CheckoutSessionHandler
                 responseItems.Add(new CheckoutResponseItemDto
                 {
                     Description = serviceName,
-                    ItemType = "Service",
+                    ItemType = _localizer[
+                        $"ItemType_{ItemType.Service}"],
                     Quantity = sessionService.Quantity,
                     UnitPrice = sessionService.UnitPrice,
                     Total = itemTotal
@@ -311,19 +319,19 @@ public class CheckoutSessionHandler
                 if (discount is null)
                 {
                     throw new KeyNotFoundException(
-                        "Discount not found.");
+                        _localizer["DiscountNotFound"]);
                 }
 
                 if (!discount.IsActive)
                 {
                     throw new InvalidOperationException(
-                        "Discount is not active.");
+                        _localizer["DiscountIsNotActive"]);
                 }
 
                 if (discount.Value < 0)
                 {
                     throw new InvalidOperationException(
-                        "Discount value cannot be negative.");
+                        _localizer["DiscountValueCannotBeNegative"]);
                 }
 
                 if (discount.DiscountType == DiscountType.FixedAmount)
@@ -335,7 +343,8 @@ public class CheckoutSessionHandler
                     if (discount.Value > 100)
                     {
                         throw new InvalidOperationException(
-                            "Discount percentage cannot be greater than 100.");
+                            _localizer[
+                                "DiscountPercentageCannotExceed100"]);
                     }
 
                     discountAmount =
@@ -354,13 +363,13 @@ public class CheckoutSessionHandler
             if (taxRate < 0)
             {
                 throw new InvalidOperationException(
-                    "Tax rate cannot be negative.");
+                    _localizer["TaxRateCannotBeNegative"]);
             }
 
             if (taxRate > 100)
             {
                 throw new InvalidOperationException(
-                    "Tax rate cannot be greater than 100.");
+                    _localizer["TaxRateCannotExceed100"]);
             }
 
             var taxableAmount =
@@ -403,7 +412,8 @@ public class CheckoutSessionHandler
                 DiscountAmount = discountAmount,
                 TaxAmount = taxAmount,
                 Total = total,
-                Status = transaction.Status,
+                Status = _localizer[
+                    $"TransactionStatus_{TransactionStatus.Completed}"],
                 Items = responseItems
             };
         }

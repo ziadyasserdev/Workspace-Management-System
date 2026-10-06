@@ -1,10 +1,17 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using System.ComponentModel;
+using System.Globalization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.Packages.Dtos;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
+using Workspace_Management_System.Domain.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Workspace_Management_System.Application.Features.Packages.Queries.GetPackageById;
 
@@ -12,20 +19,23 @@ public class GetPackageByIdHandler
     : IRequestHandler<GetPackageByIdQuery, Result<PackageDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILocalizationService _localizationService;
+    private readonly IStringLocalizer<SharedResources> _localizer;
 
     public GetPackageByIdHandler(
         IUnitOfWork unitOfWork,
-        ILocalizationService localizationService)
+        IStringLocalizer<SharedResources> localizer)
     {
         _unitOfWork = unitOfWork;
-        _localizationService = localizationService;
+        _localizer = localizer;
     }
 
     public async Task<Result<PackageDto>> Handle(
         GetPackageByIdQuery request,
         CancellationToken cancellationToken)
     {
+        var isArabic =
+            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
         var package = await _unitOfWork.Packages
             .Query()
             .AsNoTracking()
@@ -76,17 +86,20 @@ public class GetPackageByIdHandler
         {
             return Result<PackageDto>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         var result = new PackageDto
         {
             Id = package.Id,
-            NameEn = package.NameEn,
-            NameAr = package.NameAr,
-            DescriptionEn = package.DescriptionEn,
-            DescriptionAr = package.DescriptionAr,
-            PackageType = package.PackageType,
+            Name = isArabic
+                ? package.NameAr
+                : package.NameEn,
+            Description = isArabic
+                ? package.DescriptionAr
+                : package.DescriptionEn,
+            PackageType = _localizer[
+                $"PackageType_{package.PackageType}"],
             TotalHours = package.TotalHours,
             DurationDays = package.DurationDays,
             Price = package.Price,
@@ -96,11 +109,12 @@ public class GetPackageByIdHandler
                 .Select(cp => new PackageCustomerDto
                 {
                     CustomerId = cp.CustomerId,
-                    FullName = _localizationService.GetLocalizedValue(
-                        cp.CustomerNameEn,
-                        cp.CustomerNameAr),
+                    FullName = isArabic
+                        ? cp.CustomerNameAr
+                        : cp.CustomerNameEn,
                     MobileNumber = cp.MobileNumber,
-                    Status = cp.Status,
+                    Status = _localizer[
+                        $"CustomerPackageStatus_{cp.Status}"],
                     PurchaseDate = cp.PurchaseDate,
                     StartDate = cp.StartDate,
                     EndDate = cp.EndDate,
@@ -111,6 +125,6 @@ public class GetPackageByIdHandler
 
         return Result<PackageDto>.Success(
             result,
-            "Package retrieved successfully.");
+            _localizer["PackageRetrievedSuccessfully"]);
     }
 }

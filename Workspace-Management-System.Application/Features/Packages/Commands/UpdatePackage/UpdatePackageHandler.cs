@@ -1,7 +1,12 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
+using Workspace_Management_System.Domain.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Workspace_Management_System.Application.Features.Packages.Commands.UpdatePackage;
 
@@ -10,13 +15,16 @@ public class UpdatePackageHandler
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStringLocalizer _localizer;
 
     public UpdatePackageHandler(
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUser = currentUser;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<Result<int>> Handle(
@@ -30,7 +38,7 @@ public class UpdatePackageHandler
         {
             return Result<int>.Failure(
                 ResultStatus.NotFound,
-                "Package not found.");
+                _localizer["PackageNotFound"]);
         }
 
         package.NameEn = request.NameEn.Trim();
@@ -61,6 +69,6 @@ public class UpdatePackageHandler
 
         return Result<int>.Success(
             package.Id,
-            "Package updated successfully.");
+            _localizer["PackageUpdatedSuccessfully"]);
     }
 }

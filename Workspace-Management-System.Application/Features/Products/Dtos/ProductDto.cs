@@ -1,31 +1,13 @@
-﻿namespace Workspace_Management_System.Application.Features.Products.DTOs
+﻿public class ProductDto
 {
-    public class ProductDto
-    {
-        public int Id { get; set; }
-
-        public int ProductCategoryId { get; set; }
-
-        public string? ProductCategoryNameEn { get; set; }
-
-        public string? ProductCategoryNameAr { get; set; }
-
-        public string NameEn { get; set; } = null!;
-
-        public string NameAr { get; set; } = null!;
-
-        public string? DescriptionEn { get; set; }
-
-        public string? DescriptionAr { get; set; }
-
-        public string Sku { get; set; } = null!;
-
-        public decimal SellingPrice { get; set; }
-
-        public decimal CostPrice { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public bool IsDeleted { get; set; }
-    }
+    public int Id { get; set; }
+    public int ProductCategoryId { get; set; }
+    public string ProductCategoryName { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string Sku { get; set; } = string.Empty;
+    public decimal SellingPrice { get; set; }
+    public decimal CostPrice { get; set; }
+    public bool IsActive { get; set; }
+    public bool IsDeleted { get; set; }
 }

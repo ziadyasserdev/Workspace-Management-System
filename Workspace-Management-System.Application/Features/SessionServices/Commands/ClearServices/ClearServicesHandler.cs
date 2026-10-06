@@ -11,16 +11,16 @@ public class ClearServicesHandler : IRequestHandler<ClearServicesCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUserService _currentUserService;
-    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly IStringLocalizer _localizer;
 
     public ClearServicesHandler(
         IUnitOfWork unitOfWork,
         ICurrentUserService currentUserService,
-        IStringLocalizer<SharedResources> localizer)
+        IStringLocalizerFactory factory)
     {
         _unitOfWork = unitOfWork;
         _currentUserService = currentUserService;
-        _localizer = localizer;
+        _localizer = factory.Create(typeof(SharedResources));
     }
 
     public async Task<bool> Handle(

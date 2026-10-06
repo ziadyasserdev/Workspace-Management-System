@@ -1,15 +1,18 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+using Workspace_Management_System.Application.Resources;
 
-namespace Workspace_Management_System.Application.Features.Discounts.Queries.GetDiscountById
+namespace Workspace_Management_System.Application.Features.Discounts.Queries.GetDiscountById;
+
+public class GetDiscountByIdValidator
+    : AbstractValidator<GetDiscountByIdQuery>
 {
-    public class GetDiscountByIdValidator
-        : AbstractValidator<GetDiscountByIdQuery>
+    public GetDiscountByIdValidator(
+        IStringLocalizer<SharedResources> localizer)
     {
-        public GetDiscountByIdValidator()
-        {
-            RuleFor(x => x.Id)
-                .GreaterThan(0)
-                .WithMessage("Discount ID must be greater than zero.");
-        }
+        RuleFor(x => x.Id)
+            .GreaterThan(0)
+            .WithMessage(localizer["DiscountIdGreaterThanZero"]);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Companies.Commands.UpdateCompany
 {
@@ -11,13 +13,16 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public UpdateCompanyCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -36,7 +41,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Company not found.");
+                    _localizer["CompanyNotFound"]);
             }
 
             var exists = await _unitOfWork.Companies
@@ -53,7 +58,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A company with the same name already exists.");
+                    _localizer["CompanySameNameAlreadyExists"]);
             }
 
             if (request.PricingPlanId.HasValue)
@@ -70,7 +75,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
                 {
                     return Result<bool>.Failure(
                         ResultStatus.NotFound,
-                        "Pricing plan not found.");
+                        _localizer["PricingPlanNotFound"]);
                 }
             }
 
@@ -93,7 +98,7 @@ namespace Workspace_Management_System.Application.Features.Companies.Commands.Up
 
             return Result<bool>.Success(
                 true,
-                "Company updated successfully.");
+                _localizer["CompanyUpdatedSuccessfully"]);
         }
     }
 }

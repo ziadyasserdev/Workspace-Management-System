@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Workspace_Management_System.Application.Extensions
         public static IServiceCollection AddApplicationDependency(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
-
+            services.AddLocalization(options => options.ResourcesPath = "");
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped<IPricingCalculator, PricingCalculator>();

@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.DeletePricingPlan
 {
@@ -11,13 +13,16 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ICurrentUserService currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public DeletePricingPlanCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             this.unitOfWork = unitOfWork;
             this.currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -34,7 +39,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Pricing plan not found.");
+                    _localizer["PricingPlanNotFound"]);
             }
 
             var hasPricingRules = await unitOfWork.PricingRules
@@ -48,7 +53,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Pricing plan cannot be deleted because it has pricing rules.");
+                    _localizer["PricingPlanCannotBeDeletedHasPricingRules"]);
             }
 
             var isUsedByCompany = await unitOfWork.Companies
@@ -62,10 +67,8 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Pricing plan cannot be deleted because it is assigned to a company.");
+                    _localizer["PricingPlanCannotBeDeletedAssignedToCompany"]);
             }
-
-      
 
             pricingPlan.IsDeleted = true;
             pricingPlan.IsDeletedBy = currentUser.UserId;
@@ -77,7 +80,7 @@ namespace Workspace_Management_System.Application.Features.PricingPlan.Commands.
 
             return Result<bool>.Success(
                 true,
-                "Pricing plan deleted successfully.");
+                _localizer["PricingPlanDeletedSuccessfully"]);
         }
     }
 }
