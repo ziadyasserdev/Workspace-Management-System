@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Workspace_Management_System.Api.Attributes;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.CreatePricingPlan;
 using Workspace_Management_System.Application.Features.PricingPlan.Commands.DeletePricingPlan;
@@ -10,11 +12,13 @@ using Workspace_Management_System.Application.Features.PricingPlan.Commands.Upda
 using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlanById;
 using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlanRules;
 using Workspace_Management_System.Application.Features.PricingPlan.Queries.GetPricingPlans;
+using Workspace_Management_System.Domain.Constants;
 
 namespace Workspace_Management_System.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PricingPlanController : ControllerBase
     {
         private readonly IMediator mediator;
@@ -25,6 +29,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPost]
+        [RequirePermission(Permissions.PricingPlansCreate)]
         [SwaggerOperation(
             Summary = "Create pricing plan",
             Description = "Creates a new pricing plan."
@@ -38,17 +43,16 @@ namespace Workspace_Management_System.Api.Controllers
             [FromBody] CreatePricingPlanCommand command,
             CancellationToken cancellationToken)
         {
-            var result = await mediator.Send(
-                command,
-                cancellationToken);
-
+            var result = await mediator.Send(command, cancellationToken);
             return result.ToActionResult();
         }
+
         [HttpPut("{id}")]
+        [RequirePermission(Permissions.PricingPlansUpdate)]
         [SwaggerOperation(
-    Summary = "Update pricing plan",
-    Description = "Updates an existing pricing plan."
-)]
+            Summary = "Update pricing plan",
+            Description = "Updates an existing pricing plan."
+        )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -56,49 +60,41 @@ namespace Workspace_Management_System.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Update(
-    int id,
-    [FromBody] UpdatePricingPlanCommand command,
-    CancellationToken cancellationToken)
+            int id,
+            [FromBody] UpdatePricingPlanCommand command,
+            CancellationToken cancellationToken)
         {
             command.Id = id;
-
-            var result = await mediator.Send(
-                command,
-                cancellationToken);
-
+            var result = await mediator.Send(command, cancellationToken);
             return result.ToActionResult();
         }
 
         [HttpDelete("{id}")]
+        [RequirePermission(Permissions.PricingPlansDelete)]
         [SwaggerOperation(
-        Summary = "Delete pricing plan",
-        Description = "Soft deletes an existing pricing plan."
-    )]
+            Summary = "Delete pricing plan",
+            Description = "Soft deletes an existing pricing plan."
+        )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
-        int id,
-        CancellationToken cancellationToken)
+            int id,
+            CancellationToken cancellationToken)
         {
-            var command = new DeletePricingPlanCommand
-            {
-                Id = id
-            };
-
-            var result = await mediator.Send(
-                command,
-                cancellationToken);
-
+            var command = new DeletePricingPlanCommand { Id = id };
+            var result = await mediator.Send(command, cancellationToken);
             return result.ToActionResult();
         }
+
         [HttpPatch("{id}/restore")]
+        [RequirePermission(Permissions.PricingPlansRestore)]
         [SwaggerOperation(
-    Summary = "Restore pricing plan",
-    Description = "Restores a soft-deleted pricing plan."
-)]
+            Summary = "Restore pricing plan",
+            Description = "Restores a soft-deleted pricing plan."
+        )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -106,22 +102,16 @@ namespace Workspace_Management_System.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Restore(
-    int id,
-    CancellationToken cancellationToken)
+            int id,
+            CancellationToken cancellationToken)
         {
-            var command = new RestorePricingPlanCommand
-            {
-                Id = id
-            };
-
-            var result = await mediator.Send(
-                command,
-                cancellationToken);
-
+            var command = new RestorePricingPlanCommand { Id = id };
+            var result = await mediator.Send(command, cancellationToken);
             return result.ToActionResult();
         }
 
         [HttpGet]
+        [RequirePermission(Permissions.PricingPlansView)]
         [SwaggerOperation(
             Summary = "Get pricing plans",
             Description = "Retrieves a paginated list of pricing plans with optional search and active-status filtering."
@@ -134,61 +124,48 @@ namespace Workspace_Management_System.Api.Controllers
             [FromQuery] GetPricingPlansQuery query,
             CancellationToken cancellationToken)
         {
-            var result = await mediator.Send(
-                query,
-                cancellationToken);
-
+            var result = await mediator.Send(query, cancellationToken);
             return result.ToActionResult();
         }
+
         [HttpGet("{id}")]
+        [RequirePermission(Permissions.PricingPlansViewDetails)]
         [SwaggerOperation(
-    Summary = "Get pricing plan by ID",
-    Description = "Retrieves a pricing plan by ID."
-)]
+            Summary = "Get pricing plan by ID",
+            Description = "Retrieves a pricing plan by ID."
+        )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(
-    int id,
-    CancellationToken cancellationToken)
+            int id,
+            CancellationToken cancellationToken)
         {
-            var query = new GetPricingPlanByIdQuery
-            {
-                Id = id
-            };
-
-            var result = await mediator.Send(
-                query,
-                cancellationToken);
-
+            var query = new GetPricingPlanByIdQuery { Id = id };
+            var result = await mediator.Send(query, cancellationToken);
             return result.ToActionResult();
         }
+
         [HttpGet("{id}/rules")]
+        [RequirePermission(Permissions.PricingPlansViewRules)]
         [SwaggerOperation(
-    Summary = "Get pricing plan rules",
-    Description = "Retrieves all non-deleted pricing rules belonging to a specific pricing plan."
-)]
+            Summary = "Get pricing plan rules",
+            Description = "Retrieves all non-deleted pricing rules belonging to a specific pricing plan."
+        )]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPricingPlanRules(
-    int id,
-    CancellationToken cancellationToken)
+            int id,
+            CancellationToken cancellationToken)
         {
-            var query = new GetPricingPlanRulesQuery
-            {
-                Id = id
-            };
-
-            var result = await mediator.Send(
-                query,
-                cancellationToken);
-
+            var query = new GetPricingPlanRulesQuery { Id = id };
+            var result = await mediator.Send(query, cancellationToken);
             return result.ToActionResult();
         }
     }
- }
+}

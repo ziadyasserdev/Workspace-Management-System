@@ -17,6 +17,8 @@ namespace Workspace_Management_System.Infrastructure.Services
 {
     public class AuthService : IAuthService
     {
+        private const string PermissionClaimType = "permission";
+
         private readonly UserManager<ApplicationUser> userManager;
         private readonly JwtSetting jwtSetting;
         private readonly RoleManager<IdentityRole> roleManager;
@@ -41,15 +43,23 @@ namespace Workspace_Management_System.Infrastructure.Services
             };
 
             var userCliams = await userManager.GetClaimsAsync(user);
+         
             var roles = await userManager.GetRolesAsync(user);
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
                 var roleName = await roleManager.FindByNameAsync(role);
                 var roleCliams = await roleManager.GetClaimsAsync(roleName!);
+ 
                 foreach (var claim in roleCliams)
                 {
-                    userCliams.Add(claim);
+                    if (claim.Type == PermissionClaimType)
+                    {
+                        claims.Add(
+                            new Claim(
+                                PermissionClaimType,
+                                claim.Value));
+                    }
                 }
 
             }

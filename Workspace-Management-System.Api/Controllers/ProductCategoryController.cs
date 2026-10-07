@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Workspace_Management_System.Api.Attributes;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.ProductCategories.Commands.CreateProductCategory;
 using Workspace_Management_System.Application.Features.ProductCategories.Commands.DeleteProductCategory;
@@ -9,11 +11,13 @@ using Workspace_Management_System.Application.Features.ProductCategories.Command
 using Workspace_Management_System.Application.Features.ProductCategories.Commands.UpdateProductCategory;
 using Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategories;
 using Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategoryById;
+using Workspace_Management_System.Domain.Constants;
 
 namespace Workspace_Management_System.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductCategoryController : ControllerBase
     {
         private readonly IMediator mediator;
@@ -24,6 +28,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPost]
+        [RequirePermission(Permissions.ProductCategoriesCreate)]
         [SwaggerOperation(
             Summary = "Create product category",
             Description = "Creates a new product category."
@@ -45,6 +50,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [RequirePermission(Permissions.ProductCategoriesUpdate)]
         [SwaggerOperation(
             Summary = "Update product category",
             Description = "Updates an existing product category."
@@ -70,6 +76,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [RequirePermission(Permissions.ProductCategoriesDelete)]
         [SwaggerOperation(
             Summary = "Delete product category",
             Description = "Soft deletes an existing product category."
@@ -96,6 +103,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpGet]
+        [RequirePermission(Permissions.ProductCategoriesView)]
         [SwaggerOperation(
             Summary = "Get product categories",
             Description = "Retrieves a paginated list of active product categories."
@@ -116,6 +124,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [RequirePermission(Permissions.ProductCategoriesViewDetails)]
         [SwaggerOperation(
             Summary = "Get product category by ID",
             Description = "Retrieves a product category by ID."
@@ -142,6 +151,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPatch("{id:int}/restore")]
+        [RequirePermission(Permissions.ProductCategoriesRestore)]
         [SwaggerOperation(
             Summary = "Restore product category",
             Description = "Restores a previously soft-deleted product category."

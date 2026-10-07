@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Workspace_Management_System.Api.Attributes;
 using Workspace_Management_System.Api.Common.Responses;
 using Workspace_Management_System.Application.Features.Products.Commands.CreateProduct;
 using Workspace_Management_System.Application.Features.Products.Commands.DeleteProduct;
@@ -9,11 +11,13 @@ using Workspace_Management_System.Application.Features.Products.Commands.Restore
 using Workspace_Management_System.Application.Features.Products.Commands.UpdateProduct;
 using Workspace_Management_System.Application.Features.Products.Queries.GetProductById;
 using Workspace_Management_System.Application.Features.Products.Queries.GetProducts;
+using Workspace_Management_System.Domain.Constants;
 
 namespace Workspace_Management_System.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IMediator mediator;
@@ -24,6 +28,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPost]
+        [RequirePermission(Permissions.ProductsCreate)]
         [SwaggerOperation(
             Summary = "Create product",
             Description = "Creates a new product."
@@ -46,6 +51,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [RequirePermission(Permissions.ProductsUpdate)]
         [SwaggerOperation(
             Summary = "Update product",
             Description = "Updates an existing product."
@@ -71,6 +77,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [RequirePermission(Permissions.ProductsDelete)]
         [SwaggerOperation(
             Summary = "Delete product",
             Description = "Soft deletes an existing product."
@@ -97,6 +104,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpGet]
+        [RequirePermission(Permissions.ProductsView)]
         [SwaggerOperation(
             Summary = "Get products",
             Description = "Retrieves a paginated list of products with optional search and filters."
@@ -117,6 +125,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [RequirePermission(Permissions.ProductsViewDetails)]
         [SwaggerOperation(
             Summary = "Get product by ID",
             Description = "Retrieves a product by ID."
@@ -143,6 +152,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPatch("{id:int}/restore")]
+        [RequirePermission(Permissions.ProductsRestore)]
         [SwaggerOperation(
             Summary = "Restore product",
             Description = "Restores a previously soft-deleted product."
@@ -170,3 +180,4 @@ namespace Workspace_Management_System.Api.Controllers
         }
     }
 }
+ 
