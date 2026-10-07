@@ -1,10 +1,9 @@
-﻿using MediatR;
-using Workspace_Management_System.Application.Common.Results;
+using MediatR;
 
-namespace Workspace_Management_System.Application.Features.Authentications.Queries.GetCurrentUserPermissions
+namespace Workspace_Management_System.Application.Permissions.Queries
 {
-    public class GetCurrentUserPermissionsQuery
-        : IRequest<Result<GetCurrentUserPermissionsResponse>>
+    public class GetCurrentUserPermissionsQuery : IRequest<object>
     {
+    
     }
 }
