@@ -114,7 +114,19 @@ namespace Workspace_Management_System.Api
 
 
 
+            builder.Services.AddAuthorization(options =>
+            {
+                var permissions = typeof(Permissions)
+                    .GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                    .Where(f => f.FieldType == typeof(string))
+                    .Select(f => f.GetValue(null)!.ToString()!);
 
+                foreach (var permission in permissions)
+                {
+                    options.AddPolicy(permission, policy =>
+                        policy.RequireClaim("permission", permission));
+                }
+            });
 
             builder.Services.Configure<EmailSettings>(
       builder.Configuration.GetSection("EmailSettings")
@@ -168,7 +180,7 @@ namespace Workspace_Management_System.Api
         .GetRequiredService<UserManager<ApplicationUser>>();
                 await RoleSeeder.SeedAsync(roleManager);
                 await RolePermissionSeeder.SeedAsync(roleManager);
-                await AdminSeeder.SeedAsync(userManager);
+                await AdminSeeder.SeedAsync(userManager, roleManager);
 
             }
 
@@ -182,8 +194,7 @@ namespace Workspace_Management_System.Api
             app.UseCors("AllowFrontend");
 
             app.UseAuthorization();
-
-
+            app.UseAuthorization();
             app.MapControllers();
             // Add Global Exception Handling Middleware
 

@@ -1,15 +1,19 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Workspace_Management_System.Api.Attributes;
 using Workspace_Management_System.Application.Features.SessionProducts.Commands.AddProduct;
 using Workspace_Management_System.Application.Features.SessionProducts.Commands.ClearProducts;
 using Workspace_Management_System.Application.Features.SessionProducts.Commands.RemoveProduct;
 using Workspace_Management_System.Application.Features.SessionProducts.Commands.UpdateProductQuantity;
 using Workspace_Management_System.Application.Features.SessionProducts.Queries.GetSessionProducts;
+using Workspace_Management_System.Domain.Constants;
 
 namespace Workspace_Management_System.Api.Controllers
 {
+    [Authorize]
     [Route("api/sessions/{sessionId:int}/products")]
     [ApiController]
     public class SessionProductsController : ControllerBase
@@ -22,6 +26,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpGet]
+        [RequirePermission(Permissions.SessionProductsView)]
         [SwaggerOperation(
             Summary = "Get session products",
             Description = "Returns all products currently added to a session."
@@ -48,6 +53,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPost]
+        [RequirePermission(Permissions.SessionProductsAdd)]
         [SwaggerOperation(
             Summary = "Add product to session",
             Description = "Adds a product to an active session. If the product already exists, its quantity is increased."
@@ -72,6 +78,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpPut("{productId:int}")]
+        [RequirePermission(Permissions.SessionProductsUpdate)]
         [SwaggerOperation(
             Summary = "Update session product quantity",
             Description = "Updates the quantity of a product already added to an active session."
@@ -98,6 +105,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpDelete("{productId:int}")]
+        [RequirePermission(Permissions.SessionProductsRemove)]
         [SwaggerOperation(
             Summary = "Remove product from session",
             Description = "Removes a specific product from an active session."
@@ -132,6 +140,7 @@ namespace Workspace_Management_System.Api.Controllers
         }
 
         [HttpDelete]
+        [RequirePermission(Permissions.SessionProductsClear)]
         [SwaggerOperation(
             Summary = "Clear session products",
             Description = "Removes all products currently added to an active session."
