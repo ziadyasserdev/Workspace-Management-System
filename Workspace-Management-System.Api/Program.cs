@@ -3,6 +3,7 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
@@ -16,6 +17,7 @@ using Workspace_Management_System.Domain.Identity;
 using Workspace_Management_System.Domain.Models;
 using Workspace_Management_System.Infrastructure.BackgroundJobs;
 using Workspace_Management_System.Infrastructure.Extensions;
+using Workspace_Management_System.Infrastructure.Persistence.Context;
 using Workspace_Management_System.Infrastructure.Persistence.SeedData;
 namespace Workspace_Management_System.Api
 {
@@ -183,10 +185,28 @@ namespace Workspace_Management_System.Api
                 await AdminSeeder.SeedAsync(userManager, roleManager);
 
             }
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider
+                    .GetRequiredService<ApplicationDbContext>();
+
+                var tableNames = context.Model
+                    .GetEntityTypes()
+                    .Select(x => x.GetTableName())
+                    .Where(x => x != null)
+                    .Distinct()
+                    .OrderBy(x => x)
+                    .ToList();
+
+                foreach (var tableName in tableNames)
+                {
+                    Console.WriteLine(tableName);
+                }
+            }
 
             // Configure the HTTP request pipeline.
-            
-                app.UseSwagger();
+
+            app.UseSwagger();
                 app.UseSwaggerUI();
          
 

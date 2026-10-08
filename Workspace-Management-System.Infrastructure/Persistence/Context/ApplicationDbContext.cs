@@ -215,6 +215,7 @@ namespace Workspace_Management_System.Infrastructure.Persistence.Context
                 entity.HasIndex(x => new { x.SessionId, x.ServiceId })
                     .IsUnique();
             });
+
         }
 
     }
