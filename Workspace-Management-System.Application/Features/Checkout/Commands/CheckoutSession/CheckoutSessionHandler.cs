@@ -35,10 +35,9 @@ public class CheckoutSessionHandler
         _localizationService = localizationService;
         _localizer = factory.Create(typeof(SharedResources));
     }
-
-    public async Task<CheckoutResponseDto> Handle(
-        CheckoutSessionCommand request,
-        CancellationToken cancellationToken)
+public async Task<CheckoutResponseDto> Handle(
+    CheckoutSessionCommand request,
+    CancellationToken cancellationToken)
     {
         var dbTransaction = await _unitOfWork.BeginTransactionAsync();
 
@@ -63,21 +62,37 @@ public class CheckoutSessionHandler
                     _localizer["SessionNotFoundWithId", request.SessionId]);
             }
 
-            if (session.Status != SessionStatus.Active)
+            if (session.Status != SessionStatus.Completed)
             {
                 throw new InvalidOperationException(
-                    _localizer["OnlyActiveSessionsCanBeCheckedOut"]);
+                    _localizer["SessionIsNotEnded"]);
             }
 
-            var endTime = now;
+            if (!session.EndTime.HasValue)
+            {
+                throw new InvalidOperationException(
+                    _localizer["SessionEndTimeIsRequired"]);
+            }
+
+            var existingTransaction = await _unitOfWork.Transactions
+                .Query()
+                .FirstOrDefaultAsync(
+                    x => x.SessionId == session.Id,
+                    cancellationToken);
+
+            if (existingTransaction is not null)
+            {
+                throw new InvalidOperationException(
+                    _localizer["SessionAlreadyCheckedOut"]);
+            }
+
+            var endTime = session.EndTime.Value;
 
             if (endTime < session.StartTime)
             {
                 throw new InvalidOperationException(
                     _localizer["CheckoutTimeCannotBeBeforeSessionStart"]);
             }
-
-            session.EndTime = endTime;
 
             var duration = endTime - session.StartTime;
             var sessionHours = (decimal)duration.TotalHours;
@@ -100,8 +115,7 @@ public class CheckoutSessionHandler
 
             if (customerPackage is not null)
             {
-                var remainingHours =
-                    customerPackage.RemainingHours!.Value;
+                var remainingHours = customerPackage.RemainingHours!.Value;
 
                 if (remainingHours < sessionHours)
                 {
@@ -113,7 +127,6 @@ public class CheckoutSessionHandler
                 }
 
                 packageHoursUsed = sessionHours;
-
                 customerPackage.RemainingHours =
                     remainingHours - packageHoursUsed;
 
@@ -178,16 +191,14 @@ public class CheckoutSessionHandler
             var productsAmount = 0m;
             var servicesAmount = 0m;
 
-            var responseItems =
-                new List<CheckoutResponseItemDto>();
+            var responseItems = new List<CheckoutResponseItemDto>();
 
             var transaction = new Transaction
             {
                 SessionId = session.Id,
                 CustomerId = session.CustomerId,
                 EmployeeId = session.EmployeeId,
-                TransactionNumber =
-                    $"TRX-{now:yyyyMMddHHmmssfff}",
+                TransactionNumber = $"TRX-{now:yyyyMMddHHmmssfff}",
                 Status = TransactionStatus.Completed.ToString(),
                 CreatedAt = now,
                 CreatedBy = _currentUser.UserId
@@ -209,8 +220,7 @@ public class CheckoutSessionHandler
                 responseItems.Add(new CheckoutResponseItemDto
                 {
                     Description = _localizer["WorkspaceUsage"],
-                    ItemType = _localizer[
-                        $"ItemType_{ItemType.Workspace}"],
+                    ItemType = _localizer[$"ItemType_{ItemType.Workspace}"],
                     Quantity = 1,
                     UnitPrice = workspaceAmount,
                     Total = workspaceAmount
@@ -228,15 +238,13 @@ public class CheckoutSessionHandler
                 }
 
                 var itemTotal =
-                    sessionProduct.Quantity *
-                    sessionProduct.UnitPrice;
+                    sessionProduct.Quantity * sessionProduct.UnitPrice;
 
                 productsAmount += itemTotal;
 
-                var productName =
-                    _localizationService.GetLocalizedValue(
-                        sessionProduct.Product.NameEn,
-                        sessionProduct.Product.NameAr);
+                var productName = _localizationService.GetLocalizedValue(
+                    sessionProduct.Product.NameEn,
+                    sessionProduct.Product.NameAr);
 
                 transaction.Items.Add(new TransactionItem
                 {
@@ -253,8 +261,7 @@ public class CheckoutSessionHandler
                 responseItems.Add(new CheckoutResponseItemDto
                 {
                     Description = productName,
-                    ItemType = _localizer[
-                        $"ItemType_{ItemType.Product}"],
+                    ItemType = _localizer[$"ItemType_{ItemType.Product}"],
                     Quantity = sessionProduct.Quantity,
                     UnitPrice = sessionProduct.UnitPrice,
                     Total = itemTotal
@@ -272,15 +279,13 @@ public class CheckoutSessionHandler
                 }
 
                 var itemTotal =
-                    sessionService.Quantity *
-                    sessionService.UnitPrice;
+                    sessionService.Quantity * sessionService.UnitPrice;
 
                 servicesAmount += itemTotal;
 
-                var serviceName =
-                    _localizationService.GetLocalizedValue(
-                        sessionService.Service.NameEn,
-                        sessionService.Service.NameAr);
+                var serviceName = _localizationService.GetLocalizedValue(
+                    sessionService.Service.NameEn,
+                    sessionService.Service.NameAr);
 
                 transaction.Items.Add(new TransactionItem
                 {
@@ -296,18 +301,14 @@ public class CheckoutSessionHandler
                 responseItems.Add(new CheckoutResponseItemDto
                 {
                     Description = serviceName,
-                    ItemType = _localizer[
-                        $"ItemType_{ItemType.Service}"],
+                    ItemType = _localizer[$"ItemType_{ItemType.Service}"],
                     Quantity = sessionService.Quantity,
                     UnitPrice = sessionService.UnitPrice,
                     Total = itemTotal
                 });
             }
 
-            var subtotal =
-                workspaceAmount +
-                productsAmount +
-                servicesAmount;
+            var subtotal = workspaceAmount + productsAmount + servicesAmount;
 
             decimal discountAmount = 0m;
 
@@ -343,12 +344,10 @@ public class CheckoutSessionHandler
                     if (discount.Value > 100)
                     {
                         throw new InvalidOperationException(
-                            _localizer[
-                                "DiscountPercentageCannotExceed100"]);
+                            _localizer["DiscountPercentageCannotExceed100"]);
                     }
 
-                    discountAmount =
-                        subtotal * (discount.Value / 100m);
+                    discountAmount = subtotal * (discount.Value / 100m);
                 }
 
                 if (discountAmount > subtotal)
@@ -357,8 +356,7 @@ public class CheckoutSessionHandler
                 }
             }
 
-            var taxRate =
-                request.Request.TaxRate ?? 0m;
+            var taxRate = request.Request.TaxRate ?? 0m;
 
             if (taxRate < 0)
             {
@@ -372,24 +370,13 @@ public class CheckoutSessionHandler
                     _localizer["TaxRateCannotExceed100"]);
             }
 
-            var taxableAmount =
-                subtotal - discountAmount;
-
-            var taxAmount =
-                taxableAmount * (taxRate / 100m);
-
-            var total =
-                taxableAmount + taxAmount;
+            var taxableAmount = subtotal - discountAmount;
+            var taxAmount = taxableAmount * (taxRate / 100m);
+            var total = taxableAmount + taxAmount;
 
             transaction.Subtotal = subtotal;
             transaction.TaxAmount = taxAmount;
             transaction.Total = total;
-
-            session.Status = SessionStatus.Completed;
-            session.UpdatedAt = now;
-            session.UpdatedBy = _currentUser.UserId;
-
-            _unitOfWork.Sessions.Update(session);
 
             await _unitOfWork.Transactions.AddAsync(transaction);
 
@@ -423,4 +410,5 @@ public class CheckoutSessionHandler
             throw;
         }
     }
+
 }
