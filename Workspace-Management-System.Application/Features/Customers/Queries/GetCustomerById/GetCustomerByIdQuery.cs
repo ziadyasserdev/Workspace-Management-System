@@ -5,7 +5,7 @@ using Workspace_Management_System.Application.Features.Customers.Dtos;
 namespace Workspace_Management_System.Application.Features.Customers.Queries.GetCustomerById
 {
     public class GetCustomerByIdQuery
-        : IRequest<Result<CustomerDto>>
+        : IRequest<Result<CustomerEditDto>>
     {
         public int Id { get; set; }
     }

@@ -4,7 +4,7 @@ using Workspace_Management_System.Application.Features.Services.Dtos;
 
 namespace Workspace_Management_System.Application.Features.Services.Queries.GetServiceById
 {
-    public class GetServiceByIdQuery : IRequest<Result<ServiceResponseDto>>
+    public class GetServiceByIdQuery : IRequest<Result<ServiceEditDto>>
     {
         public int Id { get; set; }
     }
