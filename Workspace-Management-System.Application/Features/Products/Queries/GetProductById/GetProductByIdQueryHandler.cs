@@ -1,15 +1,16 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.Globalization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Features.Products.DTOs;
 using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Products.Queries.GetProductById;
 
 public class GetProductByIdQueryHandler
-    : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
+    : IRequestHandler<GetProductByIdQuery, Result<ProductEditDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStringLocalizer<SharedResources> _localizer;
@@ -22,32 +23,24 @@ public class GetProductByIdQueryHandler
         _localizer = localizer;
     }
 
-    public async Task<Result<ProductDto>> Handle(
+    public async Task<Result<ProductEditDto>> Handle(
         GetProductByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var isArabic =
-            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
-
         var product = await _unitOfWork.Products
             .Query()
             .AsNoTracking()
-            .Where(x =>
-                x.Id == request.Id &&
-                !x.IsDeleted)
-            .Select(x => new ProductDto
+            .Where(x => x.Id == request.Id && !x.IsDeleted)
+            .Select(x => new ProductEditDto
             {
                 Id = x.Id,
                 ProductCategoryId = x.ProductCategoryId,
-                ProductCategoryName = isArabic
-                    ? x.ProductCategory.NameAr
-                    : x.ProductCategory.NameEn,
-                Name = isArabic
-                    ? x.NameAr
-                    : x.NameEn,
-                Description = isArabic
-                    ? x.DescriptionAr
-                    : x.DescriptionEn,
+                ProductCategoryNameEn = x.ProductCategory.NameEn,
+                ProductCategoryNameAr = x.ProductCategory.NameAr,
+                NameEn = x.NameEn,
+                NameAr = x.NameAr,
+                DescriptionEn = x.DescriptionEn,
+                DescriptionAr = x.DescriptionAr,
                 Sku = x.Sku,
                 SellingPrice = x.SellingPrice,
                 CostPrice = x.CostPrice,
@@ -56,14 +49,14 @@ public class GetProductByIdQueryHandler
             })
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (product == null)
+        if (product is null)
         {
-            return Result<ProductDto>.Failure(
+            return Result<ProductEditDto>.Failure(
                 ResultStatus.NotFound,
                 _localizer["ProductNotFound"]);
         }
 
-        return Result<ProductDto>.Success(
+        return Result<ProductEditDto>.Success(
             product,
             _localizer["ProductRetrievedSuccessfully"]);
     }

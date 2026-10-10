@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
@@ -9,7 +10,7 @@ using Workspace_Management_System.Application.Resources;
 namespace Workspace_Management_System.Application.Features.Services.Queries.GetServiceById;
 
 public class GetServiceByIdQueryHandler
-    : IRequestHandler<GetServiceByIdQuery, Result<ServiceResponseDto>>
+    : IRequestHandler<GetServiceByIdQuery, Result<ServiceEditDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStringLocalizer<SharedResources> _localizer;
@@ -22,7 +23,7 @@ public class GetServiceByIdQueryHandler
         _localizer = localizer;
     }
 
-    public async Task<Result<ServiceResponseDto>> Handle(
+    public async Task<Result<ServiceEditDto>> Handle(
         GetServiceByIdQuery request,
         CancellationToken cancellationToken)
     {
@@ -30,7 +31,7 @@ public class GetServiceByIdQueryHandler
             .Query()
             .AsNoTracking()
             .Where(x => x.Id == request.Id && !x.IsDeleted)
-            .Select(x => new ServiceResponseDto
+            .Select(x => new ServiceEditDto
             {
                 Id = x.Id,
                 NameEn = x.NameEn,
@@ -42,14 +43,14 @@ public class GetServiceByIdQueryHandler
             })
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (service == null)
+        if (service is null)
         {
-            return Result<ServiceResponseDto>.Failure(
+            return Result<ServiceEditDto>.Failure(
                 ResultStatus.NotFound,
                 _localizer["ServiceNotFound"]);
         }
 
-        return Result<ServiceResponseDto>.Success(
+        return Result<ServiceEditDto>.Success(
             service,
             _localizer["ServiceRetrievedSuccessfully"]);
     }

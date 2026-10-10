@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.Globalization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Repositories;
 using Workspace_Management_System.Application.Features.ProductCategories.DTOs;
@@ -10,9 +10,7 @@ using Workspace_Management_System.Application.Resources;
 namespace Workspace_Management_System.Application.Features.ProductCategories.Queries.GetProductCategoryById;
 
 public class GetProductCategoryByIdQueryHandler
-    : IRequestHandler<
-        GetProductCategoryByIdQuery,
-        Result<ProductCategoryDto>>
+    : IRequestHandler<GetProductCategoryByIdQuery, Result<ProductCategoryEditDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IStringLocalizer<SharedResources> _localizer;
@@ -25,41 +23,34 @@ public class GetProductCategoryByIdQueryHandler
         _localizer = localizer;
     }
 
-    public async Task<Result<ProductCategoryDto>> Handle(
+    public async Task<Result<ProductCategoryEditDto>> Handle(
         GetProductCategoryByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var isArabic =
-            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
-
         var category = await _unitOfWork.ProductCategories
             .Query()
             .AsNoTracking()
-            .Where(x =>
-                x.Id == request.Id &&
-                !x.IsDeleted)
-            .Select(x => new ProductCategoryDto
+            .Where(x => x.Id == request.Id && !x.IsDeleted)
+            .Select(x => new ProductCategoryEditDto
             {
                 Id = x.Id,
-                Name = isArabic
-                    ? x.NameAr
-                    : x.NameEn,
-                Description = isArabic
-                    ? x.DescriptionAr
-                    : x.DescriptionEn,
+                NameEn = x.NameEn,
+                NameAr = x.NameAr,
+                DescriptionEn = x.DescriptionEn,
+                DescriptionAr = x.DescriptionAr,
                 IsActive = x.IsActive,
                 IsDeleted = x.IsDeleted
             })
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (category == null)
+        if (category is null)
         {
-            return Result<ProductCategoryDto>.Failure(
+            return Result<ProductCategoryEditDto>.Failure(
                 ResultStatus.NotFound,
                 _localizer["ProductCategoryNotFound"]);
         }
 
-        return Result<ProductCategoryDto>.Success(
+        return Result<ProductCategoryEditDto>.Success(
             category,
             _localizer["ProductCategoryRetrievedSuccessfully"]);
     }
