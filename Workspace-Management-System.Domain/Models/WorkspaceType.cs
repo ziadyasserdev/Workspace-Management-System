@@ -8,8 +8,12 @@ namespace Workspace_Management_System.Domain.Models
 {
     public class WorkspaceType : BaseEntity
     {
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
+
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
+
         public bool IsActive { get; set; }
 
         public ICollection<Workspace> Workspaces { get; set; }

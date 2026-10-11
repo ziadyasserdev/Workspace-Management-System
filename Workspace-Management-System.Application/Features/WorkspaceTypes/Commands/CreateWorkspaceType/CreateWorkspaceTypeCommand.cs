@@ -10,7 +10,10 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Comman
 {
     public class CreateWorkspaceTypeCommand : IRequest<Result<int>>
     {
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
+
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
     }
 }

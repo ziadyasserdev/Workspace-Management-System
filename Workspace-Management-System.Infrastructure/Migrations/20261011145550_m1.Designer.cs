@@ -12,8 +12,8 @@ using Workspace_Management_System.Infrastructure.Persistence.Context;
 namespace Workspace_Management_System.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261008160701_AddBaseEntityColumnsToSessionService")]
-    partial class AddBaseEntityColumnsToSessionService
+    [Migration("20261011145550_m1")]
+    partial class m1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1960,7 +1960,10 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEn")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Floor")
@@ -1978,7 +1981,11 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2015,7 +2022,10 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionEn")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -2027,7 +2037,11 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("IsDeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

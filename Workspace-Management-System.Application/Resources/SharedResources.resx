@@ -162,11 +162,26 @@
   <data name="CannotAssignInactivePackage" xml:space="preserve">
     <value>Cannot assign an inactive package.</value>
   </data>
+  <data name="CannotAssignWorkspaceToInactiveType" xml:space="preserve">
+    <value>Cannot assign workspace to an inactive workspace type.</value>
+  </data>
+  <data name="CannotChangeStatusOfInactiveWorkspace" xml:space="preserve">
+    <value>Cannot change the status of an inactive workspace.</value>
+  </data>
+  <data name="CannotCreateWorkspaceForInactiveType" xml:space="preserve">
+    <value>Cannot create a workspace for an inactive workspace type.</value>
+  </data>
   <data name="CannotDeactivatePackageWithActiveCustomers" xml:space="preserve">
     <value>Cannot deactivate a package with active customers.</value>
   </data>
   <data name="CannotDeletePackageWithActiveCustomers" xml:space="preserve">
     <value>Cannot delete a package with active customers.</value>
+  </data>
+  <data name="CannotRestoreWorkspaceInactiveType" xml:space="preserve">
+    <value>Cannot restore workspace because its workspace type is inactive.</value>
+  </data>
+  <data name="CannotRestoreWorkspaceTypeNotFound" xml:space="preserve">
+    <value>Cannot restore workspace because its workspace type no longer exists.</value>
   </data>
   <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
     <value>Cannot upgrade to an inactive package.</value>
@@ -372,6 +387,9 @@
   <data name="DeletedServiceNotFound" xml:space="preserve">
     <value>Deleted service not found.</value>
   </data>
+  <data name="DeletedWorkspaceNotFound" xml:space="preserve">
+    <value>Deleted workspace not found.</value>
+  </data>
   <data name="DiscountArabicNameMaxLength" xml:space="preserve">
     <value>Discount Arabic name must not exceed 100 characters.</value>
   </data>
@@ -480,6 +498,9 @@
   <data name="InvalidEmail" xml:space="preserve">
     <value>Email must be valid.</value>
   </data>
+  <data name="InvalidWorkspaceStatus" xml:space="preserve">
+    <value>Invalid workspace status.</value>
+  </data>
   <data name="ItemType_Product" xml:space="preserve">
     <value>Product</value>
   </data>
@@ -558,7 +579,13 @@
   <data name="PageNumberGreaterThanZero" xml:space="preserve">
     <value>Page number must be greater than 0.</value>
   </data>
+  <data name="PageNumberMustBeGreaterThanZero" xml:space="preserve">
+    <value>Page number must be greater than 0.</value>
+  </data>
   <data name="PageSizeBetweenOneAndOneHundred" xml:space="preserve">
+    <value>Page size must be between 1 and 100.</value>
+  </data>
+  <data name="PageSizeMustBeBetween1And100" xml:space="preserve">
     <value>Page size must be between 1 and 100.</value>
   </data>
   <data name="PercentageDiscountCannotExceed100" xml:space="preserve">
@@ -903,11 +930,143 @@
   <data name="TransactionStatus_Refunded" xml:space="preserve">
     <value>RefundedRefunded</value>
   </data>
+  <data name="WorkspaceArabicDescriptionMaxLength" xml:space="preserve">
+    <value>Arabic description cannot exceed 500 characters.</value>
+  </data>
+  <data name="WorkspaceArabicNameMaxLength" xml:space="preserve">
+    <value>Arabic workspace name cannot exceed 150 characters.</value>
+  </data>
+  <data name="WorkspaceArabicNameRequired" xml:space="preserve">
+    <value>Arabic workspace name is required.</value>
+  </data>
+  <data name="WorkspaceCapacityMustBeGreaterThanZero" xml:space="preserve">
+    <value>Workspace capacity must be greater than zero.</value>
+  </data>
+  <data name="WorkspaceCodeAlreadyExists" xml:space="preserve">
+    <value>Workspace code already exists.</value>
+  </data>
+  <data name="WorkspaceCodeMaxLength" xml:space="preserve">
+    <value>Workspace code cannot exceed 50 characters.</value>
+  </data>
+  <data name="WorkspaceCodeRequired" xml:space="preserve">
+    <value>Workspace code is required.</value>
+  </data>
+  <data name="WorkspaceCreatedSuccessfully" xml:space="preserve">
+    <value>Workspace created successfully.</value>
+  </data>
+  <data name="WorkspaceDeletedSuccessfully" xml:space="preserve">
+    <value>Workspace deleted successfully.</value>
+  </data>
+  <data name="WorkspaceEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>English description cannot exceed 500 characters.</value>
+  </data>
+  <data name="WorkspaceEnglishNameMaxLength" xml:space="preserve">
+    <value>English workspace name cannot exceed 150 characters.</value>
+  </data>
+  <data name="WorkspaceEnglishNameRequired" xml:space="preserve">
+    <value>English workspace name is required.</value>
+  </data>
+  <data name="WorkspaceFloorMaxLength" xml:space="preserve">
+    <value>Floor cannot exceed 50 characters.</value>
+  </data>
+  <data name="WorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Workspace ID must be greater than 0.</value>
+  </data>
+  <data name="WorkspaceLocationMaxLength" xml:space="preserve">
+    <value>Location cannot exceed 200 characters.</value>
+  </data>
+  <data name="WorkspaceNotFound" xml:space="preserve">
+    <value>Workspace not found.</value>
+  </data>
+  <data name="WorkspaceRestoredSuccessfully" xml:space="preserve">
+    <value>Workspace restored successfully.</value>
+  </data>
+  <data name="WorkspaceRetrievedSuccessfully" xml:space="preserve">
+    <value>Workspace retrieved successfully.</value>
+  </data>
+  <data name="WorkspaceSearchMaxLength" xml:space="preserve">
+    <value>Search cannot exceed 100 characters.</value>
+  </data>
+  <data name="WorkspacesRetrievedSuccessfully" xml:space="preserve">
+    <value>Workspaces retrieved successfully.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyAvailable" xml:space="preserve">
+    <value>Workspace is already Available.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyInactive" xml:space="preserve">
+    <value>Workspace is already Inactive.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyMaintenance" xml:space="preserve">
+    <value>Workspace is already in Maintenance.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyOccupied" xml:space="preserve">
+    <value>Workspace is already Occupied.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyReserved" xml:space="preserve">
+    <value>Workspace is already Reserved.</value>
+  </data>
+  <data name="WorkspaceStatusChangedSuccessfully" xml:space="preserve">
+    <value>Workspace status changed successfully.</value>
+  </data>
+  <data name="WorkspaceTypeAlreadyActive" xml:space="preserve">
+    <value>Workspace type is already active.</value>
+  </data>
+  <data name="WorkspaceTypeAlreadyExists" xml:space="preserve">
+    <value>Workspace type already exists.</value>
+  </data>
+  <data name="WorkspaceTypeAlreadyInactive" xml:space="preserve">
+    <value>Workspace type is already inactive.</value>
+  </data>
+  <data name="WorkspaceTypeArabicDescriptionMaxLength" xml:space="preserve">
+    <value>Arabic description cannot exceed 500 characters.</value>
+  </data>
+  <data name="WorkspaceTypeArabicNameMaxLength" xml:space="preserve">
+    <value>Arabic name cannot exceed 100 characters.</value>
+  </data>
+  <data name="WorkspaceTypeArabicNameRequired" xml:space="preserve">
+    <value>Arabic name is required.</value>
+  </data>
+  <data name="WorkspaceTypeCreatedSuccessfully" xml:space="preserve">
+    <value>Workspace type created successfully.</value>
+  </data>
+  <data name="WorkspaceTypeDeactivatedSuccessfully" xml:space="preserve">
+    <value>Workspace type deactivated successfully.</value>
+  </data>
+  <data name="WorkspaceTypeDeletedSuccessfully" xml:space="preserve">
+    <value>Workspace type deleted successfully.</value>
+  </data>
+  <data name="WorkspaceTypeEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>English description cannot exceed 500 characters.</value>
+  </data>
+  <data name="WorkspaceTypeEnglishNameMaxLength" xml:space="preserve">
+    <value>English name cannot exceed 100 characters.</value>
+  </data>
+  <data name="WorkspaceTypeEnglishNameRequired" xml:space="preserve">
+    <value>English name is required.</value>
+  </data>
   <data name="WorkspaceTypeIdGreaterThanZero" xml:space="preserve">
     <value> Workspace type ID must be greater than zero.</value>
   </data>
+  <data name="WorkspaceTypeIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Workspace type ID must be greater than 0.</value>
+  </data>
   <data name="WorkspaceTypeNotFound" xml:space="preserve">
     <value>Workspace type not found.</value>
+  </data>
+  <data name="WorkspaceTypeRetrievedSuccessfully" xml:space="preserve">
+    <value>Workspace type retrieved successfully.</value>
+  </data>
+  <data name="WorkspaceTypeSearchMaxLength" xml:space="preserve">
+    <value>Search cannot exceed 100 characters.</value>
+  </data>
+  <data name="WorkspaceTypesRetrievedSuccessfully" xml:space="preserve">
+    <value>Workspace types retrieved successfully.</value>
+  </data>
+  <data name="WorkspaceTypeUpdatedSuccessfully" xml:space="preserve">
+    <value>Workspace type updated successfully.</value>
+  </data>
+  <data name="WorkspaceUpdatedSuccessfully" xml:space="preserve">
+    <value>Workspace updated successfully.</value>
   </data>
   <data name="WorkspaceUsage" xml:space="preserve">
     <value>Workspace Usage.</value>
