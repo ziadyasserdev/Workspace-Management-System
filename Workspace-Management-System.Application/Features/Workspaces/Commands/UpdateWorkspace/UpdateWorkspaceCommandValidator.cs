@@ -1,52 +1,78 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Workspaces.Commands.UpdateWorkspace
 {
     public class UpdateWorkspaceCommandValidator
-        : AbstractValidator<UpdateWorkspaceCommand>
+       : AbstractValidator<UpdateWorkspaceCommand>
     {
-        public UpdateWorkspaceCommandValidator()
+        public UpdateWorkspaceCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Workspace ID must be greater than 0.");
+                .WithMessage(
+                    localizer["WorkspaceIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.WorkspaceTypeId)
                 .GreaterThan(0)
-                .WithMessage("Workspace type ID must be greater than 0.");
+                .WithMessage(
+                    localizer["WorkspaceTypeIdMustBeGreaterThanZero"].Value);
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Workspace name is required.")
+                .WithMessage(
+                    localizer["WorkspaceEnglishNameRequired"].Value)
                 .MaximumLength(150)
-                .WithMessage("Workspace name cannot exceed 150 characters.");
+                .WithMessage(
+                    localizer["WorkspaceEnglishNameMaxLength"].Value);
+
+            RuleFor(x => x.NameAr)
+                .NotEmpty()
+                .WithMessage(
+                    localizer["WorkspaceArabicNameRequired"].Value)
+                .MaximumLength(150)
+                .WithMessage(
+                    localizer["WorkspaceArabicNameMaxLength"].Value);
 
             RuleFor(x => x.Code)
                 .NotEmpty()
-                .WithMessage("Workspace code is required.")
+                .WithMessage(
+                    localizer["WorkspaceCodeRequired"].Value)
                 .MaximumLength(50)
-                .WithMessage("Workspace code cannot exceed 50 characters.");
+                .WithMessage(
+                    localizer["WorkspaceCodeMaxLength"].Value);
 
             RuleFor(x => x.Floor)
                 .MaximumLength(50)
-                .WithMessage("Floor cannot exceed 50 characters.");
+                .WithMessage(
+                    localizer["WorkspaceFloorMaxLength"].Value);
 
             RuleFor(x => x.Location)
                 .MaximumLength(200)
-                .WithMessage("Location cannot exceed 200 characters.");
+                .WithMessage(
+                    localizer["WorkspaceLocationMaxLength"].Value);
 
             RuleFor(x => x.Capacity)
                 .GreaterThan(0)
-                .WithMessage("Workspace capacity must be greater than 0.");
+                .WithMessage(
+                    localizer["WorkspaceCapacityMustBeGreaterThanZero"].Value);
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.DescriptionEn)
                 .MaximumLength(500)
-                .WithMessage("Workspace description cannot exceed 500 characters.");
+                .WithMessage(
+                    localizer["WorkspaceEnglishDescriptionMaxLength"].Value);
+
+            RuleFor(x => x.DescriptionAr)
+                .MaximumLength(500)
+                .WithMessage(
+                    localizer["WorkspaceArabicDescriptionMaxLength"].Value);
         }
     }
 

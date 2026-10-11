@@ -12,21 +12,28 @@ namespace Workspace_Management_System.Domain.Models
     {
         public int WorkspaceTypeId { get; set; }
 
-        public string Name { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
+
         public string Code { get; set; } = null!;
         public string? Floor { get; set; }
         public string? Location { get; set; }
+
         public int Capacity { get; set; }
-        public WorkspaceStatus Status { get; set; } 
-        public string? Description { get; set; }
+        public WorkspaceStatus Status { get; set; }
+
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
+
         public bool IsActive { get; set; }
 
         public WorkspaceType WorkspaceType { get; set; } = null!;
 
         public ICollection<Booking> Bookings { get; set; }
             = new List<Booking>();
+
         public ICollection<Employee> Employees { get; set; }
-    = new List<Employee>();
+            = new List<Employee>();
 
         public ICollection<Session> Sessions { get; set; }
             = new List<Session>();

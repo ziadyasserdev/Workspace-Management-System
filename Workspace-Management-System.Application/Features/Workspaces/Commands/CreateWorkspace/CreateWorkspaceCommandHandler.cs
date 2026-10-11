@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
 
@@ -19,13 +21,16 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.C
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public CreateWorkspaceCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = localizer;
         }
 
         public async Task<Result<int>> Handle(
@@ -35,22 +40,21 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.C
             var workspaceType = await _unitOfWork.WorkspaceTypes
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.WorkspaceTypeId &&
-                         !x.IsDeleted,
+                    x => x.Id == request.WorkspaceTypeId && !x.IsDeleted,
                     cancellationToken);
 
             if (workspaceType is null)
             {
                 return Result<int>.Failure(
                     ResultStatus.NotFound,
-                    "Workspace type not found.");
+                    _localizer["WorkspaceTypeNotFound"].Value);
             }
 
             if (!workspaceType.IsActive)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "Cannot create a workspace for an inactive workspace type.");
+                    _localizer["CannotCreateWorkspaceForInactiveType"].Value);
             }
 
             var code = request.Code.Trim();
@@ -58,39 +62,44 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.C
             var codeExists = await _unitOfWork.Workspaces
                 .Query()
                 .AnyAsync(
-                    x => x.Code == code &&
-                         !x.IsDeleted,
+                    x => x.Code == code && !x.IsDeleted,
                     cancellationToken);
 
             if (codeExists)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "Workspace code already exists.");
+                    _localizer["WorkspaceCodeAlreadyExists"].Value);
             }
 
             var workspace = new Workspace
             {
                 WorkspaceTypeId = request.WorkspaceTypeId,
-                Name = request.Name.Trim(),
+
+                NameEn = request.NameEn.Trim(),
+                NameAr = request.NameAr.Trim(),
+
                 Code = code,
                 Floor = request.Floor?.Trim(),
                 Location = request.Location?.Trim(),
+
                 Capacity = request.Capacity,
                 Status = WorkspaceStatus.Available,
-                Description = request.Description?.Trim(),
+
+                DescriptionEn = request.DescriptionEn?.Trim(),
+                DescriptionAr = request.DescriptionAr?.Trim(),
+
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _currentUser.UserId
             };
 
             await _unitOfWork.Workspaces.AddAsync(workspace);
-
             await _unitOfWork.SaveAsync();
 
             return Result<int>.Success(
                 workspace.Id,
-                "Workspace created successfully.");
+                _localizer["WorkspaceCreatedSuccessfully"].Value);
         }
     }
 }

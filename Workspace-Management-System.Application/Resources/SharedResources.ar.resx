@@ -162,11 +162,26 @@
   <data name="CannotAssignInactivePackage" xml:space="preserve">
     <value> لا يمكن تعيين باقة غير مفعّلة.</value>
   </data>
+  <data name="CannotAssignWorkspaceToInactiveType" xml:space="preserve">
+    <value>لا يمكن إسناد مساحة العمل إلى نوع غير نشط.</value>
+  </data>
+  <data name="CannotChangeStatusOfInactiveWorkspace" xml:space="preserve">
+    <value>لا يمكن تغيير حالة مساحة عمل غير نشطة.</value>
+  </data>
+  <data name="CannotCreateWorkspaceForInactiveType" xml:space="preserve">
+    <value>لا يمكن إنشاء مساحة عمل لنوع غير نشط.</value>
+  </data>
   <data name="CannotDeactivatePackageWithActiveCustomers" xml:space="preserve">
     <value> لا يمكن إلغاء تفعيل باقة لديها عملاء مفعّلون.</value>
   </data>
   <data name="CannotDeletePackageWithActiveCustomers" xml:space="preserve">
     <value>لا يمكن حذف باقة لديها عملاء مفعّلون.</value>
+  </data>
+  <data name="CannotRestoreWorkspaceInactiveType" xml:space="preserve">
+    <value>لا يمكن استرجاع مساحة العمل لأن نوعها غير نشط.</value>
+  </data>
+  <data name="CannotRestoreWorkspaceTypeNotFound" xml:space="preserve">
+    <value>لا يمكن استرجاع مساحة العمل لأن نوعها لم يعد موجودًا.</value>
   </data>
   <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
     <value>لا يمكن الترقية إلى باقة غير مفعّلة.</value>
@@ -372,6 +387,9 @@
   <data name="DeletedServiceNotFound" xml:space="preserve">
     <value>الخدمة المحذوفة غير موجودة.</value>
   </data>
+  <data name="DeletedWorkspaceNotFound" xml:space="preserve">
+    <value>مساحة العمل المحذوفة غير موجودة.</value>
+  </data>
   <data name="DiscountArabicNameMaxLength" xml:space="preserve">
     <value> يجب ألا يتجاوز اسم الخصم باللغة العربية 100 حرف.</value>
   </data>
@@ -480,6 +498,9 @@
   <data name="InvalidEmail" xml:space="preserve">
     <value>يجب أن يكون البريد الإلكتروني صالحًا.</value>
   </data>
+  <data name="InvalidWorkspaceStatus" xml:space="preserve">
+    <value>حالة مساحة العمل غير صحيحة.</value>
+  </data>
   <data name="ItemType_Product" xml:space="preserve">
     <value>منتج</value>
   </data>
@@ -558,7 +579,13 @@
   <data name="PageNumberGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون رقم الصفحة أكبر من صفر.</value>
   </data>
+  <data name="PageNumberMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون رقم الصفحة أكبر من صفر.</value>
+  </data>
   <data name="PageSizeBetweenOneAndOneHundred" xml:space="preserve">
+    <value>يجب أن يكون حجم الصفحة بين 1 و100.</value>
+  </data>
+  <data name="PageSizeMustBeBetween1And100" xml:space="preserve">
     <value>يجب أن يكون حجم الصفحة بين 1 و100.</value>
   </data>
   <data name="PercentageDiscountCannotExceed100" xml:space="preserve">
@@ -903,11 +930,143 @@
   <data name="TransactionStatus_Refunded" xml:space="preserve">
     <value>مستردة</value>
   </data>
+  <data name="WorkspaceArabicDescriptionMaxLength" xml:space="preserve">
+    <value>الوصف بالعربية لا يمكن أن يتجاوز 500 حرف.</value>
+  </data>
+  <data name="WorkspaceArabicNameMaxLength" xml:space="preserve">
+    <value>الاسم بالعربية لا يمكن أن يتجاوز 150 حرفًا.</value>
+  </data>
+  <data name="WorkspaceArabicNameRequired" xml:space="preserve">
+    <value>الاسم بالعربية مطلوب.</value>
+  </data>
+  <data name="WorkspaceCapacityMustBeGreaterThanZero" xml:space="preserve">
+    <value>سعة مساحة العمل يجب أن تكون أكبر من صفر.</value>
+  </data>
+  <data name="WorkspaceCodeAlreadyExists" xml:space="preserve">
+    <value>كود مساحة العمل مستخدم بالفعل.</value>
+  </data>
+  <data name="WorkspaceCodeMaxLength" xml:space="preserve">
+    <value>كود مساحة العمل لا يمكن أن يتجاوز 50 حرفًا.</value>
+  </data>
+  <data name="WorkspaceCodeRequired" xml:space="preserve">
+    <value>كود مساحة العمل مطلوب.</value>
+  </data>
+  <data name="WorkspaceCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>الوصف بالإنجليزية لا يمكن أن يتجاوز 500 حرف.</value>
+  </data>
+  <data name="WorkspaceEnglishNameMaxLength" xml:space="preserve">
+    <value>الاسم بالإنجليزية لا يمكن أن يتجاوز 150 حرفًا.</value>
+  </data>
+  <data name="WorkspaceEnglishNameRequired" xml:space="preserve">
+    <value>الاسم بالإنجليزية مطلوب.</value>
+  </data>
+  <data name="WorkspaceFloorMaxLength" xml:space="preserve">
+    <value>الطابق لا يمكن أن يتجاوز 50 حرفًا.</value>
+  </data>
+  <data name="WorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم مساحة العمل يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="WorkspaceLocationMaxLength" xml:space="preserve">
+    <value>الموقع لا يمكن أن يتجاوز 200 حرف.</value>
+  </data>
+  <data name="WorkspaceNotFound" xml:space="preserve">
+    <value>مساحة العمل غير موجودة.</value>
+  </data>
+  <data name="WorkspaceRestoredSuccessfully" xml:space="preserve">
+    <value>تم استرجاع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceSearchMaxLength" xml:space="preserve">
+    <value>نص البحث لا يمكن أن يتجاوز 100 حرف.</value>
+  </data>
+  <data name="WorkspacesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع مساحات العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyAvailable" xml:space="preserve">
+    <value>مساحة العمل متاحة بالفعل.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyInactive" xml:space="preserve">
+    <value>مساحة العمل غير نشطة بالفعل.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyMaintenance" xml:space="preserve">
+    <value>مساحة العمل في حالة صيانة بالفعل.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyOccupied" xml:space="preserve">
+    <value>مساحة العمل مشغولة بالفعل.</value>
+  </data>
+  <data name="WorkspaceStatusAlreadyReserved" xml:space="preserve">
+    <value>مساحة العمل محجوزة بالفعل.</value>
+  </data>
+  <data name="WorkspaceStatusChangedSuccessfully" xml:space="preserve">
+    <value>تم تغيير حالة مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceTypeAlreadyActive" xml:space="preserve">
+    <value>نوع مساحة العمل مفعّل بالفعل.</value>
+  </data>
+  <data name="WorkspaceTypeAlreadyExists" xml:space="preserve">
+    <value>نوع مساحة العمل موجود بالفعل.</value>
+  </data>
+  <data name="WorkspaceTypeAlreadyInactive" xml:space="preserve">
+    <value>نوع مساحة العمل غير مفعّل بالفعل.</value>
+  </data>
+  <data name="WorkspaceTypeArabicDescriptionMaxLength" xml:space="preserve">
+    <value>الوصف بالعربية لا يمكن أن يتجاوز 500 حرف.</value>
+  </data>
+  <data name="WorkspaceTypeArabicNameMaxLength" xml:space="preserve">
+    <value>الاسم بالعربية لا يمكن أن يتجاوز 100 حرف.</value>
+  </data>
+  <data name="WorkspaceTypeArabicNameRequired" xml:space="preserve">
+    <value>الاسم بالعربية مطلوب.</value>
+  </data>
+  <data name="WorkspaceTypeCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء نوع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceTypeDeactivatedSuccessfully" xml:space="preserve">
+    <value>تم إلغاء تفعيل نوع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceTypeDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف نوع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceTypeEnglishDescriptionMaxLength" xml:space="preserve">
+    <value>الوصف بالإنجليزية لا يمكن أن يتجاوز 500 حرف.</value>
+  </data>
+  <data name="WorkspaceTypeEnglishNameMaxLength" xml:space="preserve">
+    <value>الاسم بالإنجليزية لا يمكن أن يتجاوز 100 حرف.</value>
+  </data>
+  <data name="WorkspaceTypeEnglishNameRequired" xml:space="preserve">
+    <value>الاسم بالإنجليزية مطلوب.</value>
+  </data>
   <data name="WorkspaceTypeIdGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون رقم نوع مساحة العمل أكبر من صفر.</value>
   </data>
+  <data name="WorkspaceTypeIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون معرّف نوع مساحة العمل أكبر من صفر.</value>
+  </data>
   <data name="WorkspaceTypeNotFound" xml:space="preserve">
     <value>نوع مساحة العمل غير موجود.</value>
+  </data>
+  <data name="WorkspaceTypeRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع نوع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceTypeSearchMaxLength" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز نص البحث 100 حرف.</value>
+  </data>
+  <data name="WorkspaceTypesRetrievedSuccessfully" xml:space="preserve">
+    <value>تم استرجاع أنواع مساحات العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceTypeUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث نوع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث مساحة العمل بنجاح.</value>
   </data>
   <data name="WorkspaceUsage" xml:space="preserve">
     <value>استخدام مساحة العمل.</value>

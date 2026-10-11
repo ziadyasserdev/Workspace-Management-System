@@ -1,30 +1,45 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Commands.UpdateWorkspaceType
 {
     public class UpdateWorkspaceTypeCommandValidator
-        : AbstractValidator<UpdateWorkspaceTypeCommand>
+          : AbstractValidator<UpdateWorkspaceTypeCommand>
     {
-        public UpdateWorkspaceTypeCommandValidator()
+        public UpdateWorkspaceTypeCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Workspace type ID must be greater than 0.");
+                .WithMessage(localizer["WorkspaceTypeIdMustBeGreaterThanZero"]);
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.NameEn)
                 .NotEmpty()
-                .WithMessage("Workspace type name is required.")
+                .WithMessage(localizer["WorkspaceTypeEnglishNameRequired"])
                 .MaximumLength(100)
-                .WithMessage("Workspace type name cannot exceed 100 characters.");
+                .WithMessage(localizer["WorkspaceTypeEnglishNameMaxLength"]);
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.NameAr)
+                .NotEmpty()
+                .WithMessage(localizer["WorkspaceTypeArabicNameRequired"])
+                .MaximumLength(100)
+                .WithMessage(localizer["WorkspaceTypeArabicNameMaxLength"]);
+
+            RuleFor(x => x.DescriptionEn)
                 .MaximumLength(500)
-                .WithMessage("Workspace type description cannot exceed 500 characters.");
+                .When(x => !string.IsNullOrWhiteSpace(x.DescriptionEn))
+                .WithMessage(localizer["WorkspaceTypeEnglishDescriptionMaxLength"]);
+
+            RuleFor(x => x.DescriptionAr)
+                .MaximumLength(500)
+                .When(x => !string.IsNullOrWhiteSpace(x.DescriptionAr))
+                .WithMessage(localizer["WorkspaceTypeArabicDescriptionMaxLength"]);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Workspaces.Commands.UpdateWorkspace
 {
@@ -16,13 +18,16 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.U
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public UpdateWorkspaceCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -32,36 +37,34 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.U
             var workspace = await _unitOfWork.Workspaces
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         !x.IsDeleted,
+                    x => x.Id == request.Id && !x.IsDeleted,
                     cancellationToken);
 
             if (workspace is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Workspace not found.");
+                    _localizer["WorkspaceNotFound"].Value);
             }
 
             var workspaceType = await _unitOfWork.WorkspaceTypes
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.WorkspaceTypeId &&
-                         !x.IsDeleted,
+                    x => x.Id == request.WorkspaceTypeId && !x.IsDeleted,
                     cancellationToken);
 
             if (workspaceType is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Workspace type not found.");
+                    _localizer["WorkspaceTypeNotFound"].Value);
             }
 
             if (!workspaceType.IsActive)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Cannot assign workspace to an inactive workspace type.");
+                    _localizer["CannotAssignWorkspaceToInactiveType"].Value);
             }
 
             var code = request.Code.Trim();
@@ -78,16 +81,22 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.U
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Workspace code already exists.");
+                    _localizer["WorkspaceCodeAlreadyExists"].Value);
             }
 
             workspace.WorkspaceTypeId = request.WorkspaceTypeId;
-            workspace.Name = request.Name.Trim();
+
+            workspace.NameEn = request.NameEn.Trim();
+            workspace.NameAr = request.NameAr.Trim();
+
             workspace.Code = code;
             workspace.Floor = request.Floor?.Trim();
             workspace.Location = request.Location?.Trim();
+
             workspace.Capacity = request.Capacity;
-            workspace.Description = request.Description?.Trim();
+
+            workspace.DescriptionEn = request.DescriptionEn?.Trim();
+            workspace.DescriptionAr = request.DescriptionAr?.Trim();
 
             workspace.UpdatedAt = DateTime.UtcNow;
             workspace.UpdatedBy = _currentUser.UserId;
@@ -96,7 +105,7 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.U
 
             return Result<bool>.Success(
                 true,
-                "Workspace updated successfully.");
+                _localizer["WorkspaceUpdatedSuccessfully"].Value);
         }
     }
 }

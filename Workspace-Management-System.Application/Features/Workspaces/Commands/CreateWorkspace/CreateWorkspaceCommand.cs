@@ -12,7 +12,8 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.C
     {
         public int WorkspaceTypeId { get; set; }
 
-        public string Name { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
 
         public string Code { get; set; } = null!;
 
@@ -22,6 +23,7 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.C
 
         public int Capacity { get; set; }
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
     }
 }

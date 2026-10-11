@@ -1,99 +1,99 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Workspace_Management_System.Application.Common.Results;
-using Workspace_Management_System.Application.Contracts;
-using Workspace_Management_System.Application.Contracts.Repositories;
-using Workspace_Management_System.Application.Features.Bookings.Dtos;
+﻿//using MediatR;
+//using Microsoft.EntityFrameworkCore;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using Workspace_Management_System.Application.Common.Results;
+//using Workspace_Management_System.Application.Contracts;
+//using Workspace_Management_System.Application.Contracts.Repositories;
+//using Workspace_Management_System.Application.Features.Bookings.Dtos;
 
-namespace Workspace_Management_System.Application.Features.Bookings.Queries.GetBookingById
-{
-    public class GetBookingByIdQueryHandler
-    : IRequestHandler<GetBookingByIdQuery, Result<BookingDetailsDto>>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILocalizationService _localizationService;
+//namespace Workspace_Management_System.Application.Features.Bookings.Queries.GetBookingById
+//{
+//    public class GetBookingByIdQueryHandler
+//    : IRequestHandler<GetBookingByIdQuery, Result<BookingDetailsDto>>
+//    {
+//        private readonly IUnitOfWork _unitOfWork;
+//        private readonly ILocalizationService _localizationService;
 
-        public GetBookingByIdQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
-        {
-            _unitOfWork = unitOfWork;
-            _localizationService = localizationService;
-        }
+//        public GetBookingByIdQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
+//        {
+//            _unitOfWork = unitOfWork;
+//            _localizationService = localizationService;
+//        }
 
-        public async Task<Result<BookingDetailsDto>> Handle(
-            GetBookingByIdQuery request,
-            CancellationToken cancellationToken)
-        {
-            var booking = await _unitOfWork.Bookings
-                .Query()
-                .AsNoTracking()
-                .Where(x =>
-                    x.Id == request.Id &&
-                    !x.IsDeleted)
-                .Select(x => new BookingDetailsDto
-                {
-                    Id = x.Id,
+//        public async Task<Result<BookingDetailsDto>> Handle(
+//            GetBookingByIdQuery request,
+//            CancellationToken cancellationToken)
+//        {
+//            var booking = await _unitOfWork.Bookings
+//                .Query()
+//                .AsNoTracking()
+//                .Where(x =>
+//                    x.Id == request.Id &&
+//                    !x.IsDeleted)
+//                .Select(x => new BookingDetailsDto
+//                {
+//                    Id = x.Id,
 
-                    BookingNumber = x.BookingNumber,
+//                    BookingNumber = x.BookingNumber,
 
-                    CustomerId = x.CustomerId,
+//                    CustomerId = x.CustomerId,
 
-                      CustomerName =
-                _localizationService.GetLocalizedValue(
-                    x.Customer.FullNameEn,
-                    x.Customer.FullNameAr),
+//                      CustomerName =
+//                _localizationService.GetLocalizedValue(
+//                    x.Customer.FullNameEn,
+//                    x.Customer.FullNameAr),
 
-                    WorkspaceId = x.WorkspaceId,
+//                    WorkspaceId = x.WorkspaceId,
 
-                    WorkspaceName = x.Workspace.Name,
+//                    WorkspaceName = x.Workspace.Name,
 
-                    WorkspaceCode = x.Workspace.Code,
+//                    WorkspaceCode = x.Workspace.Code,
 
-                    BookingDate = x.BookingDate,
+//                    BookingDate = x.BookingDate,
 
-                    StartTime = x.StartTime,
+//                    StartTime = x.StartTime,
 
-                    ExpectedEndTime = x.ExpectedEndTime,
+//                    ExpectedEndTime = x.ExpectedEndTime,
 
-                    NumberOfPeople = x.NumberOfPeople,
+//                    NumberOfPeople = x.NumberOfPeople,
 
-                    Status = x.Status,
+//                    Status = x.Status,
 
-                    Notes = x.Notes,
+//                    Notes = x.Notes,
 
-                    Session = x.Session == null
-                        ? null
-                        : new SessionSummaryDto
-                        {
-                            Id = x.Session.Id,
+//                    Session = x.Session == null
+//                        ? null
+//                        : new SessionSummaryDto
+//                        {
+//                            Id = x.Session.Id,
 
-                            StartTime = x.Session.StartTime,
+//                            StartTime = x.Session.StartTime,
 
-                            EndTime = x.Session.EndTime,
+//                            EndTime = x.Session.EndTime,
 
-                            Status = x.Session.Status,
+//                            Status = x.Session.Status,
 
-                            EmployeeId = x.Session.EmployeeId,
+//                            EmployeeId = x.Session.EmployeeId,
 
-                            WorkspaceId = x.Session.WorkspaceId,
+//                            WorkspaceId = x.Session.WorkspaceId,
 
-                            PricingPlanId = x.Session.PricingPlanId
-                        }
-                })
-                .FirstOrDefaultAsync(cancellationToken);
+//                            PricingPlanId = x.Session.PricingPlanId
+//                        }
+//                })
+//                .FirstOrDefaultAsync(cancellationToken);
 
-            if (booking == null)
-            {
-                return Result<BookingDetailsDto>.Failure(
-                    ResultStatus.NotFound,
-                    "Booking not found.");
-            }
+//            if (booking == null)
+//            {
+//                return Result<BookingDetailsDto>.Failure(
+//                    ResultStatus.NotFound,
+//                    "Booking not found.");
+//            }
 
-            return Result<BookingDetailsDto>.Success(booking);
-        }
-    }
-}
+//            return Result<BookingDetailsDto>.Success(booking);
+//        }
+//    }
+//}

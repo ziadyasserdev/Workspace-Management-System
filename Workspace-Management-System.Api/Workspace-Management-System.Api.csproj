@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Workspace-Management-System.Infrastructure\Workspace-Management-System.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

@@ -11,7 +11,7 @@ using Workspace_Management_System.Application.Features.WorkspaceTypes.Dtos;
 namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Queries.GetWorkspaceTypes
 {
     public class GetWorkspaceTypesQuery
-      : IRequest<Result<PaginatedResult<WorkspaceTypeDto>>>
+         : IRequest<Result<PaginatedResult<WorkspaceTypeDto>>>
     {
         public int PageNumber { get; set; } = 1;
 

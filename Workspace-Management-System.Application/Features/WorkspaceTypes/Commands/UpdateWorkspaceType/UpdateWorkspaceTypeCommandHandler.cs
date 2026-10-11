@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,25 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Commands.UpdateWorkspaceType
 {
     public class UpdateWorkspaceTypeCommandHandler
-       : IRequestHandler<UpdateWorkspaceTypeCommand, Result<bool>>
+      : IRequestHandler<UpdateWorkspaceTypeCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer _localizer;
 
         public UpdateWorkspaceTypeCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizerFactory factory)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = factory.Create(typeof(SharedResources));
         }
 
         public async Task<Result<bool>> Handle(
@@ -32,36 +37,39 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Comman
             var workspaceType = await _unitOfWork.WorkspaceTypes
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         !x.IsDeleted,
+                    x => x.Id == request.Id && !x.IsDeleted,
                     cancellationToken);
 
             if (workspaceType is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Workspace type not found.");
+                    _localizer["WorkspaceTypeNotFound"]);
             }
 
-            var name = request.Name.Trim();
+            var nameEn = request.NameEn.Trim();
+            var nameAr = request.NameAr.Trim();
 
             var exists = await _unitOfWork.WorkspaceTypes
                 .Query()
                 .AnyAsync(
                     x => x.Id != request.Id &&
-                         x.Name == name &&
-                         !x.IsDeleted,
+                         !x.IsDeleted &&
+                         (x.NameEn == nameEn || x.NameAr == nameAr),
                     cancellationToken);
 
             if (exists)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Workspace type with the same name already exists.");
+                    _localizer["WorkspaceTypeAlreadyExists"]);
             }
 
-            workspaceType.Name = name;
-            workspaceType.Description = request.Description?.Trim();
+            workspaceType.NameEn = nameEn;
+            workspaceType.NameAr = nameAr;
+            workspaceType.DescriptionEn = request.DescriptionEn?.Trim();
+            workspaceType.DescriptionAr = request.DescriptionAr?.Trim();
+
             workspaceType.UpdatedAt = DateTime.UtcNow;
             workspaceType.UpdatedBy = _currentUser.UserId;
 
@@ -69,7 +77,7 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Comman
 
             return Result<bool>.Success(
                 true,
-                "Workspace type updated successfully.");
+                _localizer["WorkspaceTypeUpdatedSuccessfully"]);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using Workspace_Management_System.Api.Middleware;
+using Workspace_Management_System.Api.Swagger;
 using Workspace_Management_System.Application.Contracts.Services.Memberships;
 using Workspace_Management_System.Application.Extensions;
 using Workspace_Management_System.Application.Settings;
@@ -135,7 +136,7 @@ namespace Workspace_Management_System.Api
   );
 
 
-
+    //      
 
             builder.Services.AddCors(options =>
             {
@@ -147,7 +148,14 @@ namespace Workspace_Management_System.Api
                         .AllowAnyHeader();
                 });
             });
-         
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                // Keep your existing JWT configuration here.
+
+                options.OperationFilter<AcceptLanguageOperationFilter>();
+            });
+
 
             var supportedCultures = new[]
 {
@@ -205,7 +213,7 @@ namespace Workspace_Management_System.Api
             }
 
             // Configure the HTTP request pipeline.
-
+            app.UseStaticFiles();
             app.UseSwagger();
                 app.UseSwaggerUI();
          

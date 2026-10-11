@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +9,26 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Workspaces.Commands.RestoreWorkspace
 {
     public class RestoreWorkspaceCommandHandler
-         : IRequestHandler<RestoreWorkspaceCommand, Result<bool>>
+          : IRequestHandler<RestoreWorkspaceCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUser;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public RestoreWorkspaceCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUser = currentUser;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -32,16 +37,16 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.R
         {
             var workspace = await _unitOfWork.Workspaces
                 .Query()
+                .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         x.IsDeleted,
+                    x => x.Id == request.Id && x.IsDeleted,
                     cancellationToken);
 
             if (workspace is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Deleted workspace not found.");
+                    _localizer["DeletedWorkspaceNotFound"].Value);
             }
 
             var workspaceType = await _unitOfWork.WorkspaceTypes
@@ -55,14 +60,14 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.R
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Cannot restore workspace because its workspace type no longer exists.");
+                    _localizer["CannotRestoreWorkspaceTypeNotFound"].Value);
             }
 
             if (!workspaceType.IsActive)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Cannot restore workspace because its workspace type is inactive.");
+                    _localizer["CannotRestoreWorkspaceInactiveType"].Value);
             }
 
             workspace.IsDeleted = false;
@@ -77,7 +82,7 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Commands.R
 
             return Result<bool>.Success(
                 true,
-                "Workspace restored successfully.");
+                _localizer["WorkspaceRestoredSuccessfully"].Value);
         }
     }
 }
