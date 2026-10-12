@@ -246,6 +246,9 @@
   <data name="CompanyUpdatedSuccessfully" xml:space="preserve">
     <value>Company updated successfully.</value>
   </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>Confirm password is required.</value>
+  </data>
   <data name="ContactPersonMaxLength" xml:space="preserve">
     <value>Contact person must not exceed 150 characters.</value>
   </data>
@@ -372,6 +375,9 @@
   <data name="DeletedDiscountNotFound" xml:space="preserve">
     <value>Deleted discount not found.</value>
   </data>
+  <data name="DeletedEmployeeNotFound" xml:space="preserve">
+    <value>Deleted employee not found.</value>
+  </data>
   <data name="DeletedPackageNotFound" xml:space="preserve">
     <value>Deleted package not found.</value>
   </data>
@@ -450,6 +456,90 @@
   <data name="DurationDaysMustBeGreaterThanZero" xml:space="preserve">
     <value> Duration days must be greater than zero.</value>
   </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>Email already exists.</value>
+  </data>
+  <data name="EmailMaxLength" xml:space="preserve">
+    <value>Email cannot exceed 256 characters.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="EmployeeAlreadyAssignedToWorkspace" xml:space="preserve">
+    <value>Employee is already assigned to this workspace.</value>
+  </data>
+  <data name="EmployeeAlreadyHasThisStatus" xml:space="preserve">
+    <value>Employee already has this status.</value>
+  </data>
+  <data name="EmployeeAssignedToWorkspaceSuccessfully" xml:space="preserve">
+    <value>Employee assigned to workspace successfully.</value>
+  </data>
+  <data name="EmployeeDeletedSuccessfully" xml:space="preserve">
+    <value>Employee deleted successfully.</value>
+  </data>
+  <data name="EmployeeEmailAlreadyExists" xml:space="preserve">
+    <value>Email already exists for another employee.</value>
+  </data>
+  <data name="EmployeeFirstNameArMaxLength" xml:space="preserve">
+    <value>Arabic first name must not exceed 100 characters.</value>
+  </data>
+  <data name="EmployeeFirstNameArMinLength" xml:space="preserve">
+    <value>Arabic first name must be at least 3 characters.</value>
+  </data>
+  <data name="EmployeeFirstNameArRequired" xml:space="preserve">
+    <value>Arabic first name is required.</value>
+  </data>
+  <data name="EmployeeFirstNameEnMaxLength" xml:space="preserve">
+    <value>English first name must not exceed 100 characters.</value>
+  </data>
+  <data name="EmployeeFirstNameEnMinLength" xml:space="preserve">
+    <value>English first name must be at least 3 characters.</value>
+  </data>
+  <data name="EmployeeFirstNameEnRequired" xml:space="preserve">
+    <value>English first name is required.</value>
+  </data>
+  <data name="EmployeeIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Employee ID must be greater than 0.</value>
+  </data>
+  <data name="EmployeeLastNameArMaxLength" xml:space="preserve">
+    <value>Arabic last name must not exceed 100 characters.</value>
+  </data>
+  <data name="EmployeeLastNameArMinLength" xml:space="preserve">
+    <value>Arabic last name must be at least 3 characters.</value>
+  </data>
+  <data name="EmployeeLastNameArRequired" xml:space="preserve">
+    <value>Arabic last name is required.</value>
+  </data>
+  <data name="EmployeeLastNameEnMaxLength" xml:space="preserve">
+    <value>English last name must not exceed 100 characters.</value>
+  </data>
+  <data name="EmployeeLastNameEnMinLength" xml:space="preserve">
+    <value>English last name must be at least 3 characters.</value>
+  </data>
+  <data name="EmployeeLastNameEnRequired" xml:space="preserve">
+    <value>English last name is required.</value>
+  </data>
+  <data name="EmployeeNotFound" xml:space="preserve">
+    <value>Employee not found.</value>
+  </data>
+  <data name="EmployeePhoneAlreadyExists" xml:space="preserve">
+    <value>Phone number already exists for another employee.</value>
+  </data>
+  <data name="EmployeePhoneMaxLength" xml:space="preserve">
+    <value>Phone must not exceed 20 characters.</value>
+  </data>
+  <data name="EmployeeRestoredSuccessfully" xml:space="preserve">
+    <value>Employee restored successfully.</value>
+  </data>
+  <data name="EmployeeSearchMaxLength" xml:space="preserve">
+    <value>Search cannot exceed 100 characters.</value>
+  </data>
+  <data name="EmployeeStatusChangedSuccessfully" xml:space="preserve">
+    <value>Employee status changed successfully.</value>
+  </data>
+  <data name="EmployeeUpdatedSuccessfully" xml:space="preserve">
+    <value>Employee updated successfully.</value>
+  </data>
   <data name="EndDateCannotBeBeforeStartDate" xml:space="preserve">
     <value>End date cannot be before start date.</value>
   </data>
@@ -480,6 +570,9 @@
   <data name="EnglishTaxInformationMaxLength" xml:space="preserve">
     <value>English tax information must not exceed 500 characters.</value>
   </data>
+  <data name="FailedToAssignRole" xml:space="preserve">
+    <value>Failed to assign role.</value>
+  </data>
   <data name="Gender_Female" xml:space="preserve">
     <value>Female</value>
   </data>
@@ -497,6 +590,18 @@
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Email must be valid.</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>Invalid email format.</value>
+  </data>
+  <data name="InvalidEmployeeStatus" xml:space="preserve">
+    <value>Invalid employee status.</value>
+  </data>
+  <data name="InvalidGender" xml:space="preserve">
+    <value>Invalid gender value.</value>
+  </data>
+  <data name="InvalidPhoneNumber" xml:space="preserve">
+    <value>Invalid phone number.</value>
   </data>
   <data name="InvalidWorkspaceStatus" xml:space="preserve">
     <value>Invalid workspace status.</value>
@@ -588,8 +693,29 @@
   <data name="PageSizeMustBeBetween1And100" xml:space="preserve">
     <value>Page size must be between 1 and 100.</value>
   </data>
+  <data name="PasswordMinLength" xml:space="preserve">
+    <value>Password must be at least 8 characters.</value>
+  </data>
+  <data name="PasswordMustContainLowercase" xml:space="preserve">
+    <value>Password must contain at least one lowercase letter.</value>
+  </data>
+  <data name="PasswordMustContainNumber" xml:space="preserve">
+    <value>Password must contain at least one number.</value>
+  </data>
+  <data name="PasswordMustContainUppercase" xml:space="preserve">
+    <value>Password must contain at least one uppercase letter.</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>Password and confirm password do not match.</value>
+  </data>
   <data name="PercentageDiscountCannotExceed100" xml:space="preserve">
     <value>Discount value must be greater than zero.</value>
+  </data>
+  <data name="PhoneNumberRequired" xml:space="preserve">
+    <value>Phone number is required.</value>
   </data>
   <data name="PriceCannotBeNegative" xml:space="preserve">
     <value>Price cannot be negative.</value>
@@ -930,6 +1056,9 @@
   <data name="TransactionStatus_Refunded" xml:space="preserve">
     <value>RefundedRefunded</value>
   </data>
+  <data name="UserRegisteredSuccessfully" xml:space="preserve">
+    <value>User registered successfully.</value>
+  </data>
   <data name="WorkspaceArabicDescriptionMaxLength" xml:space="preserve">
     <value>Arabic description cannot exceed 500 characters.</value>
   </data>
@@ -971,6 +1100,9 @@
   </data>
   <data name="WorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
     <value>Workspace ID must be greater than 0.</value>
+  </data>
+  <data name="WorkspaceIsInactive" xml:space="preserve">
+    <value>Workspace is inactive.</value>
   </data>
   <data name="WorkspaceLocationMaxLength" xml:space="preserve">
     <value>Location cannot exceed 200 characters.</value>

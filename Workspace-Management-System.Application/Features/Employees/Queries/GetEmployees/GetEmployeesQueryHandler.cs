@@ -1,96 +1,113 @@
-﻿//using MediatR;
-//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Workspace_Management_System.Application.Common.PaginatedResults;
-//using Workspace_Management_System.Application.Common.Results;
-//using Workspace_Management_System.Application.Contracts.Repositories;
-//using Workspace_Management_System.Application.Features.Employees.Dtos;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Workspace_Management_System.Application.Common.PaginatedResults;
+using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Features.Employees.Dtos;
 
-//namespace Workspace_Management_System.Application.Features.Employees.Queries.GetEmployees
-//{
-//    public class GetEmployeesQueryHandler
-//      : IRequestHandler<GetEmployeesQuery, Result<PaginatedResult<EmployeeListDto>>>
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
+namespace Workspace_Management_System.Application.Features.Employees.Queries.GetEmployees
+{
+    public class GetEmployeesQueryHandler
+     : IRequestHandler<GetEmployeesQuery, Result<PaginatedResult<EmployeeListDto>>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
 
-//        public GetEmployeesQueryHandler(IUnitOfWork unitOfWork)
-//        {
-//            _unitOfWork = unitOfWork;
-//        }
+        public GetEmployeesQueryHandler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
-//        public async Task<Result<PaginatedResult<EmployeeListDto>>> Handle(
-//            GetEmployeesQuery request,
-//            CancellationToken cancellationToken)
-//        {
-//            var query = _unitOfWork.Employees
-//                .Query()
-//                .AsNoTracking()
-//                .Where(x => !x.IsDeleted);
+        public async Task<Result<PaginatedResult<EmployeeListDto>>> Handle(
+            GetEmployeesQuery request,
+            CancellationToken cancellationToken)
+        {
+            var isArabic = CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
 
-//            // Search
-//            if (!string.IsNullOrWhiteSpace(request.Search))
-//            {
-//                var search = request.Search.Trim();
+            var query = _unitOfWork.Employees
+                .Query()
+                .AsNoTracking()
+                .Where(x => !x.IsDeleted);
 
-//                query = query.Where(x =>
-//                    x.FirstName.Contains(search) ||
-//                    x.LastName.Contains(search) ||
-//                    x.Phone.Contains(search) ||
-//                    (x.Email != null && x.Email.Contains(search)));
-//            }
+            // Search in Arabic and English names, phone, and email.
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                var search = request.Search.Trim();
 
-//            // Filter by status
-//            if (request.Status.HasValue)
-//            {
-//                query = query.Where(x =>
-//                    x.Status == request.Status.Value);
-//            }
+                query = query.Where(x =>
+                    x.FirstNameEn.Contains(search) ||
+                    x.FirstNameAr.Contains(search) ||
+                    x.LastNameEn.Contains(search) ||
+                    x.LastNameAr.Contains(search) ||
+                    x.Phone.Contains(search) ||
+                    (x.Email != null && x.Email.Contains(search)));
+            }
 
-//            // Filter by workspace
-//            if (request.WorkspaceId.HasValue)
-//            {
-//                query = query.Where(x =>
-//                    x.WorkspaceId == request.WorkspaceId.Value);
-//            }
+            // Filter by employee status.
+            if (request.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == request.Status.Value);
+            }
 
-//            var totalCount = await query.CountAsync(cancellationToken);
+            // Filter by workspace.
+            if (request.WorkspaceId.HasValue)
+            {
+                query = query.Where(
+                    x => x.WorkspaceId == request.WorkspaceId.Value);
+            }
 
-//            var employees = await query
-//                .OrderBy(x => x.FirstName)
-//                .ThenBy(x => x.LastName)
-//                .Skip((request.PageNumber - 1) * request.PageSize)
-//                .Take(request.PageSize)
-//                .Select(x => new EmployeeListDto
-//                {
-//                    Id = x.Id,
+            var totalCount = await query.CountAsync(cancellationToken);
 
-//                    FirstName = x.FirstName,
-//                    LastName = x.LastName,
-//                    FullName = x.FirstName + " " + x.LastName,
+            var employees = await query
+      .OrderBy(x => isArabic ? x.FirstNameAr : x.FirstNameEn)
+      .ThenBy(x => isArabic ? x.LastNameAr : x.LastNameEn)
+      .Skip((request.PageNumber - 1) * request.PageSize)
+      .Take(request.PageSize)
+      .Select(x => new EmployeeListDto
+      {
+          Id = x.Id,
 
-//                    Phone = x.Phone,
-//                    Email = x.Email,
+          FirstName = isArabic
+              ? x.FirstNameAr
+              : x.FirstNameEn,
 
-//                    HireDate = x.HireDate,
-//                    Status = x.Status,
+          LastName = isArabic
+              ? x.LastNameAr
+              : x.LastNameEn,
 
-//                    WorkspaceId = x.WorkspaceId,
+          FullName = isArabic
+              ? x.FirstNameAr + " " + x.LastNameAr
+              : x.FirstNameEn + " " + x.LastNameEn,
 
-//                    WorkspaceName = x.Workspace != null
-//                        ? x.Workspace.Name
-//                        : null
-//                })
-//                .ToListAsync(cancellationToken);
+          Phone = x.Phone,
+          Email = x.Email,
 
-//            var result = new PaginatedResult<EmployeeListDto>(employees, request.PageNumber,
-//                request.PageSize, totalCount);
-       
+          HireDate = x.HireDate,
+          Status = x.Status,
 
-//            return Result<PaginatedResult<EmployeeListDto>>.Success(result);
-//        }
-//    }
-//}
+          WorkspaceId = x.WorkspaceId,
+
+          WorkspaceName = x.Workspace != null
+              ? (isArabic
+                  ? x.Workspace.NameAr
+                  : x.Workspace.NameEn)
+              : null
+      })
+      .ToListAsync(cancellationToken);
+
+            var result = new PaginatedResult<EmployeeListDto>(
+                employees,
+                request.PageNumber,
+                request.PageSize,
+                totalCount);
+
+            return Result<PaginatedResult<EmployeeListDto>>.Success(result);
+        }
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,25 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Employees.Commands.AssignEmployeeToWorkspace
 {
     public class AssignEmployeeToWorkspaceCommandHandler
-     : IRequestHandler<AssignEmployeeToWorkspaceCommand, Result<bool>>
+       : IRequestHandler<AssignEmployeeToWorkspaceCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public AssignEmployeeToWorkspaceCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -32,44 +37,41 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.As
             var employee = await _unitOfWork.Employees
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.EmployeeId &&
-                         !x.IsDeleted,
+                    x => x.Id == request.EmployeeId && !x.IsDeleted,
                     cancellationToken);
 
             if (employee is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Employee not found.");
+                    _localizer["EmployeeNotFound"].Value);
             }
 
             var workspace = await _unitOfWork.Workspaces
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.WorkspaceId &&
-                         !x.IsDeleted
-                         &&x.IsActive,
+                    x => x.Id == request.WorkspaceId && !x.IsDeleted,
                     cancellationToken);
 
             if (workspace is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Workspace not found.");
+                    _localizer["WorkspaceNotFound"].Value);
             }
 
             if (!workspace.IsActive)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Workspace is inactive.");
+                    _localizer["WorkspaceIsInactive"].Value);
             }
 
             if (employee.WorkspaceId == request.WorkspaceId)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Employee is already assigned to this workspace.");
+                    _localizer["EmployeeAlreadyAssignedToWorkspace"].Value);
             }
 
             var now = DateTime.UtcNow;
@@ -78,13 +80,11 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.As
             employee.UpdatedAt = now;
             employee.UpdatedBy = _currentUserService.UserId;
 
-      
-
             await _unitOfWork.SaveAsync();
 
             return Result<bool>.Success(
                 true,
-                "Employee assigned to workspace successfully.");
+                _localizer["EmployeeAssignedToWorkspaceSuccessfully"].Value);
         }
     }
 }

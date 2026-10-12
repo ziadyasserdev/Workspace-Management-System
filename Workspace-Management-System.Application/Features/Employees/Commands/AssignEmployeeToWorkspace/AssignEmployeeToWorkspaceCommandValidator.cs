@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Employees.Commands.AssignEmployeeToWorkspace
 {
@@ -11,15 +13,18 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.As
     public class AssignEmployeeToWorkspaceCommandValidator
         : AbstractValidator<AssignEmployeeToWorkspaceCommand>
     {
-        public AssignEmployeeToWorkspaceCommandValidator()
+        public AssignEmployeeToWorkspaceCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.EmployeeId)
                 .GreaterThan(0)
-                .WithMessage("EmployeeId must be greater than 0.");
+                .WithMessage(
+                    localizer["EmployeeIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.WorkspaceId)
                 .GreaterThan(0)
-                .WithMessage("WorkspaceId must be greater than 0.");
+                .WithMessage(
+                    localizer["WorkspaceIdMustBeGreaterThanZero"].Value);
         }
     }
 }

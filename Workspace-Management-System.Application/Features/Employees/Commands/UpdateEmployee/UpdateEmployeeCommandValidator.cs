@@ -1,45 +1,66 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Employees.Commands.UpdateEmployee
 {
     public class UpdateEmployeeCommandValidator
-      : AbstractValidator<UpdateEmployeeCommand>
+           : AbstractValidator<UpdateEmployeeCommand>
     {
-        public UpdateEmployeeCommandValidator()
+        public UpdateEmployeeCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.EmployeeId)
                 .GreaterThan(0)
-                .WithMessage("Employee id must be greater than 0.");
+                .WithMessage(
+                    localizer["EmployeeIdMustBeGreaterThanZero"].Value);
 
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.FirstNameEn)
                 .NotEmpty()
+                .WithMessage(localizer["EmployeeFirstNameEnRequired"].Value)
                 .MaximumLength(100)
-                .WithMessage("First name is required and must not exceed 100 characters.");
+                .WithMessage(localizer["EmployeeFirstNameEnMaxLength"].Value);
 
-            RuleFor(x => x.LastName)
+            RuleFor(x => x.FirstNameAr)
                 .NotEmpty()
+                .WithMessage(localizer["EmployeeFirstNameArRequired"].Value)
                 .MaximumLength(100)
-                .WithMessage("Last name is required and must not exceed 100 characters.");
+                .WithMessage(localizer["EmployeeFirstNameArMaxLength"].Value);
+
+            RuleFor(x => x.LastNameEn)
+                .NotEmpty()
+                .WithMessage(localizer["EmployeeLastNameEnRequired"].Value)
+                .MaximumLength(100)
+                .WithMessage(localizer["EmployeeLastNameEnMaxLength"].Value);
+
+            RuleFor(x => x.LastNameAr)
+                .NotEmpty()
+                .WithMessage(localizer["EmployeeLastNameArRequired"].Value)
+                .MaximumLength(100)
+                .WithMessage(localizer["EmployeeLastNameArMaxLength"].Value);
 
             RuleFor(x => x.Phone)
                 .NotEmpty()
+                .WithMessage(localizer["PhoneNumberRequired"].Value)
                 .MaximumLength(20)
-                .WithMessage("Phone is required and must not exceed 20 characters.");
+                .WithMessage(localizer["EmployeePhoneMaxLength"].Value)
+                .Matches(@"^\+?\d{10,15}$")
+                .WithMessage(localizer["InvalidPhoneNumber"].Value);
 
             RuleFor(x => x.Email)
                 .EmailAddress()
                 .When(x => !string.IsNullOrWhiteSpace(x.Email))
-                .WithMessage("Invalid email address.");
+                .WithMessage(localizer["InvalidEmailFormat"].Value);
 
             RuleFor(x => x.Email)
                 .MaximumLength(256)
                 .When(x => !string.IsNullOrWhiteSpace(x.Email))
-                .WithMessage("Email must not exceed 256 characters.");
+                .WithMessage(localizer["EmailMaxLength"].Value);
         }
     }
 }

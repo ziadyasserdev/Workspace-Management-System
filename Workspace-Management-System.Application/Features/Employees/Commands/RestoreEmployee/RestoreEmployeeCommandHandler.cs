@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,25 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Employees.Commands.RestoreEmployee
 {
     public class RestoreEmployeeCommandHandler
-     : IRequestHandler<RestoreEmployeeCommand, Result<bool>>
+    : IRequestHandler<RestoreEmployeeCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public RestoreEmployeeCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -31,16 +36,16 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.Re
         {
             var employee = await _unitOfWork.Employees
                 .Query()
+                .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.EmployeeId &&
-                         x.IsDeleted,
+                    x => x.Id == request.EmployeeId && x.IsDeleted,
                     cancellationToken);
 
             if (employee is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Deleted employee not found.");
+                    _localizer["DeletedEmployeeNotFound"].Value);
             }
 
             employee.IsDeleted = false;
@@ -54,7 +59,7 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.Re
 
             return Result<bool>.Success(
                 true,
-                "Employee restored successfully.");
+                _localizer["EmployeeRestoredSuccessfully"].Value);
         }
     }
 }

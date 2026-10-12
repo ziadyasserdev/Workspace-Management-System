@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,26 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Employees.Commands.ChangeEmployeeStatus
 {
+
     public class ChangeEmployeeStatusCommandHandler
-      : IRequestHandler<ChangeEmployeeStatusCommand, Result<bool>>
+        : IRequestHandler<ChangeEmployeeStatusCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public ChangeEmployeeStatusCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -32,22 +38,21 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.Ch
             var employee = await _unitOfWork.Employees
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.EmployeeId &&
-                         !x.IsDeleted,
+                    x => x.Id == request.EmployeeId && !x.IsDeleted,
                     cancellationToken);
 
             if (employee is null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Employee not found.");
+                    _localizer["EmployeeNotFound"].Value);
             }
 
             if (employee.Status == request.Status)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Employee already has this status.");
+                    _localizer["EmployeeAlreadyHasThisStatus"].Value);
             }
 
             employee.Status = request.Status;
@@ -60,7 +65,7 @@ namespace Workspace_Management_System.Application.Features.Employees.Commands.Ch
 
             return Result<bool>.Success(
                 true,
-                "Employee status changed successfully.");
+                _localizer["EmployeeStatusChangedSuccessfully"].Value);
         }
     }
 }
