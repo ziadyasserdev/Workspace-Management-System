@@ -1,145 +1,122 @@
-﻿//using MediatR;
-//using Microsoft.EntityFrameworkCore;
-//using Workspace_Management_System.Application.Common.PaginatedResults;
-//using Workspace_Management_System.Application.Common.Results;
-//using Workspace_Management_System.Application.Contracts;
-//using Workspace_Management_System.Application.Contracts.Repositories;
-//using Workspace_Management_System.Application.Features.Bookings.Dtos;
-//using Workspace_Management_System.Application.Features.Bookings.Queries.GetBookings;
-
-//public class GetBookingsQueryHandler
-//    : IRequestHandler<
-//        GetBookingsQuery,
-//        Result<PaginatedResult<BookingListDto>>>
-//{
-//    private readonly IUnitOfWork _unitOfWork;
-//    private readonly ILocalizationService _localizationService;
-
-//    public GetBookingsQueryHandler(IUnitOfWork unitOfWork, ILocalizationService localizationService)
-//    {
-//        _unitOfWork = unitOfWork;
-//        _localizationService = localizationService;
-//    }
-
-//    public async Task<Result<PaginatedResult<BookingListDto>>> Handle(
-//        GetBookingsQuery request,
-//        CancellationToken cancellationToken)
-//    {
-//        var query = _unitOfWork.Bookings
-//            .Query()
-//            .AsNoTracking()
-//            .Where(x => !x.IsDeleted);
-
-      
-//        if (!string.IsNullOrWhiteSpace(request.Search))
-//        {
-//            var search = request.Search.Trim();
-
-//            query = query.Where(x =>
-//                x.BookingNumber.Contains(search) ||
-
-//                x.Customer.FullNameEn.Contains(search) ||
-//                x.Customer.FullNameAr.Contains(search) ||
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Workspace_Management_System.Application.Common.PaginatedResults;
+using Workspace_Management_System.Application.Common.Results;
+using Workspace_Management_System.Application.Contracts;
+using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Features.Bookings.Dtos;
+using Workspace_Management_System.Application.Features.Bookings.Queries.GetBookings;
 
 
-//                x.Workspace.Name.Contains(search) ||
-//                x.Workspace.Code.Contains(search));
-//        }
+public class GetBookingsQueryHandler
+        : IRequestHandler<
+            GetBookingsQuery,
+            Result<PaginatedResult<BookingListDto>>>
+{
+    private readonly IUnitOfWork _unitOfWork;
 
-    
-//        if (request.Status.HasValue)
-//        {
-//            query = query.Where(x =>
-//                x.Status == request.Status.Value);
-//        }
+    public GetBookingsQueryHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
 
-      
-//        if (request.WorkspaceId.HasValue)
-//        {
-//            query = query.Where(x =>
-//                x.WorkspaceId == request.WorkspaceId.Value);
-//        }
+    public async Task<Result<PaginatedResult<BookingListDto>>> Handle(
+        GetBookingsQuery request,
+        CancellationToken cancellationToken)
+    {
+        var query = _unitOfWork.Bookings
+            .Query()
+            .AsNoTracking()
+            .Where(x => !x.IsDeleted);
 
-    
-//        if (request.CustomerId.HasValue)
-//        {
-//            query = query.Where(x =>
-//                x.CustomerId == request.CustomerId.Value);
-//        }
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim();
 
-     
-//        if (request.FromDate.HasValue)
-//        {
-//            var fromDate = request.FromDate.Value.Date;
+            query = query.Where(x =>
+                x.BookingNumber.Contains(search) ||
+                x.Customer.FullNameEn.Contains(search) ||
+                x.Customer.FullNameAr.Contains(search) ||
+                x.Workspace.NameEn.Contains(search) ||
+                x.Workspace.NameAr.Contains(search) ||
+                x.Workspace.Code.Contains(search));
+        }
 
-//            query = query.Where(x =>
-//                x.BookingDate >= fromDate);
-//        }
+        if (request.Status.HasValue)
+        {
+            query = query.Where(x =>
+                x.Status == request.Status.Value);
+        }
 
-//        if (request.ToDate.HasValue)
-//        {
-//            var toDate = request.ToDate.Value.Date.AddDays(1);
+        if (request.WorkspaceId.HasValue)
+        {
+            query = query.Where(x =>
+                x.WorkspaceId == request.WorkspaceId.Value);
+        }
 
-//            query = query.Where(x =>
-//                x.BookingDate < toDate);
-//        }
+        if (request.CustomerId.HasValue)
+        {
+            query = query.Where(x =>
+                x.CustomerId == request.CustomerId.Value);
+        }
 
-      
-//        var totalCount =
-//            await query.CountAsync(cancellationToken);
+        if (request.FromDate.HasValue)
+        {
+            var fromDate = request.FromDate.Value.Date;
 
-     
-//        if (request.SortDescending)
-//        {
-//            query = query.OrderByDescending(x => x.StartTime);
-//        }
-//        else
-//        {
-//            query = query.OrderBy(x => x.StartTime);
-//        }
+            query = query.Where(x =>
+                x.BookingDate >= fromDate);
+        }
 
-       
-//        var bookings = await query
-//            .Skip((request.PageNumber - 1) * request.PageSize)
-//            .Take(request.PageSize)
-//            .Select(x => new BookingListDto
-//            {
-//                Id = x.Id,
+        if (request.ToDate.HasValue)
+        {
+            var toDate = request.ToDate.Value.Date.AddDays(1);
 
-//                BookingNumber = x.BookingNumber,
+            query = query.Where(x =>
+                x.BookingDate < toDate);
+        }
 
-//                CustomerId = x.CustomerId,
-//                CustomerNameEn = x.Customer.FullNameEn,
-//                CustomerNameAr = x.Customer.FullNameAr,
+        var totalCount = await query.CountAsync(cancellationToken);
 
+        query = request.SortDescending
+            ? query.OrderByDescending(x => x.StartTime)
+            : query.OrderBy(x => x.StartTime);
 
-//                WorkspaceId = x.WorkspaceId,
-//                WorkspaceName = x.Workspace.Name,
-//                WorkspaceCode = x.Workspace.Code,
+        var bookings = await query
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(x => new BookingListDto
+            {
+                Id = x.Id,
+                BookingNumber = x.BookingNumber,
 
-//                BookingDate = x.BookingDate,
+                CustomerId = x.CustomerId,
+                CustomerNameEn = x.Customer.FullNameEn,
+                CustomerNameAr = x.Customer.FullNameAr,
 
-//                StartTime = x.StartTime,
-//                ExpectedEndTime = x.ExpectedEndTime,
+                WorkspaceId = x.WorkspaceId,
+                WorkspaceNameEn = x.Workspace.NameEn,
+                WorkspaceNameAr = x.Workspace.NameAr,
+                WorkspaceCode = x.Workspace.Code,
 
-//                NumberOfPeople = x.NumberOfPeople,
+                BookingDate = x.BookingDate,
+                StartTime = x.StartTime,
+                ExpectedEndTime = x.ExpectedEndTime,
+                NumberOfPeople = x.NumberOfPeople,
+                Status = x.Status,
+                Notes = x.Notes,
 
-//                Status = x.Status,
+                HasSession = x.Session != null
+            })
+            .ToListAsync(cancellationToken);
 
-//                Notes = x.Notes,
+        var result = new PaginatedResult<BookingListDto>(
+            bookings,
+            totalCount,
+            request.PageNumber,
+            request.PageSize);
 
-//                HasSession = x.Session != null
-//            })
-//            .ToListAsync(cancellationToken);
-
-//        var result =
-//            new PaginatedResult<BookingListDto>(
-//                bookings,
-//                totalCount,
-//                request.PageNumber,
-//                request.PageSize);
-
-//        return Result<PaginatedResult<BookingListDto>>
-//            .Success(result);
-//    }
-//}
+        return Result<PaginatedResult<BookingListDto>>
+            .Success(result);
+    }
+}
