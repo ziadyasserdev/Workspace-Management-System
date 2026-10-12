@@ -12,12 +12,18 @@ namespace Workspace_Management_System.Application.Features.Authentications.Comma
 {
     public class RegisterUserCommand : IRequest<Result<string>>
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string FirstNameEn { get; set; } = string.Empty;
+        public string FirstNameAr { get; set; } = string.Empty;
+
+        public string LastNameEn { get; set; } = string.Empty;
+        public string LastNameAr { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+
         public Gender Gender { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
+
+        public string Password { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

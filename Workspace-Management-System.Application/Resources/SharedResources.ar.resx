@@ -246,6 +246,9 @@
   <data name="CompanyUpdatedSuccessfully" xml:space="preserve">
     <value> تم تحديث الشركة بنجاح.</value>
   </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>تأكيد كلمة المرور مطلوب.</value>
+  </data>
   <data name="ContactPersonMaxLength" xml:space="preserve">
     <value>يجب ألا يتجاوز اسم الشخص المسؤول 150 حرفًا.</value>
   </data>
@@ -372,6 +375,9 @@
   <data name="DeletedDiscountNotFound" xml:space="preserve">
     <value>لم يتم العثور على الخصم المحذوف.</value>
   </data>
+  <data name="DeletedEmployeeNotFound" xml:space="preserve">
+    <value>الموظف المحذوف غير موجود.</value>
+  </data>
   <data name="DeletedPackageNotFound" xml:space="preserve">
     <value>لم يتم العثور على الباقة المحذوفة.</value>
   </data>
@@ -450,6 +456,90 @@
   <data name="DurationDaysMustBeGreaterThanZero" xml:space="preserve">
     <value>يجب أن تكون مدة الباقة بالأيام أكبر من صفر.</value>
   </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>البريد الإلكتروني مستخدم بالفعل.</value>
+  </data>
+  <data name="EmailMaxLength" xml:space="preserve">
+    <value>البريد الإلكتروني لا يمكن أن يتجاوز 256 حرفًا.</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>البريد الإلكتروني مطلوب.</value>
+  </data>
+  <data name="EmployeeAlreadyAssignedToWorkspace" xml:space="preserve">
+    <value>الموظف مُعيّن بالفعل لمساحة العمل هذه.</value>
+  </data>
+  <data name="EmployeeAlreadyHasThisStatus" xml:space="preserve">
+    <value>الموظف لديه حالة العمل دي بالفعل.</value>
+  </data>
+  <data name="EmployeeAssignedToWorkspaceSuccessfully" xml:space="preserve">
+    <value>تم تعيين الموظف لمساحة العمل بنجاح.</value>
+  </data>
+  <data name="EmployeeDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف الموظف بنجاح.</value>
+  </data>
+  <data name="EmployeeEmailAlreadyExists" xml:space="preserve">
+    <value>البريد الإلكتروني مستخدم بالفعل لموظف آخر.</value>
+  </data>
+  <data name="EmployeeFirstNameArMaxLength" xml:space="preserve">
+    <value>الاسم الأول بالعربية يجب ألا يتجاوز 100 حرف.</value>
+  </data>
+  <data name="EmployeeFirstNameArMinLength" xml:space="preserve">
+    <value>الاسم الأول بالعربية يجب ألا يقل عن 3 أحرف.</value>
+  </data>
+  <data name="EmployeeFirstNameArRequired" xml:space="preserve">
+    <value>الاسم الأول بالعربية مطلوب.</value>
+  </data>
+  <data name="EmployeeFirstNameEnMaxLength" xml:space="preserve">
+    <value>الاسم الأول بالإنجليزية يجب ألا يتجاوز 100 حرف.</value>
+  </data>
+  <data name="EmployeeFirstNameEnMinLength" xml:space="preserve">
+    <value>الاسم الأول بالإنجليزية يجب ألا يقل عن 3 أحرف.</value>
+  </data>
+  <data name="EmployeeFirstNameEnRequired" xml:space="preserve">
+    <value>الاسم الأول بالإنجليزية مطلوب.</value>
+  </data>
+  <data name="EmployeeIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم الموظف يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="EmployeeLastNameArMaxLength" xml:space="preserve">
+    <value>اسم العائلة بالعربية يجب ألا يتجاوز 100 حرف.</value>
+  </data>
+  <data name="EmployeeLastNameArMinLength" xml:space="preserve">
+    <value>اسم العائلة بالعربية يجب ألا يقل عن 3 أحرف.</value>
+  </data>
+  <data name="EmployeeLastNameArRequired" xml:space="preserve">
+    <value>اسم العائلة بالعربية مطلوب.</value>
+  </data>
+  <data name="EmployeeLastNameEnMaxLength" xml:space="preserve">
+    <value>اسم العائلة بالإنجليزية يجب ألا يتجاوز 100 حرف.</value>
+  </data>
+  <data name="EmployeeLastNameEnMinLength" xml:space="preserve">
+    <value>اسم العائلة بالإنجليزية يجب ألا يقل عن 3 أحرف.</value>
+  </data>
+  <data name="EmployeeLastNameEnRequired" xml:space="preserve">
+    <value>اسم العائلة بالإنجليزية مطلوب.</value>
+  </data>
+  <data name="EmployeeNotFound" xml:space="preserve">
+    <value>الموظف غير موجود.</value>
+  </data>
+  <data name="EmployeePhoneAlreadyExists" xml:space="preserve">
+    <value>رقم الهاتف مستخدم بالفعل لموظف آخر.</value>
+  </data>
+  <data name="EmployeePhoneMaxLength" xml:space="preserve">
+    <value>رقم الهاتف يجب ألا يتجاوز 20 حرفًا.</value>
+  </data>
+  <data name="EmployeeRestoredSuccessfully" xml:space="preserve">
+    <value>تم استرجاع الموظف بنجاح.</value>
+  </data>
+  <data name="EmployeeSearchMaxLength" xml:space="preserve">
+    <value>نص البحث يجب ألا يتجاوز 100 حرف.</value>
+  </data>
+  <data name="EmployeeStatusChangedSuccessfully" xml:space="preserve">
+    <value>تم تغيير حالة الموظف بنجاح.</value>
+  </data>
+  <data name="EmployeeUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تحديث بيانات الموظف بنجاح.</value>
+  </data>
   <data name="EndDateCannotBeBeforeStartDate" xml:space="preserve">
     <value>لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء.</value>
   </data>
@@ -480,6 +570,9 @@
   <data name="EnglishTaxInformationMaxLength" xml:space="preserve">
     <value>يجب ألا تتجاوز المعلومات الضريبية باللغة الإنجليزية 500 حرف.</value>
   </data>
+  <data name="FailedToAssignRole" xml:space="preserve">
+    <value>فشل إسناد الدور للمستخدم.</value>
+  </data>
   <data name="Gender_Female" xml:space="preserve">
     <value>أنثى</value>
   </data>
@@ -497,6 +590,18 @@
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>يجب أن يكون البريد الإلكتروني صالحًا.</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>صيغة البريد الإلكتروني غير صحيحة.</value>
+  </data>
+  <data name="InvalidEmployeeStatus" xml:space="preserve">
+    <value>حالة الموظف غير صحيحة.</value>
+  </data>
+  <data name="InvalidGender" xml:space="preserve">
+    <value>قيمة النوع غير صحيحة.</value>
+  </data>
+  <data name="InvalidPhoneNumber" xml:space="preserve">
+    <value>رقم الهاتف غير صحيح.</value>
   </data>
   <data name="InvalidWorkspaceStatus" xml:space="preserve">
     <value>حالة مساحة العمل غير صحيحة.</value>
@@ -588,8 +693,29 @@
   <data name="PageSizeMustBeBetween1And100" xml:space="preserve">
     <value>يجب أن يكون حجم الصفحة بين 1 و100.</value>
   </data>
+  <data name="PasswordMinLength" xml:space="preserve">
+    <value>كلمة المرور يجب ألا تقل عن 8 أحرف.</value>
+  </data>
+  <data name="PasswordMustContainLowercase" xml:space="preserve">
+    <value>كلمة المرور يجب أن تحتوي على حرف إنجليزي صغير واحد على الأقل.</value>
+  </data>
+  <data name="PasswordMustContainNumber" xml:space="preserve">
+    <value>كلمة المرور يجب أن تحتوي على رقم واحد على الأقل.</value>
+  </data>
+  <data name="PasswordMustContainUppercase" xml:space="preserve">
+    <value>كلمة المرور يجب أن تحتوي على حرف إنجليزي كبير واحد على الأقل.</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>كلمة المرور مطلوبة.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>كلمة المرور وتأكيدها غير متطابقين.</value>
+  </data>
   <data name="PercentageDiscountCannotExceed100" xml:space="preserve">
     <value>لا يمكن أن يتجاوز الخصم بالنسبة المئوية 100.</value>
+  </data>
+  <data name="PhoneNumberRequired" xml:space="preserve">
+    <value>رقم الهاتف مطلوب.</value>
   </data>
   <data name="PriceCannotBeNegative" xml:space="preserve">
     <value>لا يمكن أن يكون السعر سالبًا.</value>
@@ -930,6 +1056,9 @@
   <data name="TransactionStatus_Refunded" xml:space="preserve">
     <value>مستردة</value>
   </data>
+  <data name="UserRegisteredSuccessfully" xml:space="preserve">
+    <value>تم تسجيل المستخدم بنجاح.</value>
+  </data>
   <data name="WorkspaceArabicDescriptionMaxLength" xml:space="preserve">
     <value>الوصف بالعربية لا يمكن أن يتجاوز 500 حرف.</value>
   </data>
@@ -971,6 +1100,9 @@
   </data>
   <data name="WorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
     <value>رقم مساحة العمل يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="WorkspaceIsInactive" xml:space="preserve">
+    <value>مساحة العمل غير نشطة.</value>
   </data>
   <data name="WorkspaceLocationMaxLength" xml:space="preserve">
     <value>الموقع لا يمكن أن يتجاوز 200 حرف.</value>

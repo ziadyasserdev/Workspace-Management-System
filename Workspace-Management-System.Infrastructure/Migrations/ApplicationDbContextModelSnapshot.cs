@@ -718,7 +718,11 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FirstNameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstNameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -734,7 +738,11 @@ namespace Workspace_Management_System.Infrastructure.Migrations
                     b.Property<string>("IsDeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("LastNameAr")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastNameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
