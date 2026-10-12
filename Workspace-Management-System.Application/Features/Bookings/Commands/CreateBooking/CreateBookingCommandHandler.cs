@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +9,27 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Bookings.Commands.CreateBooking
 {
     public class CreateBookingCommandHandler
-    : IRequestHandler<CreateBookingCommand, Result<int>>
+      : IRequestHandler<CreateBookingCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public CreateBookingCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<int>> Handle(
@@ -42,17 +47,16 @@ namespace Workspace_Management_System.Application.Features.Bookings.Commands.Cre
                 {
                     return Result<int>.Failure(
                         ResultStatus.Unauthorized,
-                        "User is not authenticated.");
+                        _localizer["UserNotAuthenticated"].Value);
                 }
 
-              
                 var now = DateTime.UtcNow;
 
                 if (request.StartTime <= now)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Booking start time must be in the future.");
+                        _localizer["BookingStartTimeMustBeInFuture"].Value);
                 }
 
                 if (request.ExpectedEndTime.HasValue &&
@@ -60,72 +64,63 @@ namespace Workspace_Management_System.Application.Features.Bookings.Commands.Cre
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Expected end time must be after start time.");
+                        _localizer["ExpectedEndTimeAfterStartTime"].Value);
                 }
 
-              
                 if (request.BookingDate.Date != request.StartTime.Date)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Booking date must match the start time date.");
+                        _localizer["BookingDateMustMatchStartDate"].Value);
                 }
 
-              
                 var customer = await _unitOfWork.Customers
                     .Query()
                     .FirstOrDefaultAsync(
-                        x => x.Id == request.CustomerId &&
-                             !x.IsDeleted,
+                        x => x.Id == request.CustomerId && !x.IsDeleted,
                         cancellationToken);
 
                 if (customer is null)
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Customer not found.");
+                        _localizer["CustomerNotFound"].Value);
                 }
 
-             
                 var workspace = await _unitOfWork.Workspaces
                     .Query()
                     .FirstOrDefaultAsync(
-                        x => x.Id == request.WorkspaceId &&
-                             !x.IsDeleted,
+                        x => x.Id == request.WorkspaceId && !x.IsDeleted,
                         cancellationToken);
 
                 if (workspace is null)
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Workspace not found.");
+                        _localizer["WorkspaceNotFound"].Value);
                 }
 
-               
                 if (!workspace.IsActive)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace is inactive.");
+                        _localizer["WorkspaceIsInactive"].Value);
                 }
 
-              
                 if (workspace.Status == WorkspaceStatus.Maintenance)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace is under maintenance.");
+                        _localizer["WorkspaceUnderMaintenance"].Value);
                 }
 
-               
                 if (request.NumberOfPeople > workspace.Capacity)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Number of people exceeds workspace capacity.");
+                        _localizer["NumberOfPeopleExceedsWorkspaceCapacity"].Value);
                 }
 
-               
                 var newStart = request.StartTime;
                 var newEnd = request.ExpectedEndTime;
 
@@ -138,7 +133,6 @@ namespace Workspace_Management_System.Application.Features.Bookings.Commands.Cre
                             x.Status != BookingStatus.Cancelled &&
                             x.Status != BookingStatus.NoShow &&
                             x.Status != BookingStatus.Completed &&
-
                             (
                                 newEnd == null
                                     ? x.ExpectedEndTime == null
@@ -157,27 +151,20 @@ namespace Workspace_Management_System.Application.Features.Bookings.Commands.Cre
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace already has a conflicting booking.");
+                        _localizer["WorkspaceHasConflictingBooking"].Value);
                 }
 
-             
-                var bookingNumber =
-                    $"BK-{DateTime.UtcNow:yyyyMMddHHmmssfff}";
+                var bookingNumber = $"BK-{DateTime.UtcNow:yyyyMMddHHmmssfff}";
 
-              
                 var booking = new Booking
                 {
                     BookingNumber = bookingNumber,
-
                     CustomerId = request.CustomerId,
                     WorkspaceId = request.WorkspaceId,
-
                     BookingDate = request.BookingDate.Date,
                     StartTime = request.StartTime,
                     ExpectedEndTime = request.ExpectedEndTime,
-
                     NumberOfPeople = request.NumberOfPeople,
-
                     Status = BookingStatus.Pending,
 
                     Notes = string.IsNullOrWhiteSpace(request.Notes)
@@ -189,14 +176,13 @@ namespace Workspace_Management_System.Application.Features.Bookings.Commands.Cre
                 };
 
                 await _unitOfWork.Bookings.AddAsync(booking);
-
                 await _unitOfWork.SaveAsync();
 
                 await transaction.CommitAsync(cancellationToken);
 
                 return Result<int>.Success(
                     booking.Id,
-                    "Booking created successfully.");
+                    _localizer["BookingCreatedSuccessfully"].Value);
             }
             catch
             {
@@ -206,3 +192,4 @@ namespace Workspace_Management_System.Application.Features.Bookings.Commands.Cre
         }
     }
 }
+  

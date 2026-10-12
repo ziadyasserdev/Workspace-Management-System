@@ -159,6 +159,60 @@
   <data name="ArabicTaxInformationMaxLength" xml:space="preserve">
     <value>يجب ألا تتجاوز المعلومات الضريبية باللغة العربية 500 حرف.</value>
   </data>
+  <data name="BookingAlreadyHasThisStatus" xml:space="preserve">
+    <value>الحجز لديه الحالة دي بالفعل.</value>
+  </data>
+  <data name="BookingCannotBeNoShowBeforeStart" xml:space="preserve">
+    <value>لا يمكن تسجيل عدم حضور الحجز قبل موعد بدايته.</value>
+  </data>
+  <data name="BookingCannotBeUpdatedWithCurrentStatus" xml:space="preserve">
+    <value>لا يمكن تعديل الحجز بينما حالته 0.</value>
+  </data>
+  <data name="BookingCannotConfirmAfterStart" xml:space="preserve">
+    <value>لا يمكن تأكيد حجز بدأ موعده بالفعل.</value>
+  </data>
+  <data name="BookingCheckInRequiresStartingSession" xml:space="preserve">
+    <value>يجب تسجيل حضور الحجز من خلال بدء جلسة.</value>
+  </data>
+  <data name="BookingCompletionRequiresEndingSession" xml:space="preserve">
+    <value>يجب إكمال الحجز عند إنهاء الجلسة المرتبطة به.</value>
+  </data>
+  <data name="BookingCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء الحجز بنجاح.</value>
+  </data>
+  <data name="BookingDateMustMatchStartDate" xml:space="preserve">
+    <value>يجب أن يتطابق تاريخ الحجز مع تاريخ البداية.</value>
+  </data>
+  <data name="BookingDateRequired" xml:space="preserve">
+    <value>تاريخ الحجز مطلوب.</value>
+  </data>
+  <data name="BookingDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف الحجز بنجاح.</value>
+  </data>
+  <data name="BookingIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم الحجز يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="BookingLinkedToSessionCannotBeDeleted" xml:space="preserve">
+    <value>لا يمكن حذف الحجز لأنه مرتبط بجلسة.</value>
+  </data>
+  <data name="BookingNotesMaxLength" xml:space="preserve">
+    <value>يجب ألا تتجاوز الملاحظات 1000 حرف.</value>
+  </data>
+  <data name="BookingNotFound" xml:space="preserve">
+    <value>الحجز غير موجود.</value>
+  </data>
+  <data name="BookingStartTimeMustBeInFuture" xml:space="preserve">
+    <value>يجب أن يكون موعد بداية الحجز في المستقبل.</value>
+  </data>
+  <data name="BookingStartTimeRequired" xml:space="preserve">
+    <value>موعد البداية مطلوب.</value>
+  </data>
+  <data name="BookingStatusChangedSuccessfully" xml:space="preserve">
+    <value>تم تغيير حالة الحجز بنجاح.</value>
+  </data>
+  <data name="BookingUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تعديل الحجز بنجاح.</value>
+  </data>
   <data name="CannotAssignInactivePackage" xml:space="preserve">
     <value> لا يمكن تعيين باقة غير مفعّلة.</value>
   </data>
@@ -185,6 +239,9 @@
   </data>
   <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
     <value>لا يمكن الترقية إلى باقة غير مفعّلة.</value>
+  </data>
+  <data name="CheckedInBookingCannotBeDeleted" xml:space="preserve">
+    <value>لا يمكن حذف الحجوزات التي تم تسجيل حضورها.</value>
   </data>
   <data name="CheckoutRequestRequired" xml:space="preserve">
     <value>طلب إتمام الدفع مطلوب.</value>
@@ -246,6 +303,9 @@
   <data name="CompanyUpdatedSuccessfully" xml:space="preserve">
     <value> تم تحديث الشركة بنجاح.</value>
   </data>
+  <data name="CompletedBookingCannotBeDeleted" xml:space="preserve">
+    <value>لا يمكن حذف الحجوزات المكتملة.</value>
+  </data>
   <data name="ConfirmPasswordRequired" xml:space="preserve">
     <value>تأكيد كلمة المرور مطلوب.</value>
   </data>
@@ -302,6 +362,9 @@
   </data>
   <data name="CustomerIdGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون معرّف العميل أكبر من صفر.</value>
+  </data>
+  <data name="CustomerIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم العميل يجب أن يكون أكبر من صفر.</value>
   </data>
   <data name="CustomerNotFound" xml:space="preserve">
     <value>العميل غير موجود.</value>
@@ -570,6 +633,9 @@
   <data name="EnglishTaxInformationMaxLength" xml:space="preserve">
     <value>يجب ألا تتجاوز المعلومات الضريبية باللغة الإنجليزية 500 حرف.</value>
   </data>
+  <data name="ExpectedEndTimeAfterStartTime" xml:space="preserve">
+    <value>يجب أن يكون موعد الانتهاء المتوقع بعد موعد البداية.</value>
+  </data>
   <data name="FailedToAssignRole" xml:space="preserve">
     <value>فشل إسناد الدور للمستخدم.</value>
   </data>
@@ -581,6 +647,12 @@
   </data>
   <data name="InsufficientPackageHours" xml:space="preserve">
     <value>لدى العميل {0} ساعة فقط متبقية في الباقة، بينما تتطلب هذه الجلسة {1:F2} ساعة.</value>
+  </data>
+  <data name="InvalidBookingStatus" xml:space="preserve">
+    <value>حالة الحجز غير صحيحة.</value>
+  </data>
+  <data name="InvalidBookingStatusTransition" xml:space="preserve">
+    <value>لا يمكن تغيير حالة الحجز إلى الحالة المطلوبة.</value>
   </data>
   <data name="InvalidCustomerType" xml:space="preserve">
     <value>نوع العميل غير صالح.</value>
@@ -626,6 +698,12 @@
   </data>
   <data name="NoApplicablePricingRules" xml:space="preserve">
     <value>لم يتم العثور على قواعد تسعير مناسبة لهذه الجلسة.</value>
+  </data>
+  <data name="NumberOfPeopleExceedsWorkspaceCapacity" xml:space="preserve">
+    <value>عدد الأشخاص يتجاوز سعة مساحة العمل.</value>
+  </data>
+  <data name="NumberOfPeopleMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون عدد الأشخاص أكبر من صفر.</value>
   </data>
   <data name="OnlyActiveSessionsCanBeCheckedOut" xml:space="preserve">
     <value>يمكن إتمام الدفع للجلسات النشطة فقط.</value>
@@ -1038,6 +1116,9 @@
   <data name="TaxRateMustBeBetween0And100" xml:space="preserve">
     <value>يجب أن تكون نسبة الضريبة بين 0 و100.</value>
   </data>
+  <data name="ToDateMustBeGreaterThanOrEqualToFromDate" xml:space="preserve">
+    <value>يجب أن يكون تاريخ النهاية أكبر من أو يساوي تاريخ البداية.</value>
+  </data>
   <data name="TotalHoursMustBeGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون إجمالي الساعات أكبر من صفر.</value>
   </data>
@@ -1055,6 +1136,9 @@
   </data>
   <data name="TransactionStatus_Refunded" xml:space="preserve">
     <value>مستردة</value>
+  </data>
+  <data name="UserNotAuthenticated" xml:space="preserve">
+    <value>المستخدم غير مسجل الدخول.</value>
   </data>
   <data name="UserRegisteredSuccessfully" xml:space="preserve">
     <value>تم تسجيل المستخدم بنجاح.</value>
@@ -1098,6 +1182,9 @@
   <data name="WorkspaceFloorMaxLength" xml:space="preserve">
     <value>الطابق لا يمكن أن يتجاوز 50 حرفًا.</value>
   </data>
+  <data name="WorkspaceHasConflictingBooking" xml:space="preserve">
+    <value>توجد بالفعل حجوزات متعارضة لمساحة العمل.</value>
+  </data>
   <data name="WorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
     <value>رقم مساحة العمل يجب أن يكون أكبر من صفر.</value>
   </data>
@@ -1106,6 +1193,9 @@
   </data>
   <data name="WorkspaceLocationMaxLength" xml:space="preserve">
     <value>الموقع لا يمكن أن يتجاوز 200 حرف.</value>
+  </data>
+  <data name="WorkspaceNotAvailableForBooking" xml:space="preserve">
+    <value>مساحة العمل غير متاحة للحجز.</value>
   </data>
   <data name="WorkspaceNotFound" xml:space="preserve">
     <value>مساحة العمل غير موجودة.</value>
@@ -1196,6 +1286,9 @@
   </data>
   <data name="WorkspaceTypeUpdatedSuccessfully" xml:space="preserve">
     <value>تم تحديث نوع مساحة العمل بنجاح.</value>
+  </data>
+  <data name="WorkspaceUnderMaintenance" xml:space="preserve">
+    <value>مساحة العمل تحت الصيانة.</value>
   </data>
   <data name="WorkspaceUpdatedSuccessfully" xml:space="preserve">
     <value>تم تحديث مساحة العمل بنجاح.</value>
