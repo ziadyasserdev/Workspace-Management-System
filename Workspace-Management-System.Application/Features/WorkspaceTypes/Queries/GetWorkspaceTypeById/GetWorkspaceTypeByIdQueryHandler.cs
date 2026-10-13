@@ -15,28 +15,25 @@ using Workspace_Management_System.Application.Resources;
 namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Queries.GetWorkspaceTypeById
 {
     public class GetWorkspaceTypeByIdQueryHandler
-          : IRequestHandler<
-              GetWorkspaceTypeByIdQuery,
-              Result<WorkspaceTypeDto>>
+         : IRequestHandler<
+             GetWorkspaceTypeByIdQuery,
+             Result<WorkspaceTypeDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IStringLocalizer _localizer;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public GetWorkspaceTypeByIdQueryHandler(
             IUnitOfWork unitOfWork,
-            IStringLocalizerFactory factory)
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
-            _localizer = factory.Create(typeof(SharedResources));
+            _localizer = localizer;
         }
 
         public async Task<Result<WorkspaceTypeDto>> Handle(
             GetWorkspaceTypeByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var isArabic =
-                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
-
             var workspaceType = await _unitOfWork.WorkspaceTypes
                 .Query()
                 .AsNoTracking()
@@ -44,10 +41,13 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Querie
                 .Select(x => new WorkspaceTypeDto
                 {
                     Id = x.Id,
-                    Name = isArabic ? x.NameAr : x.NameEn,
-                    Description = isArabic
-                        ? x.DescriptionAr
-                        : x.DescriptionEn,
+
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
+
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
+
                     IsActive = x.IsActive
                 })
                 .FirstOrDefaultAsync(cancellationToken);
@@ -56,12 +56,12 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Querie
             {
                 return Result<WorkspaceTypeDto>.Failure(
                     ResultStatus.NotFound,
-                    _localizer["WorkspaceTypeNotFound"]);
+                    _localizer["WorkspaceTypeNotFound"].Value);
             }
 
             return Result<WorkspaceTypeDto>.Success(
                 workspaceType,
-                _localizer["WorkspaceTypeRetrievedSuccessfully"]);
+                _localizer["WorkspaceTypeRetrievedSuccessfully"].Value);
         }
     }
 }

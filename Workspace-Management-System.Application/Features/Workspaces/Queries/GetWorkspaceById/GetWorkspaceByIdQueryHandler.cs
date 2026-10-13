@@ -15,7 +15,7 @@ using Workspace_Management_System.Application.Resources;
 namespace Workspace_Management_System.Application.Features.Workspaces.Queries.GetWorkspaceById
 {
     public class GetWorkspaceByIdQueryHandler
-         : IRequestHandler<GetWorkspaceByIdQuery, Result<WorkspaceDto>>
+        : IRequestHandler<GetWorkspaceByIdQuery, Result<WorkspaceDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStringLocalizer<SharedResources> _localizer;
@@ -32,27 +32,20 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Queries.Ge
             GetWorkspaceByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var isArabic =
-                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
-
             var workspace = await _unitOfWork.Workspaces
                 .Query()
                 .AsNoTracking()
-                .Where(x =>
-                    x.Id == request.Id &&
-                    !x.IsDeleted)
+                .Where(x => x.Id == request.Id && !x.IsDeleted)
                 .Select(x => new WorkspaceDto
                 {
                     Id = x.Id,
+
                     WorkspaceTypeId = x.WorkspaceTypeId,
+                    WorkspaceTypeNameEn = x.WorkspaceType.NameEn,
+                    WorkspaceTypeNameAr = x.WorkspaceType.NameAr,
 
-                    WorkspaceTypeName = isArabic
-                        ? x.WorkspaceType.NameAr
-                        : x.WorkspaceType.NameEn,
-
-                    Name = isArabic
-                        ? x.NameAr
-                        : x.NameEn,
+                    NameEn = x.NameEn,
+                    NameAr = x.NameAr,
 
                     Code = x.Code,
                     Floor = x.Floor,
@@ -60,9 +53,8 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Queries.Ge
                     Capacity = x.Capacity,
                     Status = x.Status,
 
-                    Description = isArabic
-                        ? x.DescriptionAr
-                        : x.DescriptionEn,
+                    DescriptionEn = x.DescriptionEn,
+                    DescriptionAr = x.DescriptionAr,
 
                     IsActive = x.IsActive
                 })

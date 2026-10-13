@@ -7,28 +7,33 @@ using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Workspaces.Dtos
 {
-    public class WorkspaceDto
-    {
-        public int Id { get; set; }
+   
+        public class WorkspaceDto
+        {
+            public int Id { get; set; }
 
-        public int WorkspaceTypeId { get; set; }
+            public int WorkspaceTypeId { get; set; }
 
-        public string WorkspaceTypeName { get; set; } = null!;
+            public string WorkspaceTypeNameEn { get; set; } = null!;
+            public string WorkspaceTypeNameAr { get; set; } = null!;
 
-        public string Name { get; set; } = null!;
+            public string NameEn { get; set; } = null!;
+            public string NameAr { get; set; } = null!;
 
-        public string Code { get; set; } = null!;
+            public string Code { get; set; } = null!;
 
-        public string? Floor { get; set; }
+            public string? Floor { get; set; }
 
-        public string? Location { get; set; }
+            public string? Location { get; set; }
 
-        public int Capacity { get; set; }
+            public int Capacity { get; set; }
 
-        public WorkspaceStatus Status { get; set; }
+            public WorkspaceStatus Status { get; set; }
 
-        public string? Description { get; set; }
+            public string? DescriptionEn { get; set; }
+            public string? DescriptionAr { get; set; }
 
-        public bool IsActive { get; set; }
-    }
+            public bool IsActive { get; set; }
+        }
+  
 }
