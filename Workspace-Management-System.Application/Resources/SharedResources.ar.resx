@@ -123,8 +123,14 @@
   <data name="ActiveCustomerPackageNotFound" xml:space="preserve">
     <value>لم يتم العثور على باقة نشطة للعميل.</value>
   </data>
+  <data name="ActiveOrSuspendedMembershipCannotBeRenewed" xml:space="preserve">
+    <value>لا يمكن تجديد الاشتراكات النشطة أو المعلّقة.</value>
+  </data>
   <data name="ActiveServiceWithSameNameAlreadyExists" xml:space="preserve">
     <value> توجد خدمة نشطة بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="ActiveWorkspaceHistoryNotFound" xml:space="preserve">
+    <value>لم يتم العثور على سجل مساحة العمل النشط.</value>
   </data>
   <data name="AnotherActiveCompanyWithSameName" xml:space="preserve">
     <value>توجد شركة نشطة أخرى بنفس الاسم بالفعل.</value>
@@ -159,8 +165,17 @@
   <data name="ArabicTaxInformationMaxLength" xml:space="preserve">
     <value>يجب ألا تتجاوز المعلومات الضريبية باللغة العربية 500 حرف.</value>
   </data>
+  <data name="BenefitHoursMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن يكون عدد الساعات أكبر من صفر.</value>
+  </data>
   <data name="BookingAlreadyHasThisStatus" xml:space="preserve">
     <value>الحجز لديه الحالة دي بالفعل.</value>
+  </data>
+  <data name="BookingAssociatedWithSessionNotFound" xml:space="preserve">
+    <value>الحجز المرتبط بهذه الجلسة غير موجود.</value>
+  </data>
+  <data name="BookingCannotBeCheckedInWithStatus" xml:space="preserve">
+    <value>لا يمكن تسجيل الوصول للحجز لأن حالته 0.</value>
   </data>
   <data name="BookingCannotBeNoShowBeforeStart" xml:space="preserve">
     <value>لا يمكن تسجيل عدم حضور الحجز قبل موعد بدايته.</value>
@@ -189,8 +204,20 @@
   <data name="BookingDeletedSuccessfully" xml:space="preserve">
     <value>تم حذف الحجز بنجاح.</value>
   </data>
+  <data name="BookingDoesNotBelongToCustomer" xml:space="preserve">
+    <value>الحجز لا يخص هذا العميل.</value>
+  </data>
+  <data name="BookingDoesNotBelongToWorkspace" xml:space="preserve">
+    <value>الحجز لا يخص مساحة العمل هذه.</value>
+  </data>
+  <data name="BookingHasAlreadyBeenUsed" xml:space="preserve">
+    <value>تم استخدام هذا الحجز بالفعل.</value>
+  </data>
   <data name="BookingIdMustBeGreaterThanZero" xml:space="preserve">
     <value>رقم الحجز يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="BookingIsNotCheckedIn" xml:space="preserve">
+    <value>حالة الحجز ليست «تم تسجيل الوصول».</value>
   </data>
   <data name="BookingLinkedToSessionCannotBeDeleted" xml:space="preserve">
     <value>لا يمكن حذف الحجز لأنه مرتبط بجلسة.</value>
@@ -212,6 +239,9 @@
   </data>
   <data name="BookingUpdatedSuccessfully" xml:space="preserve">
     <value>تم تعديل الحجز بنجاح.</value>
+  </data>
+  <data name="CannotAddBenefitsToInactiveMembership" xml:space="preserve">
+    <value>لا يمكن إضافة مميزات لعضوية غير مفعّلة.</value>
   </data>
   <data name="CannotAssignInactivePackage" xml:space="preserve">
     <value> لا يمكن تعيين باقة غير مفعّلة.</value>
@@ -236,6 +266,9 @@
   </data>
   <data name="CannotRestoreWorkspaceTypeNotFound" xml:space="preserve">
     <value>لا يمكن استرجاع مساحة العمل لأن نوعها لم يعد موجودًا.</value>
+  </data>
+  <data name="CannotUpdateBenefitsOfInactiveMembership" xml:space="preserve">
+    <value>لا يمكن تعديل مميزات عضوية غير مفعّلة.</value>
   </data>
   <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
     <value>لا يمكن الترقية إلى باقة غير مفعّلة.</value>
@@ -324,11 +357,23 @@
   <data name="CreditLimitCannotBeNegative" xml:space="preserve">
     <value>لا يمكن أن يكون حد الائتمان سالبًا.</value>
   </data>
+  <data name="CurrentUserIsNotRegisteredAsEmployee" xml:space="preserve">
+    <value>المستخدم الحالي غير مسجل كموظف.</value>
+  </data>
+  <data name="CurrentWorkspaceHistoryNotFound" xml:space="preserve">
+    <value>لم يتم العثور على سجل مساحة العمل الحالي.</value>
+  </data>
+  <data name="CurrentWorkspaceNotFound" xml:space="preserve">
+    <value>مساحة العمل الحالية غير موجودة.</value>
+  </data>
   <data name="CustomerAlreadyActive" xml:space="preserve">
     <value>العميل نشط بالفعل.</value>
   </data>
   <data name="CustomerAlreadyDeleted" xml:space="preserve">
     <value>العميل محذوف بالفعل.</value>
+  </data>
+  <data name="CustomerAlreadyHasActiveOrSuspendedMembership" xml:space="preserve">
+    <value>العميل لديه بالفعل عضوية نشطة أو معلّقة.</value>
   </data>
   <data name="CustomerAlreadyHasActivePackage" xml:space="preserve">
     <value> العميل لديه بالفعل باقة مفعّلة.</value>
@@ -360,11 +405,38 @@
   <data name="CustomerEnglishFullNameRequired" xml:space="preserve">
     <value>اسم العميل الكامل باللغة الإنجليزية مطلوب.</value>
   </data>
+  <data name="CustomerHasNoActiveMembership" xml:space="preserve">
+    <value>لا يوجد لدى العميل اشتراك نشط.</value>
+  </data>
   <data name="CustomerIdGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون معرّف العميل أكبر من صفر.</value>
   </data>
   <data name="CustomerIdMustBeGreaterThanZero" xml:space="preserve">
     <value>رقم العميل يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="CustomerMembershipAlreadyCancelled" xml:space="preserve">
+    <value>اشتراك العميل ملغي بالفعل.</value>
+  </data>
+  <data name="CustomerMembershipCancelledSuccessfully" xml:space="preserve">
+    <value>تم إلغاء اشتراك العميل بنجاح.</value>
+  </data>
+  <data name="CustomerMembershipHasExpired" xml:space="preserve">
+    <value>انتهت صلاحية الاشتراك بالفعل.</value>
+  </data>
+  <data name="CustomerMembershipIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم اشتراك العميل يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="CustomerMembershipNotFound" xml:space="preserve">
+    <value>اشتراك العميل غير موجود.</value>
+  </data>
+  <data name="CustomerMembershipRenewedSuccessfully" xml:space="preserve">
+    <value>تم تجديد اشتراك العميل بنجاح.</value>
+  </data>
+  <data name="CustomerMembershipResumedSuccessfully" xml:space="preserve">
+    <value>تم استئناف اشتراك العميل بنجاح.</value>
+  </data>
+  <data name="CustomerMembershipSuspendedSuccessfully" xml:space="preserve">
+    <value>تم تعليق اشتراك العميل بنجاح.</value>
   </data>
   <data name="CustomerNotFound" xml:space="preserve">
     <value>العميل غير موجود.</value>
@@ -413,6 +485,9 @@
   </data>
   <data name="CustomerStatus_Inactive" xml:space="preserve">
     <value>غير نشط</value>
+  </data>
+  <data name="CustomerSubscribedSuccessfully" xml:space="preserve">
+    <value>تم اشتراك العميل بنجاح.</value>
   </data>
   <data name="CustomerTypeCannotBeAssociatedWithCompany" xml:space="preserve">
     <value>لا يمكن ربط نوع العميل هذا بشركة.</value>
@@ -486,8 +561,14 @@
   <data name="DiscountNotFound" xml:space="preserve">
     <value> الخصم غير موجود.</value>
   </data>
+  <data name="DiscountOnlyForDiscountBenefits" xml:space="preserve">
+    <value>يجب إدخال نسبة الخصم لمميزات الخصومات فقط.</value>
+  </data>
   <data name="DiscountPercentageCannotExceed100" xml:space="preserve">
     <value>لا يمكن أن تتجاوز نسبة الخصم 100.</value>
+  </data>
+  <data name="DiscountPercentageMustBeBetween0And100" xml:space="preserve">
+    <value>يجب أن تكون نسبة الخصم أكبر من صفر ولا تتجاوز 100%.</value>
   </data>
   <data name="DiscountRestoredSuccessfully" xml:space="preserve">
     <value>تم استعادة الخصم بنجاح.</value>
@@ -564,6 +645,12 @@
   <data name="EmployeeIdMustBeGreaterThanZero" xml:space="preserve">
     <value>رقم الموظف يجب أن يكون أكبر من صفر.</value>
   </data>
+  <data name="EmployeeIsNotActive" xml:space="preserve">
+    <value>الموظف غير نشط.</value>
+  </data>
+  <data name="EmployeeIsNotAssignedToThisWorkspace" xml:space="preserve">
+    <value>الموظف غير مُعيّن لمساحة العمل هذه.</value>
+  </data>
   <data name="EmployeeLastNameArMaxLength" xml:space="preserve">
     <value>اسم العائلة بالعربية يجب ألا يتجاوز 100 حرف.</value>
   </data>
@@ -636,6 +723,9 @@
   <data name="ExpectedEndTimeAfterStartTime" xml:space="preserve">
     <value>يجب أن يكون موعد الانتهاء المتوقع بعد موعد البداية.</value>
   </data>
+  <data name="ExpiredMembershipCannotBeCancelled" xml:space="preserve">
+    <value>لا يمكن إلغاء اشتراك منتهي الصلاحية.</value>
+  </data>
   <data name="FailedToAssignRole" xml:space="preserve">
     <value>فشل إسناد الدور للمستخدم.</value>
   </data>
@@ -645,8 +735,14 @@
   <data name="Gender_Male" xml:space="preserve">
     <value>ذكر</value>
   </data>
+  <data name="HoursOnlyForHourBasedBenefits" xml:space="preserve">
+    <value>يجب إدخال الساعات لمميزات الساعات فقط.</value>
+  </data>
   <data name="InsufficientPackageHours" xml:space="preserve">
     <value>لدى العميل {0} ساعة فقط متبقية في الباقة، بينما تتطلب هذه الجلسة {1:F2} ساعة.</value>
+  </data>
+  <data name="InvalidBenefitType" xml:space="preserve">
+    <value>نوع الميزة غير صالح.</value>
   </data>
   <data name="InvalidBookingStatus" xml:space="preserve">
     <value>حالة الحجز غير صحيحة.</value>
@@ -687,6 +783,93 @@
   <data name="ItemType_Workspace" xml:space="preserve">
     <value>مساحة العمل</value>
   </data>
+  <data name="MembershipActivatedSuccessfully" xml:space="preserve">
+    <value>تم تفعيل العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipAlreadyActive" xml:space="preserve">
+    <value>العضوية مفعّلة بالفعل.</value>
+  </data>
+  <data name="MembershipAlreadyInactive" xml:space="preserve">
+    <value>العضوية غير مفعّلة بالفعل.</value>
+  </data>
+  <data name="MembershipBenefitCreatedSuccessfully" xml:space="preserve">
+    <value>تمت إضافة ميزة العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipBenefitDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف ميزة العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipBenefitDescriptionArMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف بالعربية 1000 حرف.</value>
+  </data>
+  <data name="MembershipBenefitDescriptionEnMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف بالإنجليزية 1000 حرف.</value>
+  </data>
+  <data name="MembershipBenefitIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم الميزة يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="MembershipBenefitNotFound" xml:space="preserve">
+    <value>ميزة العضوية غير موجودة.</value>
+  </data>
+  <data name="MembershipBenefitUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تعديل ميزة العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipDeactivatedSuccessfully" xml:space="preserve">
+    <value>تم إلغاء تفعيل العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف العضوية بنجاح.</value>
+  </data>
+  <data name="MembershipDescriptionArMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف بالعربية 1000 حرف.</value>
+  </data>
+  <data name="MembershipDescriptionEnMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الوصف بالإنجليزية 1000 حرف.</value>
+  </data>
+  <data name="MembershipDurationMustBeGreaterThanZero" xml:space="preserve">
+    <value>يجب أن تكون مدة العضوية أكبر من صفر يوم.</value>
+  </data>
+  <data name="MembershipHasActiveCustomerSubscriptions" xml:space="preserve">
+    <value>لا يمكن حذف العضوية لوجود اشتراكات نشطة للعملاء مرتبطة بها.</value>
+  </data>
+  <data name="MembershipIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم العضوية يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="MembershipIsInactive" xml:space="preserve">
+    <value>هذه العضوية غير مفعّلة حاليًا.</value>
+  </data>
+  <data name="MembershipNameAlreadyExists" xml:space="preserve">
+    <value>توجد عضوية بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="MembershipNameArMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم العضوية بالعربية 100 حرف.</value>
+  </data>
+  <data name="MembershipNameArRequired" xml:space="preserve">
+    <value>اسم العضوية باللغة العربية مطلوب.</value>
+  </data>
+  <data name="MembershipNameEnMaxLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم العضوية بالإنجليزية 100 حرف.</value>
+  </data>
+  <data name="MembershipNameEnRequired" xml:space="preserve">
+    <value>اسم العضوية باللغة الإنجليزية مطلوب.</value>
+  </data>
+  <data name="MembershipNotFound" xml:space="preserve">
+    <value>العضوية غير موجودة.</value>
+  </data>
+  <data name="MembershipPlanIsInactive" xml:space="preserve">
+    <value>خطة العضوية غير مفعّلة حاليًا.</value>
+  </data>
+  <data name="MembershipPlanNotFound" xml:space="preserve">
+    <value>خطة العضوية غير موجودة.</value>
+  </data>
+  <data name="MembershipPriceCannotBeNegative" xml:space="preserve">
+    <value>لا يمكن أن يكون السعر سالبًا.</value>
+  </data>
+  <data name="MembershipUpdatedSuccessfully" xml:space="preserve">
+    <value>تم تعديل العضوية بنجاح.</value>
+  </data>
   <data name="MobileNumberRequired" xml:space="preserve">
     <value>رقم الهاتف المحمول مطلوب.</value>
   </data>
@@ -696,8 +879,32 @@
   <data name="NewPackageNotFound" xml:space="preserve">
     <value>الباقة الجديدة غير موجودة.</value>
   </data>
+  <data name="NewWorkspaceAlreadyHasActiveSession" xml:space="preserve">
+    <value>توجد جلسة نشطة بالفعل في مساحة العمل الجديدة.</value>
+  </data>
+  <data name="NewWorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم مساحة العمل الجديدة يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="NewWorkspaceIsInactive" xml:space="preserve">
+    <value>مساحة العمل الجديدة غير مفعّلة.</value>
+  </data>
+  <data name="NewWorkspaceIsNotAvailable" xml:space="preserve">
+    <value>مساحة العمل الجديدة غير متاحة.</value>
+  </data>
+  <data name="NewWorkspaceNotFound" xml:space="preserve">
+    <value>مساحة العمل الجديدة غير موجودة.</value>
+  </data>
   <data name="NoApplicablePricingRules" xml:space="preserve">
     <value>لم يتم العثور على قواعد تسعير مناسبة لهذه الجلسة.</value>
+  </data>
+  <data name="NotAuthorizedToChangeSessionWorkspace" xml:space="preserve">
+    <value>غير مصرح لك بتغيير مساحة العمل الخاصة بهذه الجلسة.</value>
+  </data>
+  <data name="NotAuthorizedToEndThisSession" xml:space="preserve">
+    <value>غير مصرح لك بإنهاء هذه الجلسة.</value>
+  </data>
+  <data name="NumberOfPeopleExceedsNewWorkspaceCapacity" xml:space="preserve">
+    <value>عدد الأشخاص يتجاوز السعة الاستيعابية لمساحة العمل الجديدة.</value>
   </data>
   <data name="NumberOfPeopleExceedsWorkspaceCapacity" xml:space="preserve">
     <value>عدد الأشخاص يتجاوز سعة مساحة العمل.</value>
@@ -705,8 +912,17 @@
   <data name="NumberOfPeopleMustBeGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون عدد الأشخاص أكبر من صفر.</value>
   </data>
+  <data name="OnlyActiveMembershipsCanBeSuspended" xml:space="preserve">
+    <value>يمكن تعليق الاشتراكات النشطة فقط.</value>
+  </data>
   <data name="OnlyActiveSessionsCanBeCheckedOut" xml:space="preserve">
     <value>يمكن إتمام الدفع للجلسات النشطة فقط.</value>
+  </data>
+  <data name="OnlyActiveSessionsCanChangeWorkspace" xml:space="preserve">
+    <value>يمكن تغيير مساحة العمل للجلسات النشطة فقط.</value>
+  </data>
+  <data name="OnlySuspendedMembershipsCanBeResumed" xml:space="preserve">
+    <value>يمكن استئناف الاشتراكات المعلّقة فقط.</value>
   </data>
   <data name="PackageActivatedSuccessfully" xml:space="preserve">
     <value>تم تفعيل الباقة بنجاح.</value>
@@ -824,6 +1040,9 @@
   </data>
   <data name="PricingPlanIdGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون رقم خطة التسعير أكبر من صفر.</value>
+  </data>
+  <data name="PricingPlanIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم خطة الأسعار يجب أن يكون أكبر من صفر.</value>
   </data>
   <data name="PricingPlanNotFound" xml:space="preserve">
     <value>خطة التسعير غير موجودة.</value>
@@ -1041,6 +1260,9 @@
   <data name="SearchMaxLength" xml:space="preserve">
     <value>يجب ألا يتجاوز البحث 100 حرف.</value>
   </data>
+  <data name="SearchMustNotExceed100Characters" xml:space="preserve">
+    <value>يجب ألا يتجاوز البحث 100 حرف.</value>
+  </data>
   <data name="SearchTermRequired" xml:space="preserve">
     <value>مصطلح البحث مطلوب.</value>
   </data>
@@ -1089,14 +1311,38 @@
   <data name="ServiceWithSameNameAlreadyExists" xml:space="preserve">
     <value>توجد خدمة بنفس الاسم بالفعل.</value>
   </data>
+  <data name="SessionAlreadyUsesThisWorkspace" xml:space="preserve">
+    <value>الجلسة تستخدم مساحة العمل هذه بالفعل.</value>
+  </data>
+  <data name="SessionEndedSuccessfully" xml:space="preserve">
+    <value>تم إنهاء الجلسة بنجاح.</value>
+  </data>
   <data name="SessionIdGreaterThanZero" xml:space="preserve">
     <value>يجب أن يكون رقم الجلسة أكبر من صفر.</value>
+  </data>
+  <data name="SessionIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم الجلسة يجب أن يكون أكبر من صفر.</value>
+  </data>
+  <data name="SessionIsNotActive" xml:space="preserve">
+    <value>الجلسة غير نشطة.</value>
   </data>
   <data name="SessionNotFound" xml:space="preserve">
     <value>الجلسة غير موجودة.</value>
   </data>
   <data name="SessionNotFoundWithId" xml:space="preserve">
     <value>لم يتم العثور على الجلسة ذات المعرّف {0}.</value>
+  </data>
+  <data name="SessionStarted" xml:space="preserve">
+    <value>بدأت الجلسة.</value>
+  </data>
+  <data name="SessionStartedSuccessfully" xml:space="preserve">
+    <value>تم بدء الجلسة بنجاح.</value>
+  </data>
+  <data name="SessionWorkspaceChanged" xml:space="preserve">
+    <value>تم تغيير مساحة عمل الجلسة.</value>
+  </data>
+  <data name="SessionWorkspaceChangedSuccessfully" xml:space="preserve">
+    <value>تم تغيير مساحة عمل الجلسة بنجاح.</value>
   </data>
   <data name="SkuMaxLength" xml:space="preserve">
     <value>يجب ألا يتجاوز رمز SKU 50 حرفًا.</value>
@@ -1142,6 +1388,9 @@
   </data>
   <data name="UserRegisteredSuccessfully" xml:space="preserve">
     <value>تم تسجيل المستخدم بنجاح.</value>
+  </data>
+  <data name="WorkspaceAlreadyHasActiveSession" xml:space="preserve">
+    <value>توجد جلسة نشطة بالفعل في مساحة العمل.</value>
   </data>
   <data name="WorkspaceArabicDescriptionMaxLength" xml:space="preserve">
     <value>الوصف بالعربية لا يمكن أن يتجاوز 500 حرف.</value>
@@ -1190,6 +1439,12 @@
   </data>
   <data name="WorkspaceIsInactive" xml:space="preserve">
     <value>مساحة العمل غير نشطة.</value>
+  </data>
+  <data name="WorkspaceIsNotAvailable" xml:space="preserve">
+    <value>مساحة العمل غير متاحة.</value>
+  </data>
+  <data name="WorkspaceIsNotOccupiedByActiveSession" xml:space="preserve">
+    <value>مساحة العمل ليست مشغولة بجلسة نشطة.</value>
   </data>
   <data name="WorkspaceLocationMaxLength" xml:space="preserve">
     <value>الموقع لا يمكن أن يتجاوز 200 حرف.</value>
@@ -1274,6 +1529,9 @@
   </data>
   <data name="WorkspaceTypeNotFound" xml:space="preserve">
     <value>نوع مساحة العمل غير موجود.</value>
+  </data>
+  <data name="WorkspaceTypeRequiredForWorkspaceBenefits" xml:space="preserve">
+    <value>نوع مساحة العمل مطلوب للمميزات المرتبطة بمساحات العمل.</value>
   </data>
   <data name="WorkspaceTypeRetrievedSuccessfully" xml:space="preserve">
     <value>تم استرجاع نوع مساحة العمل بنجاح.</value>

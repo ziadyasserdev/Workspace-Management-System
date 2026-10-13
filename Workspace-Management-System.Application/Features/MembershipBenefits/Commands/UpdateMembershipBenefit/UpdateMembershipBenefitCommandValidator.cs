@@ -1,80 +1,77 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.MembershipBenefits.Commands.UpdateMembershipBenefit
 {
     public class UpdateMembershipBenefitCommandValidator
-      : AbstractValidator<UpdateMembershipBenefitCommand>
+        : AbstractValidator<UpdateMembershipBenefitCommand>
     {
-        public UpdateMembershipBenefitCommandValidator()
+        public UpdateMembershipBenefitCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.MembershipId)
                 .GreaterThan(0)
-                .WithMessage("Membership ID must be greater than 0.");
+                .WithMessage(localizer["MembershipIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.BenefitId)
                 .GreaterThan(0)
-                .WithMessage("Benefit ID must be greater than 0.");
+                .WithMessage(localizer["MembershipBenefitIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.BenefitType)
                 .IsInEnum()
-                .WithMessage("Invalid benefit type.");
+                .WithMessage(localizer["InvalidBenefitType"].Value);
 
-         
             RuleFor(x => x.Hours)
                 .GreaterThan(0)
                 .When(x =>
                     x.BenefitType == BenefitType.WorkspaceHours ||
                     x.BenefitType == BenefitType.MeetingRoomHours)
-                .WithMessage(
-                    "Hours must be greater than 0.");
+                .WithMessage(localizer["BenefitHoursMustBeGreaterThanZero"].Value);
 
-           
             RuleFor(x => x.DiscountPercentage)
                 .InclusiveBetween(0.01m, 100m)
                 .When(x =>
                     x.BenefitType == BenefitType.ProductDiscount ||
                     x.BenefitType == BenefitType.ServiceDiscount)
-                .WithMessage(
-                    "Discount percentage must be greater than 0 and less than or equal to 100.");
+                .WithMessage(localizer["DiscountPercentageMustBeBetween0And100"].Value);
 
-        
             RuleFor(x => x.WorkspaceTypeId)
                 .NotNull()
                 .When(x =>
                     x.BenefitType == BenefitType.WorkspaceHours ||
                     x.BenefitType == BenefitType.MeetingRoomHours)
-                .WithMessage(
-                    "Workspace type is required for workspace-related benefits.");
+                .WithMessage(localizer["WorkspaceTypeRequiredForWorkspaceBenefits"].Value);
 
-        
             RuleFor(x => x.Hours)
                 .Null()
                 .When(x =>
                     x.BenefitType != BenefitType.WorkspaceHours &&
                     x.BenefitType != BenefitType.MeetingRoomHours)
-                .WithMessage(
-                    "Hours should only be provided for hour-based benefits.");
+                .WithMessage(localizer["HoursOnlyForHourBasedBenefits"].Value);
 
-           
             RuleFor(x => x.DiscountPercentage)
                 .Null()
                 .When(x =>
                     x.BenefitType != BenefitType.ProductDiscount &&
                     x.BenefitType != BenefitType.ServiceDiscount)
-                .WithMessage(
-                    "Discount percentage should only be provided for discount benefits.");
+                .WithMessage(localizer["DiscountOnlyForDiscountBenefits"].Value);
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.DescriptionEn)
                 .MaximumLength(1000)
-                .When(x => !string.IsNullOrWhiteSpace(x.Description))
-                .WithMessage(
-                    "Description must not exceed 1000 characters.");
+                .When(x => !string.IsNullOrWhiteSpace(x.DescriptionEn))
+                .WithMessage(localizer["MembershipBenefitDescriptionEnMaxLength"].Value);
+
+            RuleFor(x => x.DescriptionAr)
+                .MaximumLength(1000)
+                .When(x => !string.IsNullOrWhiteSpace(x.DescriptionAr))
+                .WithMessage(localizer["MembershipBenefitDescriptionArMaxLength"].Value);
         }
     }
 }

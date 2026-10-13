@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,25 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Memberships.Commands.UpdateMembership
 {
     public class UpdateMembershipCommandHandler
-    : IRequestHandler<UpdateMembershipCommand, Result<bool>>
+        : IRequestHandler<UpdateMembershipCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public UpdateMembershipCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -35,49 +40,55 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.Unauthorized,
-                    "User is not authenticated.");
+                    _localizer["UserNotAuthenticated"].Value);
             }
 
             var membership = await _unitOfWork.Memberships
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         !x.IsDeleted,
+                    x => x.Id == request.Id && !x.IsDeleted,
                     cancellationToken);
 
             if (membership == null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Membership not found.");
+                    _localizer["MembershipNotFound"].Value);
             }
 
-            var normalizedName = request.Name.Trim();
+            var normalizedNameEn = request.NameEn.Trim();
+            var normalizedNameAr = request.NameAr.Trim();
 
             var duplicateNameExists = await _unitOfWork.Memberships
                 .Query()
                 .AnyAsync(
                     x => !x.IsDeleted &&
                          x.Id != request.Id &&
-                         x.Name.ToLower() == normalizedName.ToLower(),
+                         (x.NameEn.ToLower() == normalizedNameEn.ToLower() ||
+                          x.NameAr == normalizedNameAr),
                     cancellationToken);
 
             if (duplicateNameExists)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "A membership with the same name already exists.");
+                    _localizer["MembershipNameAlreadyExists"].Value);
             }
 
-            membership.Name = normalizedName;
+            membership.NameEn = normalizedNameEn;
+            membership.NameAr = normalizedNameAr;
 
-            membership.Description =
-                string.IsNullOrWhiteSpace(request.Description)
+            membership.DescriptionEn =
+                string.IsNullOrWhiteSpace(request.DescriptionEn)
                     ? null
-                    : request.Description.Trim();
+                    : request.DescriptionEn.Trim();
+
+            membership.DescriptionAr =
+                string.IsNullOrWhiteSpace(request.DescriptionAr)
+                    ? null
+                    : request.DescriptionAr.Trim();
 
             membership.DurationDays = request.DurationDays;
-
             membership.Price = request.Price;
 
             membership.UpdatedAt = DateTime.UtcNow;
@@ -87,7 +98,7 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
 
             return Result<bool>.Success(
                 true,
-                "Membership updated successfully.");
+                _localizer["MembershipUpdatedSuccessfully"].Value);
         }
     }
 }

@@ -8,8 +8,11 @@ namespace Workspace_Management_System.Domain.Models
 {
     public class Membership : BaseEntity
     {
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
+
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
 
         public int DurationDays { get; set; }
         public decimal Price { get; set; }

@@ -15,21 +15,26 @@ namespace Workspace_Management_System.Application.Features.Memberships.Dtos
 
         public int? WorkspaceTypeId { get; set; }
 
-        public string? WorkspaceTypeName { get; set; }
+        public string? WorkspaceTypeNameEn { get; set; }
+        public string? WorkspaceTypeNameAr { get; set; }
 
         public decimal? Hours { get; set; }
 
         public decimal? DiscountPercentage { get; set; }
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
     }
+
     public class MembershipDetailsDto
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
+        public string NameAr { get; set; } = null!;
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
 
         public int DurationDays { get; set; }
 
@@ -37,7 +42,6 @@ namespace Workspace_Management_System.Application.Features.Memberships.Dtos
 
         public bool IsActive { get; set; }
 
-        public List<MembershipBenefitDto> Benefits { get; set; }
-            = new();
+        public List<MembershipBenefitDto> Benefits { get; set; } = new();
     }
 }

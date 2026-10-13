@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +9,26 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Memberships.Commands.CreateMembership
 {
     public class CreateMembershipCommandHandler
-      : IRequestHandler<CreateMembershipCommand, Result<int>>
+        : IRequestHandler<CreateMembershipCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public CreateMembershipCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<int>> Handle(
@@ -36,37 +41,44 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
             {
                 return Result<int>.Failure(
                     ResultStatus.Unauthorized,
-                    "User is not authenticated.");
+                    _localizer["UserNotAuthenticated"].Value);
             }
 
-            var normalizedName = request.Name.Trim();
+            var normalizedNameEn = request.NameEn.Trim();
+            var normalizedNameAr = request.NameAr.Trim();
 
             var membershipExists = await _unitOfWork.Memberships
                 .Query()
                 .AnyAsync(
                     x => !x.IsDeleted &&
-                         x.Name.ToLower() == normalizedName.ToLower(),
+                         (x.NameEn.ToLower() == normalizedNameEn.ToLower() ||
+                          x.NameAr == normalizedNameAr),
                     cancellationToken);
 
             if (membershipExists)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "A membership with the same name already exists.");
+                    _localizer["MembershipNameAlreadyExists"].Value);
             }
 
             var now = DateTime.UtcNow;
 
             var membership = new Membership
             {
-                Name = normalizedName,
-                Description = string.IsNullOrWhiteSpace(request.Description)
+                NameEn = normalizedNameEn,
+                NameAr = normalizedNameAr,
+
+                DescriptionEn = string.IsNullOrWhiteSpace(request.DescriptionEn)
                     ? null
-                    : request.Description.Trim(),
+                    : request.DescriptionEn.Trim(),
+
+                DescriptionAr = string.IsNullOrWhiteSpace(request.DescriptionAr)
+                    ? null
+                    : request.DescriptionAr.Trim(),
 
                 DurationDays = request.DurationDays,
                 Price = request.Price,
-
                 IsActive = true,
 
                 CreatedAt = now,
@@ -74,12 +86,11 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
             };
 
             await _unitOfWork.Memberships.AddAsync(membership);
-
             await _unitOfWork.SaveAsync();
 
             return Result<int>.Success(
                 membership.Id,
-                "Membership created successfully.");
+                _localizer["MembershipCreatedSuccessfully"].Value);
         }
     }
 }

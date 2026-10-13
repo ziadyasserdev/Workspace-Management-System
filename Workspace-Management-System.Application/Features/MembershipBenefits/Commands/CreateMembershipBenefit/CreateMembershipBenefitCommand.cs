@@ -9,8 +9,7 @@ using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.MembershipBenefits.Commands.CreateMembershipBenefit
 {
-    public class CreateMembershipBenefitCommand
-       : IRequest<Result<int>>
+    public class CreateMembershipBenefitCommand : IRequest<Result<int>>
     {
         public int MembershipId { get; set; }
 
@@ -22,6 +21,8 @@ namespace Workspace_Management_System.Application.Features.MembershipBenefits.Co
 
         public decimal? DiscountPercentage { get; set; }
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+
+        public string? DescriptionAr { get; set; }
     }
 }

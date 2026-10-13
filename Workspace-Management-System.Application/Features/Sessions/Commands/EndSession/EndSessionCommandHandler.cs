@@ -1,25 +1,30 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Commands.EndSession
 {
     public class EndSessionCommandHandler
-        : IRequestHandler<EndSessionCommand, Result<bool>>
+      : IRequestHandler<EndSessionCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public EndSessionCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -31,18 +36,15 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
 
             try
             {
-               
-
                 var currentUserId = _currentUserService.UserId;
 
                 if (string.IsNullOrWhiteSpace(currentUserId))
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Unauthorized,
-                        "User is not authenticated.");
+                        _localizer["UserNotAuthenticated"].Value);
                 }
 
-         
                 var session = await _unitOfWork.Sessions
                     .Query()
                     .FirstOrDefaultAsync(
@@ -54,19 +56,15 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                 {
                     return Result<bool>.Failure(
                         ResultStatus.NotFound,
-                        "Session not found.");
+                        _localizer["SessionNotFound"].Value);
                 }
-
-             
 
                 if (session.Status != SessionStatus.Active)
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Conflict,
-                        "Session is not active.");
+                        _localizer["SessionIsNotActive"].Value);
                 }
-
-                
 
                 var employee = await _unitOfWork.Employees
                     .Query()
@@ -79,28 +77,22 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Forbidden,
-                        "Current user is not registered as an employee.");
+                        _localizer["CurrentUserIsNotRegisteredAsEmployee"].Value);
                 }
-
-              
 
                 if (employee.Status != EmployeeStatus.Active)
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Forbidden,
-                        "Employee is not active.");
+                        _localizer["EmployeeIsNotActive"].Value);
                 }
-
-              
 
                 if (session.EmployeeId != employee.Id)
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Forbidden,
-                        "You are not authorized to end this session.");
+                        _localizer["NotAuthorizedToEndThisSession"].Value);
                 }
-
-             
 
                 var workspace = await _unitOfWork.Workspaces
                     .Query()
@@ -113,19 +105,15 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                 {
                     return Result<bool>.Failure(
                         ResultStatus.NotFound,
-                        "Workspace not found.");
+                        _localizer["WorkspaceNotFound"].Value);
                 }
-
-               
 
                 if (workspace.Status != WorkspaceStatus.Occupied)
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace is not occupied by an active session.");
+                        _localizer["WorkspaceIsNotOccupiedByActiveSession"].Value);
                 }
-
-               
 
                 Booking? booking = null;
 
@@ -142,22 +130,18 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                     {
                         return Result<bool>.Failure(
                             ResultStatus.NotFound,
-                            "Booking associated with this session was not found.");
+                            _localizer["BookingAssociatedWithSessionNotFound"].Value);
                     }
 
-                  
                     if (booking.Status != BookingStatus.CheckedIn)
                     {
                         return Result<bool>.Failure(
                             ResultStatus.Conflict,
-                            "Booking is not in CheckedIn status.");
+                            _localizer["BookingIsNotCheckedIn"].Value);
                     }
                 }
 
-   
-
                 var now = DateTime.UtcNow;
-
 
                 session.EndTime = now;
                 session.Status = SessionStatus.Completed;
@@ -165,8 +149,6 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                 session.UpdatedBy = currentUserId;
 
                 _unitOfWork.Sessions.Update(session);
-
-               
 
                 var currentHistory = await _unitOfWork
                     .SessionWorkspaceHistories
@@ -182,24 +164,20 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                 {
                     return Result<bool>.Failure(
                         ResultStatus.Failure,
-                        "Active workspace history was not found.");
+                        _localizer["ActiveWorkspaceHistoryNotFound"].Value);
                 }
 
                 currentHistory.EndTime = now;
                 currentHistory.UpdatedAt = now;
                 currentHistory.UpdatedBy = currentUserId;
 
-                _unitOfWork.SessionWorkspaceHistories
-                    .Update(currentHistory);
-
-              
+                _unitOfWork.SessionWorkspaceHistories.Update(currentHistory);
 
                 workspace.Status = WorkspaceStatus.Available;
                 workspace.UpdatedAt = now;
                 workspace.UpdatedBy = currentUserId;
 
                 _unitOfWork.Workspaces.Update(workspace);
-
 
                 if (booking is not null)
                 {
@@ -210,23 +188,17 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.End
                     _unitOfWork.Bookings.Update(booking);
                 }
 
-             
-
                 await _unitOfWork.SaveAsync();
-
 
                 await transaction.CommitAsync(cancellationToken);
 
                 return Result<bool>.Success(
                     true,
-                    "Session ended successfully.");
+                    _localizer["SessionEndedSuccessfully"].Value);
             }
             catch
             {
-              
-
                 await transaction.RollbackAsync(cancellationToken);
-
                 throw;
             }
         }

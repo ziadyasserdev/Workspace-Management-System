@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +9,26 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.MembershipBenefits.Commands.CreateMembershipBenefit
 {
     public class CreateMembershipBenefitCommandHandler
-      : IRequestHandler<
-          CreateMembershipBenefitCommand,
-          Result<int>>
+       : IRequestHandler<CreateMembershipBenefitCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public CreateMembershipBenefitCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<int>> Handle(
@@ -38,85 +41,74 @@ namespace Workspace_Management_System.Application.Features.MembershipBenefits.Co
             {
                 return Result<int>.Failure(
                     ResultStatus.Unauthorized,
-                    "User is not authenticated.");
+                    _localizer["UserNotAuthenticated"].Value);
             }
 
-           
             var membership = await _unitOfWork.Memberships
                 .Query()
                 .FirstOrDefaultAsync(
-                    x =>
-                        x.Id == request.MembershipId &&
-                        !x.IsDeleted,
+                    x => x.Id == request.MembershipId && !x.IsDeleted,
                     cancellationToken);
 
             if (membership == null)
             {
                 return Result<int>.Failure(
                     ResultStatus.NotFound,
-                    "Membership not found.");
+                    _localizer["MembershipNotFound"].Value);
             }
 
-          
             if (!membership.IsActive)
             {
                 return Result<int>.Failure(
                     ResultStatus.Conflict,
-                    "Cannot add benefits to an inactive membership.");
+                    _localizer["CannotAddBenefitsToInactiveMembership"].Value);
             }
 
-     
             if (request.WorkspaceTypeId.HasValue)
             {
                 var workspaceType = await _unitOfWork.WorkspaceTypes
                     .Query()
                     .FirstOrDefaultAsync(
-                        x =>
-                            x.Id == request.WorkspaceTypeId.Value &&
-                            !x.IsDeleted,
+                        x => x.Id == request.WorkspaceTypeId.Value
+                             && !x.IsDeleted,
                         cancellationToken);
 
                 if (workspaceType == null)
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Workspace type not found.");
+                        _localizer["WorkspaceTypeNotFound"].Value);
                 }
             }
 
-          
             var now = DateTime.UtcNow;
 
             var benefit = new MembershipBenefit
             {
                 MembershipId = request.MembershipId,
-
                 BenefitType = request.BenefitType,
-
                 WorkspaceTypeId = request.WorkspaceTypeId,
-
                 Hours = request.Hours,
+                DiscountPercentage = request.DiscountPercentage,
 
-                DiscountPercentage =
-                    request.DiscountPercentage,
+                DescriptionEn = string.IsNullOrWhiteSpace(request.DescriptionEn)
+                    ? null
+                    : request.DescriptionEn.Trim(),
 
-                Description =
-                    string.IsNullOrWhiteSpace(request.Description)
-                        ? null
-                        : request.Description.Trim(),
+                DescriptionAr = string.IsNullOrWhiteSpace(request.DescriptionAr)
+                    ? null
+                    : request.DescriptionAr.Trim(),
 
                 CreatedAt = now,
                 CreatedBy = currentUserId
             };
 
-            await _unitOfWork.MembershipBenefits
-                .AddAsync(benefit);
-
+            await _unitOfWork.MembershipBenefits.AddAsync(benefit);
             await _unitOfWork.SaveAsync();
 
             return Result<int>.Success(
                 benefit.Id,
-                "Membership benefit created successfully.");
+                _localizer["MembershipBenefitCreatedSuccessfully"].Value);
         }
     }
 }

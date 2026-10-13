@@ -1,37 +1,45 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Workspace_Management_System.Application.Resources;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Commands.StartSession
 {
     public class StartSessionCommandValidator
      : AbstractValidator<StartSessionCommand>
     {
-        public StartSessionCommandValidator()
+        public StartSessionCommandValidator(
+            IStringLocalizer<SharedResources> localizer)
         {
             RuleFor(x => x.CustomerId)
                 .GreaterThan(0)
-                .WithMessage("Customer id must be greater than 0.");
+                .WithMessage(
+                    localizer["CustomerIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.WorkspaceId)
                 .GreaterThan(0)
-                .WithMessage("Workspace id must be greater than 0.");
+                .WithMessage(
+                    localizer["WorkspaceIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.PricingPlanId)
                 .GreaterThan(0)
-                .WithMessage("Pricing plan id must be greater than 0.");
+                .WithMessage(
+                    localizer["PricingPlanIdMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.NumberOfPeople)
                 .GreaterThan(0)
-                .WithMessage("Number of people must be greater than 0.");
+                .WithMessage(
+                    localizer["NumberOfPeopleMustBeGreaterThanZero"].Value);
 
             RuleFor(x => x.BookingId)
                 .GreaterThan(0)
                 .When(x => x.BookingId.HasValue)
-                .WithMessage("Booking id must be greater than 0.");
+                .WithMessage(
+                    localizer["BookingIdMustBeGreaterThanZero"].Value);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,64 +9,61 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.CustomerMemberships.Commands.CancelCustomerMembership
 {
     public class CancelCustomerMembershipCommandHandler
-     : IRequestHandler<
-         CancelCustomerMembershipCommand,
-         Result<bool>>
+    : IRequestHandler<CancelCustomerMembershipCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public CancelCustomerMembershipCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
             CancelCustomerMembershipCommand request,
             CancellationToken cancellationToken)
         {
-           
             var currentUserId = _currentUserService.UserId;
 
             if (string.IsNullOrWhiteSpace(currentUserId))
             {
                 return Result<bool>.Failure(
                     ResultStatus.Unauthorized,
-                    "User is not authenticated.");
+                    _localizer["UserNotAuthenticated"].Value);
             }
 
-           
             var customerMembership =
                 await _unitOfWork.CustomerMemberships
                     .Query()
                     .FirstOrDefaultAsync(
-                        x =>
-                            x.Id == request.Id &&
-                            !x.IsDeleted,
+                        x => x.Id == request.Id && !x.IsDeleted,
                         cancellationToken);
 
             if (customerMembership == null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Customer membership not found.");
+                    _localizer["CustomerMembershipNotFound"].Value);
             }
 
-           
             if (customerMembership.Status ==
                 CustomerMembershipStatus.Cancelled)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Customer membership is already cancelled.");
+                    _localizer["CustomerMembershipAlreadyCancelled"].Value);
             }
 
             if (customerMembership.Status ==
@@ -73,10 +71,9 @@ namespace Workspace_Management_System.Application.Features.CustomerMemberships.C
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Expired membership cannot be cancelled.");
+                    _localizer["ExpiredMembershipCannotBeCancelled"].Value);
             }
 
-            
             var now = DateTime.UtcNow;
 
             customerMembership.Status =
@@ -85,12 +82,11 @@ namespace Workspace_Management_System.Application.Features.CustomerMemberships.C
             customerMembership.UpdatedAt = now;
             customerMembership.UpdatedBy = currentUserId;
 
-          
             await _unitOfWork.SaveAsync();
 
             return Result<bool>.Success(
                 true,
-                "Customer membership cancelled successfully.");
+                _localizer["CustomerMembershipCancelledSuccessfully"].Value);
         }
     }
 }

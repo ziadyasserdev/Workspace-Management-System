@@ -15,6 +15,88 @@ public static class RolePermissionSeeder
         {
             [Roles.Owner] =
             [
+                
+                // Bookings
+                Permissions.BookingsView,
+                Permissions.BookingsViewDetails,
+                Permissions.BookingsCreate,
+                Permissions.BookingsUpdate,
+                Permissions.BookingsDelete,
+                Permissions.BookingsRestore,
+                Permissions.BookingsSearch,
+                Permissions.BookingsChangeStatus,
+                Permissions.BookingsCheckIn,
+                Permissions.BookingsCancel,
+
+                // Sessions
+                Permissions.SessionsView,
+                Permissions.SessionsViewDetails,
+                Permissions.SessionsCreate,
+                Permissions.SessionsUpdate,
+                Permissions.SessionsSearch,
+                Permissions.SessionsStart,
+                Permissions.SessionsEnd,
+                Permissions.SessionsChangeWorkspace,
+
+                // Memberships
+                Permissions.MembershipsView,
+                Permissions.MembershipsViewDetails,
+                Permissions.MembershipsCreate,
+                Permissions.MembershipsUpdate,
+                Permissions.MembershipsDelete,
+                Permissions.MembershipsRestore,
+                Permissions.MembershipsSearch,
+                Permissions.MembershipsChangeStatus,
+
+                // Membership Benefits
+                Permissions.MembershipBenefitsView,
+                Permissions.MembershipBenefitsViewDetails,
+                Permissions.MembershipBenefitsCreate,
+                Permissions.MembershipBenefitsUpdate,
+                Permissions.MembershipBenefitsDelete,
+                Permissions.MembershipBenefitsRestore,
+                Permissions.MembershipBenefitsSearch,
+
+                // Customer Memberships
+                Permissions.CustomerMembershipsView,
+                Permissions.CustomerMembershipsViewDetails,
+                Permissions.CustomerMembershipsCreate,
+                Permissions.CustomerMembershipsUpdate,
+                Permissions.CustomerMembershipsDelete,
+                Permissions.CustomerMembershipsRestore,
+                Permissions.CustomerMembershipsSearch,
+                Permissions.CustomerMembershipsAssign,
+                Permissions.CustomerMembershipsCancel,
+
+                       Permissions.WorkspacesView,
+                Permissions.WorkspacesViewDetails,
+                Permissions.WorkspacesCreate,
+                Permissions.WorkspacesUpdate,
+                Permissions.WorkspacesDelete,
+                Permissions.WorkspacesRestore,
+                Permissions.WorkspacesSearch,
+                Permissions.WorkspacesChangeStatus,
+                Permissions.WorkspacesViewType,
+
+                // Workspace Types
+                Permissions.WorkspaceTypesView,
+                Permissions.WorkspaceTypesViewDetails,
+                Permissions.WorkspaceTypesCreate,
+                Permissions.WorkspaceTypesUpdate,
+                Permissions.WorkspaceTypesDelete,
+                Permissions.WorkspaceTypesRestore,
+                Permissions.WorkspaceTypesSearch,
+
+                // Employees
+                Permissions.EmployeesView,
+                Permissions.EmployeesViewDetails,
+                Permissions.EmployeesCreate,
+                Permissions.EmployeesUpdate,
+                Permissions.EmployeesDelete,
+                Permissions.EmployeesRestore,
+                Permissions.EmployeesSearch,
+                Permissions.EmployeesChangeStatus,
+                Permissions.EmployeesAssignWorkspace,
                 Permissions.CompaniesView,
                 Permissions.CompaniesViewDetails,
                 Permissions.CompaniesCreate,
@@ -108,6 +190,88 @@ public static class RolePermissionSeeder
 
             [Roles.Admin] =
             [
+                
+                // Bookings
+                Permissions.BookingsView,
+                Permissions.BookingsViewDetails,
+                Permissions.BookingsCreate,
+                Permissions.BookingsUpdate,
+                Permissions.BookingsDelete,
+                Permissions.BookingsRestore,
+                Permissions.BookingsSearch,
+                Permissions.BookingsChangeStatus,
+                Permissions.BookingsCheckIn,
+                Permissions.BookingsCancel,
+
+                // Sessions
+                Permissions.SessionsView,
+                Permissions.SessionsViewDetails,
+                Permissions.SessionsCreate,
+                Permissions.SessionsUpdate,
+                Permissions.SessionsSearch,
+                Permissions.SessionsStart,
+                Permissions.SessionsEnd,
+                Permissions.SessionsChangeWorkspace,
+
+                // Memberships
+                Permissions.MembershipsView,
+                Permissions.MembershipsViewDetails,
+                Permissions.MembershipsCreate,
+                Permissions.MembershipsUpdate,
+                Permissions.MembershipsDelete,
+                Permissions.MembershipsRestore,
+                Permissions.MembershipsSearch,
+                Permissions.MembershipsChangeStatus,
+
+                // Membership Benefits
+                Permissions.MembershipBenefitsView,
+                Permissions.MembershipBenefitsViewDetails,
+                Permissions.MembershipBenefitsCreate,
+                Permissions.MembershipBenefitsUpdate,
+                Permissions.MembershipBenefitsDelete,
+                Permissions.MembershipBenefitsRestore,
+                Permissions.MembershipBenefitsSearch,
+
+                // Customer Memberships
+                Permissions.CustomerMembershipsView,
+                Permissions.CustomerMembershipsViewDetails,
+                Permissions.CustomerMembershipsCreate,
+                Permissions.CustomerMembershipsUpdate,
+                Permissions.CustomerMembershipsDelete,
+                Permissions.CustomerMembershipsRestore,
+                Permissions.CustomerMembershipsSearch,
+                Permissions.CustomerMembershipsAssign,
+                Permissions.CustomerMembershipsCancel,
+
+                       Permissions.WorkspacesView,
+                Permissions.WorkspacesViewDetails,
+                Permissions.WorkspacesCreate,
+                Permissions.WorkspacesUpdate,
+                Permissions.WorkspacesDelete,
+                Permissions.WorkspacesRestore,
+                Permissions.WorkspacesSearch,
+                Permissions.WorkspacesChangeStatus,
+                Permissions.WorkspacesViewType,
+
+                // Workspace Types
+                Permissions.WorkspaceTypesView,
+                Permissions.WorkspaceTypesViewDetails,
+                Permissions.WorkspaceTypesCreate,
+                Permissions.WorkspaceTypesUpdate,
+                Permissions.WorkspaceTypesDelete,
+                Permissions.WorkspaceTypesRestore,
+                Permissions.WorkspaceTypesSearch,
+
+                // Employees
+                Permissions.EmployeesView,
+                Permissions.EmployeesViewDetails,
+                Permissions.EmployeesCreate,
+                Permissions.EmployeesUpdate,
+                Permissions.EmployeesDelete,
+                Permissions.EmployeesRestore,
+                Permissions.EmployeesSearch,
+                Permissions.EmployeesChangeStatus,
+                Permissions.EmployeesAssignWorkspace,
                 Permissions.CompaniesView,
                 Permissions.CompaniesViewDetails,
                 Permissions.CompaniesCreate,
@@ -201,6 +365,72 @@ public static class RolePermissionSeeder
 
             [Roles.Manager] =
             [
+                // Bookings
+                Permissions.BookingsView,
+                Permissions.BookingsViewDetails,
+                Permissions.BookingsCreate,
+                Permissions.BookingsUpdate,
+                Permissions.BookingsSearch,
+                Permissions.BookingsCheckIn,
+                Permissions.BookingsCancel,
+
+                // Sessions
+                Permissions.SessionsView,
+                Permissions.SessionsViewDetails,
+                Permissions.SessionsCreate,
+                Permissions.SessionsUpdate,
+                Permissions.SessionsSearch,
+                Permissions.SessionsStart,
+                Permissions.SessionsEnd,
+                Permissions.SessionsChangeWorkspace,
+
+                // Memberships
+                Permissions.MembershipsView,
+                Permissions.MembershipsViewDetails,
+                Permissions.MembershipsSearch,
+
+                // Membership Benefits
+                Permissions.MembershipBenefitsView,
+                Permissions.MembershipBenefitsViewDetails,
+
+                // Customer Memberships
+                Permissions.CustomerMembershipsView,
+                Permissions.CustomerMembershipsViewDetails,
+                Permissions.CustomerMembershipsCreate,
+                Permissions.CustomerMembershipsUpdate,
+                Permissions.CustomerMembershipsSearch,
+                Permissions.CustomerMembershipsAssign,
+                Permissions.CustomerMembershipsCancel,
+
+                       Permissions.WorkspacesView,
+                Permissions.WorkspacesViewDetails,
+                Permissions.WorkspacesCreate,
+                Permissions.WorkspacesUpdate,
+                Permissions.WorkspacesDelete,
+                Permissions.WorkspacesRestore,
+                Permissions.WorkspacesSearch,
+                Permissions.WorkspacesChangeStatus,
+                Permissions.WorkspacesViewType,
+
+                // Workspace Types
+                Permissions.WorkspaceTypesView,
+                Permissions.WorkspaceTypesViewDetails,
+                Permissions.WorkspaceTypesCreate,
+                Permissions.WorkspaceTypesUpdate,
+                Permissions.WorkspaceTypesDelete,
+                Permissions.WorkspaceTypesRestore,
+                Permissions.WorkspaceTypesSearch,
+
+                // Employees
+                Permissions.EmployeesView,
+                Permissions.EmployeesViewDetails,
+                Permissions.EmployeesCreate,
+                Permissions.EmployeesUpdate,
+                Permissions.EmployeesDelete,
+                Permissions.EmployeesRestore,
+                Permissions.EmployeesSearch,
+                Permissions.EmployeesChangeStatus,
+                Permissions.EmployeesAssignWorkspace,
                 Permissions.CompaniesView,
                 Permissions.CompaniesViewDetails,
                 Permissions.CompaniesSearch,
@@ -261,6 +491,28 @@ public static class RolePermissionSeeder
 
             [Roles.Receptionist] =
             [
+                
+                // Bookings
+                Permissions.BookingsView,
+                Permissions.BookingsViewDetails,
+                Permissions.BookingsCreate,
+                Permissions.BookingsUpdate,
+                Permissions.BookingsSearch,
+                Permissions.BookingsCheckIn,
+                Permissions.BookingsCancel,
+
+                // Sessions
+                Permissions.SessionsView,
+                Permissions.SessionsViewDetails,
+                Permissions.SessionsSearch,
+                Permissions.SessionsStart,
+                Permissions.SessionsEnd,
+
+                // Customer Memberships
+                Permissions.CustomerMembershipsView,
+                Permissions.CustomerMembershipsViewDetails,
+                Permissions.CustomerMembershipsSearch,
+
                 Permissions.CustomersView,
                 Permissions.CustomersViewDetails,
                 Permissions.CustomersCreate,
