@@ -102,4 +102,94 @@ public static class Permissions
     public const string SessionServicesUpdate = "SessionServices.Update";
     public const string SessionServicesRemove = "SessionServices.Remove";
     public const string SessionServicesClear = "SessionServices.Clear";
+
+
+
+
+
+
+
+    // -----------------------------
+    public const string WorkspacesView = "Workspaces.View";
+    public const string WorkspacesViewDetails = "Workspaces.ViewDetails";
+    public const string WorkspacesCreate = "Workspaces.Create";
+    public const string WorkspacesUpdate = "Workspaces.Update";
+    public const string WorkspacesDelete = "Workspaces.Delete";
+    public const string WorkspacesRestore = "Workspaces.Restore";
+    public const string WorkspacesSearch = "Workspaces.Search";
+    public const string WorkspacesChangeStatus = "Workspaces.ChangeStatus";
+    public const string WorkspacesViewType = "Workspaces.ViewType";
+
+
+    public const string WorkspaceTypesView = "WorkspaceTypes.View";
+    public const string WorkspaceTypesViewDetails = "WorkspaceTypes.ViewDetails";
+    public const string WorkspaceTypesCreate = "WorkspaceTypes.Create";
+    public const string WorkspaceTypesUpdate = "WorkspaceTypes.Update";
+    public const string WorkspaceTypesDelete = "WorkspaceTypes.Delete";
+    public const string WorkspaceTypesRestore = "WorkspaceTypes.Restore";
+    public const string WorkspaceTypesSearch = "WorkspaceTypes.Search";
+
+
+    public const string EmployeesView = "Employees.View";
+    public const string EmployeesViewDetails = "Employees.ViewDetails";
+    public const string EmployeesCreate = "Employees.Create";
+    public const string EmployeesUpdate = "Employees.Update";
+    public const string EmployeesDelete = "Employees.Delete";
+    public const string EmployeesRestore = "Employees.Restore";
+    public const string EmployeesSearch = "Employees.Search";
+    public const string EmployeesChangeStatus = "Employees.ChangeStatus";
+    public const string EmployeesAssignWorkspace = "Employees.AssignWorkspace";
+
+    // Bookings
+    public const string BookingsView = "Bookings.View";
+    public const string BookingsViewDetails = "Bookings.ViewDetails";
+    public const string BookingsCreate = "Bookings.Create";
+    public const string BookingsUpdate = "Bookings.Update";
+    public const string BookingsDelete = "Bookings.Delete";
+    public const string BookingsRestore = "Bookings.Restore";
+    public const string BookingsSearch = "Bookings.Search";
+    public const string BookingsChangeStatus = "Bookings.ChangeStatus";
+    public const string BookingsCheckIn = "Bookings.CheckIn";
+    public const string BookingsCancel = "Bookings.Cancel";
+
+    // Sessions
+    public const string SessionsView = "Sessions.View";
+    public const string SessionsViewDetails = "Sessions.ViewDetails";
+    public const string SessionsCreate = "Sessions.Create";
+    public const string SessionsUpdate = "Sessions.Update";
+    public const string SessionsSearch = "Sessions.Search";
+    public const string SessionsStart = "Sessions.Start";
+    public const string SessionsEnd = "Sessions.End";
+    public const string SessionsChangeWorkspace = "Sessions.ChangeWorkspace";
+
+    // Memberships
+    public const string MembershipsView = "Memberships.View";
+    public const string MembershipsViewDetails = "Memberships.ViewDetails";
+    public const string MembershipsCreate = "Memberships.Create";
+    public const string MembershipsUpdate = "Memberships.Update";
+    public const string MembershipsDelete = "Memberships.Delete";
+    public const string MembershipsRestore = "Memberships.Restore";
+    public const string MembershipsSearch = "Memberships.Search";
+    public const string MembershipsChangeStatus = "Memberships.ChangeStatus";
+
+    // Membership Benefits
+    public const string MembershipBenefitsView = "MembershipBenefits.View";
+    public const string MembershipBenefitsViewDetails = "MembershipBenefits.ViewDetails";
+    public const string MembershipBenefitsCreate = "MembershipBenefits.Create";
+    public const string MembershipBenefitsUpdate = "MembershipBenefits.Update";
+    public const string MembershipBenefitsDelete = "MembershipBenefits.Delete";
+    public const string MembershipBenefitsRestore = "MembershipBenefits.Restore";
+    public const string MembershipBenefitsSearch = "MembershipBenefits.Search";
+
+    // Customer Memberships
+    public const string CustomerMembershipsView = "CustomerMemberships.View";
+    public const string CustomerMembershipsViewDetails = "CustomerMemberships.ViewDetails";
+    public const string CustomerMembershipsCreate = "CustomerMemberships.Create";
+    public const string CustomerMembershipsUpdate = "CustomerMemberships.Update";
+    public const string CustomerMembershipsDelete = "CustomerMemberships.Delete";
+    public const string CustomerMembershipsRestore = "CustomerMemberships.Restore";
+    public const string CustomerMembershipsSearch = "CustomerMemberships.Search";
+    public const string CustomerMembershipsAssign = "CustomerMemberships.Assign";
+    public const string CustomerMembershipsCancel = "CustomerMemberships.Cancel";
+
 }

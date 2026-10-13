@@ -15,6 +15,7 @@ namespace Workspace_Management_System.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WorkspaceTypeController : ControllerBase
     {
         private readonly IMediator mediator;

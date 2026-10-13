@@ -1,25 +1,30 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 using Workspace_Management_System.Domain.Models;
 
 namespace Workspace_Management_System.Application.Features.Sessions.Commands.StartSession
 {
     public class StartSessionCommandHandler
-        : IRequestHandler<StartSessionCommand, Result<int>>
+    : IRequestHandler<StartSessionCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public StartSessionCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<int>> Handle(
@@ -31,17 +36,15 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
 
             try
             {
-               
                 var currentUserId = _currentUserService.UserId;
 
                 if (string.IsNullOrWhiteSpace(currentUserId))
                 {
                     return Result<int>.Failure(
                         ResultStatus.Unauthorized,
-                        "User is not authenticated.");
+                        _localizer["UserNotAuthenticated"].Value);
                 }
 
-             
                 var workspace = await _unitOfWork.Workspaces
                     .Query()
                     .FirstOrDefaultAsync(
@@ -53,33 +56,30 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Workspace not found.");
+                        _localizer["WorkspaceNotFound"].Value);
                 }
-
-             
 
                 if (!workspace.IsActive)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace is inactive.");
+                        _localizer["WorkspaceIsInactive"].Value);
                 }
 
                 if (workspace.Status != WorkspaceStatus.Available)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace is not available.");
+                        _localizer["WorkspaceIsNotAvailable"].Value);
                 }
 
                 if (request.NumberOfPeople > workspace.Capacity)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Number of people exceeds workspace capacity.");
+                        _localizer["NumberOfPeopleExceedsWorkspaceCapacity"].Value);
                 }
 
-            
                 var customer = await _unitOfWork.Customers
                     .Query()
                     .FirstOrDefaultAsync(
@@ -91,10 +91,8 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Customer not found.");
+                        _localizer["CustomerNotFound"].Value);
                 }
-
-             
 
                 var pricingPlan = await _unitOfWork.PricingPlans
                     .Query()
@@ -107,10 +105,8 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                 {
                     return Result<int>.Failure(
                         ResultStatus.NotFound,
-                        "Pricing plan not found.");
+                        _localizer["PricingPlanNotFound"].Value);
                 }
-
-        
 
                 var employee = await _unitOfWork.Employees
                     .Query()
@@ -123,26 +119,22 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                 {
                     return Result<int>.Failure(
                         ResultStatus.Forbidden,
-                        "Current user is not registered as an employee.");
+                        _localizer["CurrentUserIsNotRegisteredAsEmployee"].Value);
                 }
-
-              
 
                 if (employee.Status != EmployeeStatus.Active)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Forbidden,
-                        "Employee is not active.");
+                        _localizer["EmployeeIsNotActive"].Value);
                 }
 
                 if (employee.WorkspaceId != request.WorkspaceId)
                 {
                     return Result<int>.Failure(
                         ResultStatus.Forbidden,
-                        "Employee is not assigned to this workspace.");
+                        _localizer["EmployeeIsNotAssignedToThisWorkspace"].Value);
                 }
-
-            
 
                 var activeSessionExists = await _unitOfWork.Sessions
                     .Query()
@@ -156,10 +148,8 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                 {
                     return Result<int>.Failure(
                         ResultStatus.Conflict,
-                        "Workspace already has an active session.");
+                        _localizer["WorkspaceAlreadyHasActiveSession"].Value);
                 }
-
-               
 
                 Booking? booking = null;
 
@@ -176,31 +166,29 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                     {
                         return Result<int>.Failure(
                             ResultStatus.NotFound,
-                            "Booking not found.");
+                            _localizer["BookingNotFound"].Value);
                     }
 
-                   
                     if (booking.CustomerId != request.CustomerId)
                     {
                         return Result<int>.Failure(
                             ResultStatus.Conflict,
-                            "Booking does not belong to this customer.");
+                            _localizer["BookingDoesNotBelongToCustomer"].Value);
                     }
 
-                 
                     if (booking.WorkspaceId != request.WorkspaceId)
                     {
                         return Result<int>.Failure(
                             ResultStatus.Conflict,
-                            "Booking does not belong to this workspace.");
+                            _localizer["BookingDoesNotBelongToWorkspace"].Value);
                     }
 
-                 
                     if (booking.Status != BookingStatus.Confirmed)
                     {
                         return Result<int>.Failure(
                             ResultStatus.Conflict,
-                            $"Booking cannot be checked in while its status is {booking.Status}.");
+                            _localizer["BookingCannotBeCheckedInWithStatus",
+                                booking.Status].Value);
                     }
 
                     var bookingAlreadyUsed =
@@ -215,11 +203,9 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                     {
                         return Result<int>.Failure(
                             ResultStatus.Conflict,
-                            "This booking has already been used.");
+                            _localizer["BookingHasAlreadyBeenUsed"].Value);
                     }
                 }
-
-           
 
                 var now = DateTime.UtcNow;
 
@@ -230,36 +216,24 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                     WorkspaceId = request.WorkspaceId,
                     PricingPlanId = request.PricingPlanId,
                     EmployeeId = employee.Id,
-
                     StartTime = now,
                     EndTime = null,
-
                     NumberOfPeople = request.NumberOfPeople,
-
                     Status = SessionStatus.Active,
-
                     CreatedAt = now,
                     CreatedBy = currentUserId
                 };
 
-                await _unitOfWork.Sessions
-                    .AddAsync(session);
-
-    
+                await _unitOfWork.Sessions.AddAsync(session);
 
                 var history = new SessionWorkspaceHistory
                 {
                     Session = session,
-
                     WorkspaceId = workspace.Id,
-
                     StartTime = now,
                     EndTime = null,
-
                     EmployeeId = employee.Id,
-
-                    Reason = "Session started.",
-
+                    Reason = _localizer["SessionStarted"].Value,
                     CreatedAt = now,
                     CreatedBy = currentUserId
                 };
@@ -267,46 +241,36 @@ namespace Workspace_Management_System.Application.Features.Sessions.Commands.Sta
                 await _unitOfWork.SessionWorkspaceHistories
                     .AddAsync(history);
 
-
                 workspace.Status = WorkspaceStatus.Occupied;
                 workspace.UpdatedAt = now;
                 workspace.UpdatedBy = currentUserId;
 
                 _unitOfWork.Workspaces.Update(workspace);
 
-      
-
                 if (booking is not null)
                 {
                     booking.Status = BookingStatus.CheckedIn;
-
                     booking.UpdatedAt = now;
                     booking.UpdatedBy = currentUserId;
 
                     _unitOfWork.Bookings.Update(booking);
                 }
 
-            
-
                 await _unitOfWork.SaveAsync();
-
 
                 await transaction.CommitAsync(cancellationToken);
 
-           
-
                 return Result<int>.Success(
                     session.Id,
-                    "Session started successfully.");
+                    _localizer["SessionStartedSuccessfully"].Value);
             }
             catch
             {
-               
-
                 await transaction.RollbackAsync(cancellationToken);
-
                 throw;
             }
         }
     }
+
+
 }

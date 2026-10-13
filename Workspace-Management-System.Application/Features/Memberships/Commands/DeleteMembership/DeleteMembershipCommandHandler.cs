@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +9,26 @@ using System.Threading.Tasks;
 using Workspace_Management_System.Application.Common.Results;
 using Workspace_Management_System.Application.Contracts.Identity;
 using Workspace_Management_System.Application.Contracts.Repositories;
+using Workspace_Management_System.Application.Resources;
 using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.Memberships.Commands.DeleteMembership
 {
     public class DeleteMembershipCommandHandler
-       : IRequestHandler<
-           DeleteMembershipCommand,
-           Result<bool>>
+          : IRequestHandler<DeleteMembershipCommand, Result<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public DeleteMembershipCommandHandler(
             IUnitOfWork unitOfWork,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _localizer = localizer;
         }
 
         public async Task<Result<bool>> Handle(
@@ -38,21 +41,20 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
             {
                 return Result<bool>.Failure(
                     ResultStatus.Unauthorized,
-                    "User is not authenticated.");
+                    _localizer["UserNotAuthenticated"].Value);
             }
 
             var membership = await _unitOfWork.Memberships
                 .Query()
                 .FirstOrDefaultAsync(
-                    x => x.Id == request.Id &&
-                         !x.IsDeleted,
+                    x => x.Id == request.Id && !x.IsDeleted,
                     cancellationToken);
 
             if (membership == null)
             {
                 return Result<bool>.Failure(
                     ResultStatus.NotFound,
-                    "Membership not found.");
+                    _localizer["MembershipNotFound"].Value);
             }
 
             var hasActiveCustomerMembership =
@@ -62,22 +64,20 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
                         x =>
                             !x.IsDeleted &&
                             x.MembershipId == membership.Id &&
-                            x.Status ==
-                                CustomerMembershipStatus.Active,
+                            x.Status == CustomerMembershipStatus.Active,
                         cancellationToken);
 
             if (hasActiveCustomerMembership)
             {
                 return Result<bool>.Failure(
                     ResultStatus.Conflict,
-                    "Membership cannot be deleted because it has active customer subscriptions.");
+                    _localizer["MembershipHasActiveCustomerSubscriptions"].Value);
             }
 
             var now = DateTime.UtcNow;
 
             membership.IsDeleted = true;
             membership.IsDeletedBy = currentUserId;
-
             membership.UpdatedAt = now;
             membership.UpdatedBy = currentUserId;
 
@@ -85,7 +85,7 @@ namespace Workspace_Management_System.Application.Features.Memberships.Commands.
 
             return Result<bool>.Success(
                 true,
-                "Membership deleted successfully.");
+                _localizer["MembershipDeletedSuccessfully"].Value);
         }
     }
 }

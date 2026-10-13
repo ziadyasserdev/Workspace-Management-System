@@ -9,8 +9,7 @@ using Workspace_Management_System.Domain.Enums;
 
 namespace Workspace_Management_System.Application.Features.MembershipBenefits.Commands.UpdateMembershipBenefit
 {
-    public class UpdateMembershipBenefitCommand
-    : IRequest<Result<bool>>
+    public class UpdateMembershipBenefitCommand : IRequest<Result<bool>>
     {
         public int MembershipId { get; set; }
 
@@ -24,6 +23,8 @@ namespace Workspace_Management_System.Application.Features.MembershipBenefits.Co
 
         public decimal? DiscountPercentage { get; set; }
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+
+        public string? DescriptionAr { get; set; }
     }
 }

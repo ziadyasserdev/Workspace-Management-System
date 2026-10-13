@@ -9,18 +9,25 @@ namespace Workspace_Management_System.Application.Features.MembershipBenefits.Dt
 {
     public class MembershipBenefitDtoo
     {
-        public int Id { get; set; }
+        public class MembershipBenefitDto
+        {
+            public int Id { get; set; }
 
-        public BenefitType BenefitType { get; set; }
+            public BenefitType BenefitType { get; set; }
 
-        public int? WorkspaceTypeId { get; set; }
+            public int? WorkspaceTypeId { get; set; }
 
-        public string? WorkspaceTypeName { get; set; }
+            public string? WorkspaceTypeNameEn { get; set; }
 
-        public decimal? Hours { get; set; }
+            public string? WorkspaceTypeNameAr { get; set; }
 
-        public decimal? DiscountPercentage { get; set; }
+            public decimal? Hours { get; set; }
 
-        public string? Description { get; set; }
+            public decimal? DiscountPercentage { get; set; }
+
+            public string? DescriptionEn { get; set; }
+
+            public string? DescriptionAr { get; set; }
+        }
     }
 }

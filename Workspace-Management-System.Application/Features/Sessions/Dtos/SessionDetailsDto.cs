@@ -12,19 +12,23 @@ namespace Workspace_Management_System.Application.Features.Sessions.Dtos
         public int Id { get; set; }
 
         public int CustomerId { get; set; }
-        public string CustomerName { get; set; } = null!;
+        public string CustomerNameEn { get; set; } = null!;
+        public string CustomerNameAr { get; set; } = null!;
 
         public int? BookingId { get; set; }
 
         public int WorkspaceId { get; set; }
-        public string WorkspaceName { get; set; } = null!;
+        public string WorkspaceNameEn { get; set; } = null!;
+        public string WorkspaceNameAr { get; set; } = null!;
         public string WorkspaceCode { get; set; } = null!;
 
         public int PricingPlanId { get; set; }
-        public string PricingPlanName { get; set; } = null!;
+        public string PricingPlanNameEn { get; set; } = null!;
+        public string PricingPlanNameAr { get; set; } = null!;
 
         public int EmployeeId { get; set; }
-        public string EmployeeName { get; set; } = null!;
+        public string EmployeeNameEn { get; set; } = null!;
+        public string EmployeeNameAr { get; set; } = null!;
 
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
@@ -36,18 +40,21 @@ namespace Workspace_Management_System.Application.Features.Sessions.Dtos
         public List<SessionWorkspaceHistoryDto> WorkspaceHistory { get; set; }
             = new();
     }
+
     public class SessionWorkspaceHistoryDto
     {
         public int Id { get; set; }
 
         public int WorkspaceId { get; set; }
-        public string WorkspaceName { get; set; } = null!;
+        public string WorkspaceNameEn { get; set; } = null!;
+        public string WorkspaceNameAr { get; set; } = null!;
 
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 
         public int EmployeeId { get; set; }
-        public string EmployeeName { get; set; } = null!;
+        public string EmployeeNameEn { get; set; } = null!;
+        public string EmployeeNameAr { get; set; } = null!;
 
         public string? Reason { get; set; }
     }

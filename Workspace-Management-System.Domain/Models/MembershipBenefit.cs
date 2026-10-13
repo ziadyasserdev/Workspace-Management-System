@@ -17,7 +17,8 @@ namespace Workspace_Management_System.Domain.Models
         public decimal? Hours { get; set; }
         public decimal? DiscountPercentage { get; set; }
 
-        public string? Description { get; set; }
+        public string? DescriptionEn { get; set; }
+        public string? DescriptionAr { get; set; }
 
         public Membership Membership { get; set; } = null!;
         public WorkspaceType? WorkspaceType { get; set; }

@@ -123,8 +123,14 @@
   <data name="ActiveCustomerPackageNotFound" xml:space="preserve">
     <value>Active customer package not found.</value>
   </data>
+  <data name="ActiveOrSuspendedMembershipCannotBeRenewed" xml:space="preserve">
+    <value>Active or suspended memberships cannot be renewed.</value>
+  </data>
   <data name="ActiveServiceWithSameNameAlreadyExists" xml:space="preserve">
     <value>An active service with the same name already exists.</value>
+  </data>
+  <data name="ActiveWorkspaceHistoryNotFound" xml:space="preserve">
+    <value>Active workspace history was not found.</value>
   </data>
   <data name="AnotherActiveCompanyWithSameName" xml:space="preserve">
     <value>Another active company with the same name already exists.</value>
@@ -159,8 +165,17 @@
   <data name="ArabicTaxInformationMaxLength" xml:space="preserve">
     <value> Arabic tax information must not exceed 500 characters.</value>
   </data>
+  <data name="BenefitHoursMustBeGreaterThanZero" xml:space="preserve">
+    <value>Hours must be greater than 0.</value>
+  </data>
   <data name="BookingAlreadyHasThisStatus" xml:space="preserve">
     <value>Booking already has this status.</value>
+  </data>
+  <data name="BookingAssociatedWithSessionNotFound" xml:space="preserve">
+    <value>Booking associated with this session was not found.</value>
+  </data>
+  <data name="BookingCannotBeCheckedInWithStatus" xml:space="preserve">
+    <value>Booking cannot be checked in while its status is 0.</value>
   </data>
   <data name="BookingCannotBeNoShowBeforeStart" xml:space="preserve">
     <value>A booking cannot be marked as no-show before its start time.</value>
@@ -189,8 +204,20 @@
   <data name="BookingDeletedSuccessfully" xml:space="preserve">
     <value>Booking deleted successfully.</value>
   </data>
+  <data name="BookingDoesNotBelongToCustomer" xml:space="preserve">
+    <value>Booking does not belong to this customer.</value>
+  </data>
+  <data name="BookingDoesNotBelongToWorkspace" xml:space="preserve">
+    <value>Booking does not belong to this workspace.</value>
+  </data>
+  <data name="BookingHasAlreadyBeenUsed" xml:space="preserve">
+    <value>This booking has already been used.</value>
+  </data>
   <data name="BookingIdMustBeGreaterThanZero" xml:space="preserve">
     <value>Booking ID must be greater than 0.</value>
+  </data>
+  <data name="BookingIsNotCheckedIn" xml:space="preserve">
+    <value>Booking is not in CheckedIn status.</value>
   </data>
   <data name="BookingLinkedToSessionCannotBeDeleted" xml:space="preserve">
     <value>Booking cannot be deleted because it is linked to a session.</value>
@@ -212,6 +239,9 @@
   </data>
   <data name="BookingUpdatedSuccessfully" xml:space="preserve">
     <value>Booking updated successfully.</value>
+  </data>
+  <data name="CannotAddBenefitsToInactiveMembership" xml:space="preserve">
+    <value>Cannot add benefits to an inactive membership.</value>
   </data>
   <data name="CannotAssignInactivePackage" xml:space="preserve">
     <value>Cannot assign an inactive package.</value>
@@ -236,6 +266,9 @@
   </data>
   <data name="CannotRestoreWorkspaceTypeNotFound" xml:space="preserve">
     <value>Cannot restore workspace because its workspace type no longer exists.</value>
+  </data>
+  <data name="CannotUpdateBenefitsOfInactiveMembership" xml:space="preserve">
+    <value>Cannot update benefits of an inactive membership.</value>
   </data>
   <data name="CannotUpgradeToInactivePackage" xml:space="preserve">
     <value>Cannot upgrade to an inactive package.</value>
@@ -324,11 +357,23 @@
   <data name="CreditLimitCannotBeNegative" xml:space="preserve">
     <value> Credit limit must not be negative.</value>
   </data>
+  <data name="CurrentUserIsNotRegisteredAsEmployee" xml:space="preserve">
+    <value>Current user is not registered as an employee.</value>
+  </data>
+  <data name="CurrentWorkspaceHistoryNotFound" xml:space="preserve">
+    <value>Current workspace history was not found.</value>
+  </data>
+  <data name="CurrentWorkspaceNotFound" xml:space="preserve">
+    <value>Current workspace not found.</value>
+  </data>
   <data name="CustomerAlreadyActive" xml:space="preserve">
     <value>Customer is already active.</value>
   </data>
   <data name="CustomerAlreadyDeleted" xml:space="preserve">
     <value>Customer is already deleted.</value>
+  </data>
+  <data name="CustomerAlreadyHasActiveOrSuspendedMembership" xml:space="preserve">
+    <value>Customer already has an active or suspended membership.</value>
   </data>
   <data name="CustomerAlreadyHasActivePackage" xml:space="preserve">
     <value>Customer already has an active package.</value>
@@ -360,11 +405,38 @@
   <data name="CustomerEnglishFullNameRequired" xml:space="preserve">
     <value>Customer English full name is required.</value>
   </data>
+  <data name="CustomerHasNoActiveMembership" xml:space="preserve">
+    <value>Customer has no active membership.</value>
+  </data>
   <data name="CustomerIdGreaterThanZero" xml:space="preserve">
     <value> Customer ID must be greater than zero.</value>
   </data>
   <data name="CustomerIdMustBeGreaterThanZero" xml:space="preserve">
     <value>Customer ID must be greater than 0.</value>
+  </data>
+  <data name="CustomerMembershipAlreadyCancelled" xml:space="preserve">
+    <value>Customer membership is already cancelled.</value>
+  </data>
+  <data name="CustomerMembershipCancelledSuccessfully" xml:space="preserve">
+    <value>Customer membership cancelled successfully.</value>
+  </data>
+  <data name="CustomerMembershipHasExpired" xml:space="preserve">
+    <value>Membership has already expired.</value>
+  </data>
+  <data name="CustomerMembershipIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Customer membership ID must be greater than 0.</value>
+  </data>
+  <data name="CustomerMembershipNotFound" xml:space="preserve">
+    <value>Customer membership not found.</value>
+  </data>
+  <data name="CustomerMembershipRenewedSuccessfully" xml:space="preserve">
+    <value>Customer membership renewed successfully.</value>
+  </data>
+  <data name="CustomerMembershipResumedSuccessfully" xml:space="preserve">
+    <value>Customer membership resumed successfully.</value>
+  </data>
+  <data name="CustomerMembershipSuspendedSuccessfully" xml:space="preserve">
+    <value>Customer membership suspended successfully.</value>
   </data>
   <data name="CustomerNotFound" xml:space="preserve">
     <value>Customer not found.</value>
@@ -413,6 +485,9 @@
   </data>
   <data name="CustomerStatus_Inactive" xml:space="preserve">
     <value>Inactive</value>
+  </data>
+  <data name="CustomerSubscribedSuccessfully" xml:space="preserve">
+    <value>Customer subscribed successfully.</value>
   </data>
   <data name="CustomerTypeCannotBeAssociatedWithCompany" xml:space="preserve">
     <value>This customer type cannot be associated with a company.</value>
@@ -486,8 +561,14 @@
   <data name="DiscountNotFound" xml:space="preserve">
     <value>Discount not found.</value>
   </data>
+  <data name="DiscountOnlyForDiscountBenefits" xml:space="preserve">
+    <value>Discount percentage should only be provided for discount benefits.</value>
+  </data>
   <data name="DiscountPercentageCannotExceed100" xml:space="preserve">
     <value>Discount percentage cannot be greater than 100.</value>
+  </data>
+  <data name="DiscountPercentageMustBeBetween0And100" xml:space="preserve">
+    <value>Discount percentage must be greater than 0 and at most 100.</value>
   </data>
   <data name="DiscountRestoredSuccessfully" xml:space="preserve">
     <value>Discount restored successfully.</value>
@@ -564,6 +645,12 @@
   <data name="EmployeeIdMustBeGreaterThanZero" xml:space="preserve">
     <value>Employee ID must be greater than 0.</value>
   </data>
+  <data name="EmployeeIsNotActive" xml:space="preserve">
+    <value>Employee is not active.</value>
+  </data>
+  <data name="EmployeeIsNotAssignedToThisWorkspace" xml:space="preserve">
+    <value>Employee is not assigned to this workspace.</value>
+  </data>
   <data name="EmployeeLastNameArMaxLength" xml:space="preserve">
     <value>Arabic last name must not exceed 100 characters.</value>
   </data>
@@ -636,6 +723,9 @@
   <data name="ExpectedEndTimeAfterStartTime" xml:space="preserve">
     <value>Expected end time must be after start time.</value>
   </data>
+  <data name="ExpiredMembershipCannotBeCancelled" xml:space="preserve">
+    <value>Expired membership cannot be cancelled.</value>
+  </data>
   <data name="FailedToAssignRole" xml:space="preserve">
     <value>Failed to assign role.</value>
   </data>
@@ -645,8 +735,14 @@
   <data name="Gender_Male" xml:space="preserve">
     <value>Male</value>
   </data>
+  <data name="HoursOnlyForHourBasedBenefits" xml:space="preserve">
+    <value>Hours should only be provided for hour-based benefits.</value>
+  </data>
   <data name="InsufficientPackageHours" xml:space="preserve">
     <value>Customer has only {0} package hours remaining, but this session requires {1:F2} hours.</value>
+  </data>
+  <data name="InvalidBenefitType" xml:space="preserve">
+    <value>Invalid benefit type.</value>
   </data>
   <data name="InvalidBookingStatus" xml:space="preserve">
     <value>Invalid booking status.</value>
@@ -687,6 +783,93 @@
   <data name="ItemType_Workspace" xml:space="preserve">
     <value>Workspace</value>
   </data>
+  <data name="MembershipActivatedSuccessfully" xml:space="preserve">
+    <value>Membership activated successfully.</value>
+  </data>
+  <data name="MembershipAlreadyActive" xml:space="preserve">
+    <value>Membership is already active.</value>
+  </data>
+  <data name="MembershipAlreadyInactive" xml:space="preserve">
+    <value>Membership is already inactive.</value>
+  </data>
+  <data name="MembershipBenefitCreatedSuccessfully" xml:space="preserve">
+    <value>Membership benefit created successfully.</value>
+  </data>
+  <data name="MembershipBenefitDeletedSuccessfully" xml:space="preserve">
+    <value>Membership benefit deleted successfully.</value>
+  </data>
+  <data name="MembershipBenefitDescriptionArMaxLength" xml:space="preserve">
+    <value>Arabic description must not exceed 1000 characters.</value>
+  </data>
+  <data name="MembershipBenefitDescriptionEnMaxLength" xml:space="preserve">
+    <value>English description must not exceed 1000 characters.</value>
+  </data>
+  <data name="MembershipBenefitIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Benefit ID must be greater than 0.</value>
+  </data>
+  <data name="MembershipBenefitNotFound" xml:space="preserve">
+    <value>Membership benefit not found.</value>
+  </data>
+  <data name="MembershipBenefitUpdatedSuccessfully" xml:space="preserve">
+    <value>Membership benefit updated successfully.</value>
+  </data>
+  <data name="MembershipCreatedSuccessfully" xml:space="preserve">
+    <value>Membership created successfully.</value>
+  </data>
+  <data name="MembershipDeactivatedSuccessfully" xml:space="preserve">
+    <value>Membership deactivated successfully.</value>
+  </data>
+  <data name="MembershipDeletedSuccessfully" xml:space="preserve">
+    <value>Membership deleted successfully.</value>
+  </data>
+  <data name="MembershipDescriptionArMaxLength" xml:space="preserve">
+    <value>Arabic description must not exceed 1000 characters.</value>
+  </data>
+  <data name="MembershipDescriptionEnMaxLength" xml:space="preserve">
+    <value>English description must not exceed 1000 characters.</value>
+  </data>
+  <data name="MembershipDurationMustBeGreaterThanZero" xml:space="preserve">
+    <value>Duration must be greater than 0 days.</value>
+  </data>
+  <data name="MembershipHasActiveCustomerSubscriptions" xml:space="preserve">
+    <value>Membership cannot be deleted because it has active customer subscriptions.</value>
+  </data>
+  <data name="MembershipIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Membership ID must be greater than 0.</value>
+  </data>
+  <data name="MembershipIsInactive" xml:space="preserve">
+    <value>This membership is currently inactive.</value>
+  </data>
+  <data name="MembershipNameAlreadyExists" xml:space="preserve">
+    <value>A membership with the same name already exists.</value>
+  </data>
+  <data name="MembershipNameArMaxLength" xml:space="preserve">
+    <value>Arabic membership name must not exceed 100 characters.</value>
+  </data>
+  <data name="MembershipNameArRequired" xml:space="preserve">
+    <value>Membership name in Arabic is required.</value>
+  </data>
+  <data name="MembershipNameEnMaxLength" xml:space="preserve">
+    <value>English membership name must not exceed 100 characters.</value>
+  </data>
+  <data name="MembershipNameEnRequired" xml:space="preserve">
+    <value>Membership name in English is required.</value>
+  </data>
+  <data name="MembershipNotFound" xml:space="preserve">
+    <value>Membership not found.</value>
+  </data>
+  <data name="MembershipPlanIsInactive" xml:space="preserve">
+    <value>This membership plan is currently inactive.</value>
+  </data>
+  <data name="MembershipPlanNotFound" xml:space="preserve">
+    <value>Membership plan not found.</value>
+  </data>
+  <data name="MembershipPriceCannotBeNegative" xml:space="preserve">
+    <value>Price cannot be negative.</value>
+  </data>
+  <data name="MembershipUpdatedSuccessfully" xml:space="preserve">
+    <value>Membership updated successfully.</value>
+  </data>
   <data name="MobileNumberRequired" xml:space="preserve">
     <value>Mobile number is required.</value>
   </data>
@@ -696,8 +879,32 @@
   <data name="NewPackageNotFound" xml:space="preserve">
     <value>New package not found.</value>
   </data>
+  <data name="NewWorkspaceAlreadyHasActiveSession" xml:space="preserve">
+    <value>New workspace already has an active session.</value>
+  </data>
+  <data name="NewWorkspaceIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>New workspace ID must be greater than 0.</value>
+  </data>
+  <data name="NewWorkspaceIsInactive" xml:space="preserve">
+    <value>New workspace is inactive.</value>
+  </data>
+  <data name="NewWorkspaceIsNotAvailable" xml:space="preserve">
+    <value>New workspace is not available.</value>
+  </data>
+  <data name="NewWorkspaceNotFound" xml:space="preserve">
+    <value>New workspace not found.</value>
+  </data>
   <data name="NoApplicablePricingRules" xml:space="preserve">
     <value>No applicable pricing rules were found for this session.</value>
+  </data>
+  <data name="NotAuthorizedToChangeSessionWorkspace" xml:space="preserve">
+    <value>You are not authorized to change this session's workspace.</value>
+  </data>
+  <data name="NotAuthorizedToEndThisSession" xml:space="preserve">
+    <value>You are not authorized to end this session.</value>
+  </data>
+  <data name="NumberOfPeopleExceedsNewWorkspaceCapacity" xml:space="preserve">
+    <value>Number of people exceeds new workspace capacity.</value>
   </data>
   <data name="NumberOfPeopleExceedsWorkspaceCapacity" xml:space="preserve">
     <value>Number of people exceeds workspace capacity.</value>
@@ -705,8 +912,17 @@
   <data name="NumberOfPeopleMustBeGreaterThanZero" xml:space="preserve">
     <value>Number of people must be greater than 0.</value>
   </data>
+  <data name="OnlyActiveMembershipsCanBeSuspended" xml:space="preserve">
+    <value>Only active memberships can be suspended.</value>
+  </data>
   <data name="OnlyActiveSessionsCanBeCheckedOut" xml:space="preserve">
     <value>Only active sessions can be checked out.</value>
+  </data>
+  <data name="OnlyActiveSessionsCanChangeWorkspace" xml:space="preserve">
+    <value>Only active sessions can change workspace.</value>
+  </data>
+  <data name="OnlySuspendedMembershipsCanBeResumed" xml:space="preserve">
+    <value>Only suspended memberships can be resumed.</value>
   </data>
   <data name="PackageActivatedSuccessfully" xml:space="preserve">
     <value>Package activated successfully.</value>
@@ -824,6 +1040,9 @@
   </data>
   <data name="PricingPlanIdGreaterThanZero" xml:space="preserve">
     <value>Pricing plan ID must be greater than zero.</value>
+  </data>
+  <data name="PricingPlanIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Pricing plan ID must be greater than 0.</value>
   </data>
   <data name="PricingPlanNotFound" xml:space="preserve">
     <value>Pricing plan not found.</value>
@@ -1041,6 +1260,9 @@
   <data name="SearchMaxLength" xml:space="preserve">
     <value>Search must not exceed 100 characters.</value>
   </data>
+  <data name="SearchMustNotExceed100Characters" xml:space="preserve">
+    <value>Search must not exceed 100 characters.</value>
+  </data>
   <data name="SearchTermRequired" xml:space="preserve">
     <value>Search term is required.</value>
   </data>
@@ -1089,14 +1311,38 @@
   <data name="ServiceWithSameNameAlreadyExists" xml:space="preserve">
     <value>A service with the same name already exists.</value>
   </data>
+  <data name="SessionAlreadyUsesThisWorkspace" xml:space="preserve">
+    <value>Session is already using this workspace.</value>
+  </data>
+  <data name="SessionEndedSuccessfully" xml:space="preserve">
+    <value>Session ended successfully.</value>
+  </data>
   <data name="SessionIdGreaterThanZero" xml:space="preserve">
     <value>Session ID must be greater than zero.</value>
+  </data>
+  <data name="SessionIdMustBeGreaterThanZero" xml:space="preserve">
+    <value>Session ID must be greater than 0.</value>
+  </data>
+  <data name="SessionIsNotActive" xml:space="preserve">
+    <value>Session is not active.</value>
   </data>
   <data name="SessionNotFound" xml:space="preserve">
     <value>Session not found.</value>
   </data>
   <data name="SessionNotFoundWithId" xml:space="preserve">
     <value>Session with ID {0} was not found.</value>
+  </data>
+  <data name="SessionStarted" xml:space="preserve">
+    <value>Session started.</value>
+  </data>
+  <data name="SessionStartedSuccessfully" xml:space="preserve">
+    <value>Session started successfully.</value>
+  </data>
+  <data name="SessionWorkspaceChanged" xml:space="preserve">
+    <value>Session workspace changed.</value>
+  </data>
+  <data name="SessionWorkspaceChangedSuccessfully" xml:space="preserve">
+    <value>Session workspace changed successfully.</value>
   </data>
   <data name="SkuMaxLength" xml:space="preserve">
     <value>SKU must not exceed 50 characters.</value>
@@ -1142,6 +1388,9 @@
   </data>
   <data name="UserRegisteredSuccessfully" xml:space="preserve">
     <value>User registered successfully.</value>
+  </data>
+  <data name="WorkspaceAlreadyHasActiveSession" xml:space="preserve">
+    <value>Workspace already has an active session.</value>
   </data>
   <data name="WorkspaceArabicDescriptionMaxLength" xml:space="preserve">
     <value>Arabic description cannot exceed 500 characters.</value>
@@ -1190,6 +1439,12 @@
   </data>
   <data name="WorkspaceIsInactive" xml:space="preserve">
     <value>Workspace is inactive.</value>
+  </data>
+  <data name="WorkspaceIsNotAvailable" xml:space="preserve">
+    <value>Workspace is not available.</value>
+  </data>
+  <data name="WorkspaceIsNotOccupiedByActiveSession" xml:space="preserve">
+    <value>Workspace is not occupied by an active session.</value>
   </data>
   <data name="WorkspaceLocationMaxLength" xml:space="preserve">
     <value>Location cannot exceed 200 characters.</value>
@@ -1274,6 +1529,9 @@
   </data>
   <data name="WorkspaceTypeNotFound" xml:space="preserve">
     <value>Workspace type not found.</value>
+  </data>
+  <data name="WorkspaceTypeRequiredForWorkspaceBenefits" xml:space="preserve">
+    <value>Workspace type is required for workspace-related benefits.</value>
   </data>
   <data name="WorkspaceTypeRetrievedSuccessfully" xml:space="preserve">
     <value>Workspace type retrieved successfully.</value>
