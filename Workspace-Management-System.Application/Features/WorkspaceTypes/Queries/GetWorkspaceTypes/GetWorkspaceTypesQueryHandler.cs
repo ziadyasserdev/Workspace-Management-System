@@ -16,22 +16,22 @@ using Workspace_Management_System.Application.Resources;
 namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Queries.GetWorkspaceTypes
 {
     public class GetWorkspaceTypesQueryHandler
-        : IRequestHandler<
-            GetWorkspaceTypesQuery,
-            Result<PaginatedResult<WorkspaceTypeDto>>>
+       : IRequestHandler<
+           GetWorkspaceTypesQuery,
+           Result<PaginatedResult<WorkspaceTypeListDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IStringLocalizer _localizer;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public GetWorkspaceTypesQueryHandler(
             IUnitOfWork unitOfWork,
-            IStringLocalizerFactory factory)
+            IStringLocalizer<SharedResources> localizer)
         {
             _unitOfWork = unitOfWork;
-            _localizer = factory.Create(typeof(SharedResources));
+            _localizer = localizer;
         }
 
-        public async Task<Result<PaginatedResult<WorkspaceTypeDto>>> Handle(
+        public async Task<Result<PaginatedResult<WorkspaceTypeListDto>>> Handle(
             GetWorkspaceTypesQuery request,
             CancellationToken cancellationToken)
         {
@@ -43,7 +43,7 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Querie
                 .AsNoTracking()
                 .Where(x => !x.IsDeleted);
 
-            // Search by the name in the selected language.
+            // Search by name in the selected language.
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 var search = request.Search.Trim();
@@ -60,35 +60,40 @@ namespace Workspace_Management_System.Application.Features.WorkspaceTypes.Querie
                     x => x.IsActive == request.IsActive.Value);
             }
 
-            // Count records after filtering, before pagination.
-            var totalCount = await query.CountAsync(
-                cancellationToken);
+            // Count filtered records before pagination.
+            var totalCount = await query.CountAsync(cancellationToken);
 
-            // Apply sorting, pagination, and projection.
+            // Sort, paginate, and select the appropriate language.
             var items = await query
                 .OrderBy(x => isArabic ? x.NameAr : x.NameEn)
+                .ThenBy(x => x.Id)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(x => new WorkspaceTypeDto
+                .Select(x => new WorkspaceTypeListDto
                 {
                     Id = x.Id,
-                    Name = isArabic ? x.NameAr : x.NameEn,
+
+                    Name = isArabic
+                        ? x.NameAr
+                        : x.NameEn,
+
                     Description = isArabic
                         ? x.DescriptionAr
                         : x.DescriptionEn,
+
                     IsActive = x.IsActive
                 })
                 .ToListAsync(cancellationToken);
 
-            var result = new PaginatedResult<WorkspaceTypeDto>(
+            var result = new PaginatedResult<WorkspaceTypeListDto>(
                 items,
                 request.PageNumber,
                 request.PageSize,
                 totalCount);
 
-            return Result<PaginatedResult<WorkspaceTypeDto>>.Success(
+            return Result<PaginatedResult<WorkspaceTypeListDto>>.Success(
                 result,
-                _localizer["WorkspaceTypesRetrievedSuccessfully"]);
+                _localizer["WorkspaceTypesRetrievedSuccessfully"].Value);
         }
     }
 }

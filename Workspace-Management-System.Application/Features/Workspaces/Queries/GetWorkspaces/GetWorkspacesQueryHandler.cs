@@ -16,9 +16,9 @@ using Workspace_Management_System.Application.Resources;
 namespace Workspace_Management_System.Application.Features.Workspaces.Queries.GetWorkspaces
 {
     public class GetWorkspacesQueryHandler
-    : IRequestHandler<
-        GetWorkspacesQuery,
-        Result<PaginatedResult<WorkspaceDto>>>
+        : IRequestHandler<
+            GetWorkspacesQuery,
+            Result<PaginatedResult<WorkspaceListDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStringLocalizer<SharedResources> _localizer;
@@ -31,7 +31,7 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Queries.Ge
             _localizer = localizer;
         }
 
-        public async Task<Result<PaginatedResult<WorkspaceDto>>> Handle(
+        public async Task<Result<PaginatedResult<WorkspaceListDto>>> Handle(
             GetWorkspacesQuery request,
             CancellationToken cancellationToken)
         {
@@ -79,7 +79,7 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Queries.Ge
                 .ThenBy(x => x.Id)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(x => new WorkspaceDto
+                .Select(x => new WorkspaceListDto
                 {
                     Id = x.Id,
                     WorkspaceTypeId = x.WorkspaceTypeId,
@@ -106,13 +106,13 @@ namespace Workspace_Management_System.Application.Features.Workspaces.Queries.Ge
                 })
                 .ToListAsync(cancellationToken);
 
-            var result = new PaginatedResult<WorkspaceDto>(
+            var result = new PaginatedResult<WorkspaceListDto>(
                 items,
                 request.PageNumber,
                 request.PageSize,
                 totalCount);
 
-            return Result<PaginatedResult<WorkspaceDto>>.Success(
+            return Result<PaginatedResult<WorkspaceListDto>>.Success(
                 result,
                 _localizer["WorkspacesRetrievedSuccessfully"].Value);
         }
